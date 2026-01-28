@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+
 # Vauchi Architecture
 
 Vauchi is a privacy-focused, decentralized contact card exchange application that allows users to share and update contact information with people they meet in the physical world.
