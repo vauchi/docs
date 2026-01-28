@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+
 # Device Linking
 
 Device linking enables users to use the same Vauchi identity across multiple devices with full sync of contacts, cards, and settings.

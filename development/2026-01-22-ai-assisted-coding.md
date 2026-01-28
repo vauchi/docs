@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+
 # AI-Assisted Coding
 
 This project supports multiple AI coding assistants with pre-configured rules to enforce TDD, test/production code separation, and testing best practices.

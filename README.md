@@ -1,3 +1,6 @@
+<!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+
 # Vauchi Documentation
 
 User and developer documentation for [Vauchi](https://gitlab.com/vauchi) — privacy-focused updatable contact cards via in-person QR exchange.
