@@ -298,5 +298,5 @@ The locale files already contain comprehensive FAQ content. Key entries:
 ## Related Documentation
 
 - [System Overview](2026-02-06-system-overview.md) — Technical architecture
-- [help.rs](../core/vauchi-core/src/help.rs) — Help system implementation
-- [locales/](../locales/) — Locale JSON files
+- [help.rs](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/help.rs) — Help system implementation
+- [locales/](https://gitlab.com/vauchi/locales) — Locale JSON files

@@ -203,12 +203,12 @@ vauchi/                    ← Orchestrator repo
 └── docs/                  ← Documentation
 ```
 
-See [CLAUDE.md](../CLAUDE.md) for complete repository details.
+See [CLAUDE.md](https://gitlab.com/vauchi/vauchi/-/blob/main/CLAUDE.md) for complete repository details.
 
 ## Related Documentation
 
 - [Crypto Reference](2026-02-06-crypto-reference.md) — Cryptographic operations
 - [State Machines](2026-02-06-state-machines.md) — Protocol state diagrams
 - [User Help Content](2026-02-06-user-help-content.md) — User-facing documentation
-- [Exchange Protocol](./_private/docs/architecture/2026-01-22-exchange-protocol.md) — Exchange details
-- [Sync Architecture](./_private/docs/architecture/2026-01-22-sync.md) — Sync protocol
+- [Exchange Protocol](https://gitlab.com/vauchi/private/-/blob/main/docs/architecture/2026-01-22-exchange-protocol.md) — Exchange details (internal)
+- [Sync Architecture](https://gitlab.com/vauchi/private/-/blob/main/docs/architecture/2026-01-22-sync.md) — Sync protocol (internal)

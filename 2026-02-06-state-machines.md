@@ -326,5 +326,5 @@ stateDiagram-v2
 
 - [System Overview](2026-02-06-system-overview.md) — High-level architecture
 - [Crypto Reference](2026-02-06-crypto-reference.md) — Cryptographic operations
-- [Exchange Protocol](../_private/docs/architecture/2026-01-22-exchange-protocol.md) — Exchange details
-- [Sequence Diagrams](../_private/docs/diagrams/README.md) — Interaction flows
+- [Exchange Protocol](https://gitlab.com/vauchi/private/-/blob/main/docs/architecture/2026-01-22-exchange-protocol.md) — Exchange details (internal)
+- [Sequence Diagrams](https://gitlab.com/vauchi/private/-/blob/main/docs/diagrams/README.md) — Interaction flows (internal)

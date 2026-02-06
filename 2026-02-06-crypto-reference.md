@@ -307,4 +307,4 @@ Based on Dunbar's number (~150 stable relationships) and research showing:
 
 - [System Overview](2026-02-06-system-overview.md) — High-level architecture
 - [State Machines](2026-02-06-state-machines.md) — Protocol state diagrams
-- [Cryptography Architecture](../_private/docs/architecture/2026-01-22-cryptography.md) — Detailed crypto design
+- [Cryptography Architecture](https://gitlab.com/vauchi/private/-/blob/main/docs/architecture/2026-01-22-cryptography.md) — Detailed crypto design (internal)
