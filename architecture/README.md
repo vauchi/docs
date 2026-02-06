@@ -54,18 +54,18 @@ Vauchi is a privacy-focused, decentralized contact card exchange application tha
 
 | Document | Description |
 |----------|-------------|
-| [Cryptography](./cryptography.md) | Identity, key derivation, encryption schemes |
-| [Data Models](./data-models.md) | Contact cards, fields, visibility rules |
-| [Schema](./schema.md) | Database tables, columns, relationships |
-| [Exchange Protocol](./exchange-protocol.md) | QR, BLE, NFC proximity verification |
-| [Device Linking](./device-linking.md) | Multi-device sync and device pairing |
-| [Sync](./sync.md) | Update propagation, P2P sync |
-| [Storage](./storage.md) | Local encrypted storage, device sync |
-| [Relay](./relay.md) | Relay network and federation |
-| [Tech Stack](./tech-stack.md) | Languages, frameworks, platforms |
-| [Security](./security.md) | Threat model, data classification |
-| [API](./api.md) | Core library API design |
-| [Decisions](./decisions.md) | Architecture Decision Records (ADRs) |
+| [Cryptography](./2026-01-22-cryptography.md) | Identity, key derivation, encryption schemes |
+| [Data Models](./2026-01-22-data-models.md) | Contact cards, fields, visibility rules |
+| [Schema](./2026-01-22-schema.md) | Database tables, columns, relationships |
+| [Exchange Protocol](./2026-01-22-exchange-protocol.md) | QR, BLE, NFC proximity verification |
+| [Device Linking](./2026-01-22-device-linking.md) | Multi-device sync and device pairing |
+| [Sync](./2026-01-22-sync.md) | Update propagation, P2P sync |
+| [Storage](./2026-01-22-storage.md) | Local encrypted storage, device sync |
+| [Relay](./2026-01-22-relay.md) | Relay network and federation |
+| [Tech Stack](./2026-01-22-tech-stack.md) | Languages, frameworks, platforms |
+| [Security](./2026-01-22-security.md) | Threat model, data classification |
+| [API](./2026-01-22-api.md) | Core library API design |
+| [Decisions](./2026-01-22-decisions.md) | Architecture Decision Records (ADRs) |
 
 ## Glossary
 

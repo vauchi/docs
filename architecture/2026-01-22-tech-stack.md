@@ -6,7 +6,7 @@
 ## Core Library (Shared)
 
 - **Language**: Rust (compiled to native + WebAssembly)
-- **Crypto**: ring (audited) - see [cryptography.md](cryptography.md) for details
+- **Crypto**: ring (audited) - see [cryptography.md](./2026-01-22-cryptography.md) for details
 - **P2P**: libp2p (rust-libp2p) - planned
 - **Storage**: SQLite (encrypted with AES-256-GCM)
 - **Serialization**: JSON (via serde_json)

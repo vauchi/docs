@@ -28,7 +28,7 @@ Master Seed (256-bit)
 - **Forward Secrecy**: Double Ratchet algorithm for update propagation
 
 > **Note**: Original design specified XChaCha20-Poly1305, but `ring` crate doesn't support it.
-> AES-256-GCM provides equivalent security. See [ADR-002](decisions.md#adr-002-use-ring-for-all-cryptography).
+> AES-256-GCM provides equivalent security. See [ADR-002](./2026-01-22-decisions.md#adr-002-use-ring-for-all-cryptography).
 
 ## Implementation
 
