@@ -19,6 +19,7 @@ REFACTOR → Improve design       → COMMIT (tests still green)
 ```
 
 **Commit early, commit often:**
+
 - Commit immediately after GREEN (tests pass for the first time)
 - Commit after each REFACTOR cycle (if tests still pass)
 - Small, atomic commits make rollback and review easier
@@ -45,6 +46,7 @@ Examples:
 ## Critical Rules
 
 **Crypto** - Never mock. Test with real crypto:
+
 - Roundtrip (encrypt/decrypt, sign/verify)
 - Wrong key rejection
 - Tampered data rejection

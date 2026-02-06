@@ -109,6 +109,7 @@ sequenceDiagram
 ## Data Exchanged
 
 ### Link QR Code Contents
+
 ```json
 {
   "type": "device_link",
@@ -121,6 +122,7 @@ sequenceDiagram
 ```
 
 ### Identity Bundle (Encrypted)
+
 ```json
 {
   "master_seed": "32-byte seed for key derivation",

@@ -57,6 +57,7 @@ git -C docs checkout -b feature/remote-content-updates
 - See [Principles](../about/principles.md) for core values.
 
 Commit message format:
+
 ```
 {type}: {Short description}
 

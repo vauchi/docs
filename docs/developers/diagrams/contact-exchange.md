@@ -102,6 +102,7 @@ sequenceDiagram
 ## Data Exchanged
 
 ### QR Code Contents
+
 ```json
 {
   "type": "exchange",
@@ -113,6 +114,7 @@ sequenceDiagram
 ```
 
 ### Contact Card (Encrypted)
+
 ```json
 {
   "display_name": "Alice Smith",
@@ -137,6 +139,7 @@ sequenceDiagram
 ## Failure Scenarios
 
 ### Proximity Verification Fails
+
 ```mermaid
 sequenceDiagram
     participant AD as Alice's Device
@@ -151,6 +154,7 @@ sequenceDiagram
 ```
 
 ### QR Code Expired
+
 ```mermaid
 sequenceDiagram
     participant AD as Alice's Device

@@ -190,6 +190,7 @@ sequenceDiagram
 ## Data Structures
 
 ### Recovery Claim QR
+
 ```json
 {
   "type": "recovery_claim",
@@ -200,6 +201,7 @@ sequenceDiagram
 ```
 
 ### Voucher
+
 ```json
 {
   "old_pk": "Alice's old public key",
@@ -211,6 +213,7 @@ sequenceDiagram
 ```
 
 ### Recovery Proof
+
 ```json
 {
   "old_pk": "Alice's old public key",

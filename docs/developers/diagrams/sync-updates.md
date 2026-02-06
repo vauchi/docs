@@ -157,6 +157,7 @@ sequenceDiagram
 ## Data Exchanged
 
 ### Update Delta (Encrypted)
+
 ```json
 {
   "type": "card_update",

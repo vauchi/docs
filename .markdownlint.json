@@ -5,9 +5,11 @@
     "siblings_only": true
   },
   "MD033": {
-    "allowed_elements": ["br", "details", "summary", "sup", "sub"]
+    "allowed_elements": ["br", "details", "summary", "sup", "sub", "div", "p", "a", "img"]
   },
   "MD034": false,
+  "MD036": false,
+  "MD040": false,
   "MD041": false,
   "MD046": {
     "style": "fenced"
