@@ -73,6 +73,12 @@
   background-color: #181825;
 }
 
+/* Header & tab text */
+[data-md-color-scheme="vauchi-dark"] .md-header__topic,
+[data-md-color-scheme="vauchi-dark"] .md-tabs__link {
+  color: #cdd6f4;
+}
+
 /* Sidebar */
 [data-md-color-scheme="vauchi-dark"] .md-sidebar__scrollwrap {
   border-right-color: #313244;
@@ -156,4 +162,11 @@
 /* Tabs bar */
 [data-md-color-scheme="vauchi-light"] .md-tabs {
   background-color: #dce0e8;
+}
+
+/* Header & tab text */
+[data-md-color-scheme="vauchi-light"] .md-header__topic,
+[data-md-color-scheme="vauchi-light"] .md-tabs__link,
+[data-md-color-scheme="vauchi-light"] .md-header__button {
+  color: #4c4f69;
 }

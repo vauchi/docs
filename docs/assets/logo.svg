@@ -11,11 +11,11 @@
   </defs>
 
   <!-- Background circle -->
-  <circle cx="256" cy="256" r="240" fill="#1a1a2e"/>
+  <circle cx="256" cy="256" r="240" fill="none"/>
 
   <!-- Back card (slightly offset) -->
   <rect x="140" y="160" width="200" height="140" rx="12" ry="12"
-        fill="#16213e" stroke="#4fc3f7" stroke-width="2"
+        fill="rgba(116,199,236,0.2)" stroke="#4fc3f7" stroke-width="2"
         transform="rotate(-8 240 230)"/>
 
   <!-- Front card -->
