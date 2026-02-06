@@ -4,7 +4,7 @@
 
 # GitLab CI for vauchi-docs
 #
-# Documentation linting + secret detection
+# Documentation linting, mkdocs build, and deployment
 #
 # Uses shared templates from vauchi/scripts for consistency.
 
@@ -12,17 +12,58 @@ include:
   - project: 'vauchi/scripts'
     ref: main
     file:
-      - '/ci-templates/lint-docs.yml'
       - '/ci-templates/mr-rules.yml'
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 stages:
   - lint
-  - test
+  - build
+  - deploy
 
-# Secret detection — use Docker runner
+# Markdown linting
+lint:markdown:
+  stage: lint
+  image: node:20-alpine
+  tags: [docker]
+  script:
+    - npm install -g markdownlint-cli
+    - markdownlint '**/*.md' --ignore node_modules --ignore site
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+
+# Secret detection
 secret_detection:
   tags: [docker]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Build mkdocs site
+build:docs:
+  stage: build
+  image: python:3.11-slim
+  tags: [docker]
+  script:
+    - pip install mkdocs-material pymdown-extensions
+    - mkdocs build --strict
+  artifacts:
+    paths:
+      - site/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Deploy to GitLab Pages
+pages:
+  stage: deploy
+  tags: [docker]
+  script:
+    - mv site public
+  artifacts:
+    paths:
+      - public
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  needs:
+    - build:docs
