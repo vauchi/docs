@@ -21,6 +21,17 @@ stages:
   - build
   - deploy
 
+# REUSE compliance check
+reuse-lint:
+  stage: lint
+  image: fsfe/reuse:latest
+  tags: [docker]
+  script:
+    - reuse lint
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
 # Markdown linting
 lint:markdown:
   stage: lint
