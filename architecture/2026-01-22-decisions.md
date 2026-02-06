@@ -473,7 +473,7 @@ Master Seed
 **Implementation**:
 - Feature spec: `features/future/contact_recovery.feature`
 - Planning doc: `docs/planning/todo/contact-recovery.md`
-- Threat analysis: `docs/THREAT_ANALYSIS.md` (Section 9)
+- Threat analysis: `2026-01-22-THREAT_ANALYSIS.md` (Section 9)
 
 ---
 
