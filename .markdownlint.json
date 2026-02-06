@@ -7,8 +7,10 @@
   "MD033": {
     "allowed_elements": ["br", "details", "summary", "sup", "sub"]
   },
+  "MD034": false,
   "MD041": false,
   "MD046": {
     "style": "fenced"
-  }
+  },
+  "MD060": false
 }
