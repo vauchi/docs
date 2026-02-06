@@ -4,8 +4,6 @@
 site_name: Vauchi Docs
 site_url: https://docs.vauchi.app
 site_description: Privacy-focused updatable contact cards
-docs_dir: .
-
 repo_url: https://gitlab.com/vauchi/vauchi
 repo_name: vauchi/vauchi
 
