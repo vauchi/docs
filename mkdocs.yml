@@ -1,0 +1,107 @@
+# SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+site_name: Vauchi Docs
+site_url: https://docs.vauchi.app
+site_description: Privacy-focused updatable contact cards
+repo_url: https://gitlab.com/vauchi/vauchi
+repo_name: vauchi/vauchi
+
+copyright: Copyright &copy; 2026 Vauchi Contributors
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/gitlab
+
+nav:
+  - Home: index.md
+
+  - For Users:
+    - users/index.md
+    - Getting Started: users/getting-started.md
+    - FAQ: users/faq.md
+    - Features:
+      - users/features/index.md
+      - Contact Exchange: users/features/contact-exchange.md
+      - Privacy Controls: users/features/privacy-controls.md
+      - Multi-Device Sync: users/features/multi-device.md
+      - Auto Updates: users/features/auto-updates.md
+      - Backup & Recovery: users/features/backup-recovery.md
+      - Encryption: users/features/encryption.md
+    - How-To Guides:
+      - users/guides/index.md
+      - Exchange Contacts: users/guides/exchange.md
+      - Set Up Multi-Device: users/guides/multi-device.md
+      - Recover Your Account: users/guides/recovery.md
+      - Manage Visibility: users/guides/visibility.md
+
+  - About:
+    - about/index.md
+    - Our Principles: about/principles.md
+    - Security: about/security.md
+    - Community: about/community.md
+    - Supporters: about/supporters.md
+
+  - For Developers:
+    - developers/index.md
+    - Contributing: developers/contributing.md
+    - TDD Rules: developers/tdd-rules.md
+    - Architecture: developers/architecture.md
+    - Cryptography: developers/crypto.md
+    - Tech Stack: developers/tech-stack.md
+    - Diagrams:
+      - developers/diagrams/index.md
+      - Contact Exchange: developers/diagrams/contact-exchange.md
+      - Device Linking: developers/diagrams/device-linking.md
+      - Sync Updates: developers/diagrams/sync-updates.md
+      - Recovery: developers/diagrams/contact-recovery.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/vauchi
+    - icon: fontawesome/brands/github
+      link: https://github.com/vauchi
