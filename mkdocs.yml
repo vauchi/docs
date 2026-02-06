@@ -11,19 +11,17 @@ copyright: Copyright &copy; 2026 Vauchi Contributors
 
 theme:
   name: material
+  logo: assets/logo.svg
+  favicon: assets/logo.png
   palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
+    - scheme: vauchi-dark
       toggle:
         icon: material/brightness-7
-        name: Dark mode
-    - scheme: slate
-      primary: indigo
-      accent: indigo
+        name: Light mode
+    - scheme: vauchi-light
       toggle:
         icon: material/brightness-4
-        name: Light mode
+        name: Dark mode
   features:
     - navigation.tabs
     - navigation.tabs.sticky
@@ -36,6 +34,9 @@ theme:
     - content.tabs.link
   icon:
     repo: fontawesome/brands/gitlab
+  font:
+    text: Inter
+    code: JetBrains Mono
 
 nav:
   - Home: index.md
@@ -98,6 +99,9 @@ markdown_extensions:
       permalink: true
   - attr_list
   - md_in_html
+
+extra_css:
+  - stylesheets/extra.css
 
 extra:
   social:

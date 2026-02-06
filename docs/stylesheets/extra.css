@@ -1,0 +1,159 @@
+/* SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+/* Vauchi docs theme — adapted from vauchi.app Catppuccin Mocha palette */
+
+/* ── Dark scheme (default) ─────────────────────────────────────────── */
+
+[data-md-color-scheme="vauchi-dark"] {
+  --md-primary-fg-color: #74c7ec;
+  --md-primary-fg-color--light: #89dceb;
+  --md-primary-fg-color--dark: #4fa8d5;
+  --md-primary-bg-color: #1e1e2e;
+  --md-primary-bg-color--light: #313244;
+
+  --md-accent-fg-color: #cba6f7;
+  --md-accent-fg-color--transparent: rgba(203, 166, 247, 0.1);
+  --md-accent-bg-color: #1e1e2e;
+
+  --md-default-fg-color: #cdd6f4;
+  --md-default-fg-color--light: #a6adc8;
+  --md-default-fg-color--lighter: #7f849c;
+  --md-default-fg-color--lightest: #585b70;
+
+  --md-default-bg-color: #1e1e2e;
+  --md-default-bg-color--light: #181825;
+  --md-default-bg-color--lighter: #313244;
+  --md-default-bg-color--lightest: #45475a;
+
+  --md-code-fg-color: #cdd6f4;
+  --md-code-bg-color: #181825;
+
+  --md-code-hl-color: rgba(203, 166, 247, 0.15);
+  --md-code-hl-number-color: #fab387;
+  --md-code-hl-special-color: #f5c2e7;
+  --md-code-hl-function-color: #89b4fa;
+  --md-code-hl-constant-color: #fab387;
+  --md-code-hl-keyword-color: #cba6f7;
+  --md-code-hl-string-color: #a6e3a1;
+  --md-code-hl-name-color: #89dceb;
+  --md-code-hl-operator-color: #94e2d5;
+  --md-code-hl-punctuation-color: #9399b2;
+  --md-code-hl-comment-color: #6c7086;
+  --md-code-hl-generic-color: #a6e3a1;
+  --md-code-hl-variable-color: #f38ba8;
+
+  --md-typeset-color: #cdd6f4;
+  --md-typeset-a-color: #74c7ec;
+
+  --md-admonition-fg-color: #cdd6f4;
+  --md-admonition-bg-color: #313244;
+
+  --md-footer-fg-color: #a6adc8;
+  --md-footer-fg-color--light: #7f849c;
+  --md-footer-fg-color--lighter: #585b70;
+  --md-footer-bg-color: #181825;
+  --md-footer-bg-color--dark: #11111b;
+
+  --md-shadow-z1: 0 4px 10px rgba(0, 0, 0, 0.3);
+  --md-shadow-z2: 0 8px 20px rgba(0, 0, 0, 0.4);
+  --md-shadow-z3: 0 12px 28px rgba(0, 0, 0, 0.5);
+
+  color-scheme: dark;
+}
+
+/* Header bar */
+[data-md-color-scheme="vauchi-dark"] .md-header {
+  background-color: #181825;
+  border-bottom: 1px solid rgba(203, 166, 247, 0.1);
+}
+
+/* Tabs bar */
+[data-md-color-scheme="vauchi-dark"] .md-tabs {
+  background-color: #181825;
+}
+
+/* Sidebar */
+[data-md-color-scheme="vauchi-dark"] .md-sidebar__scrollwrap {
+  border-right-color: #313244;
+}
+
+/* Nav link active */
+[data-md-color-scheme="vauchi-dark"] .md-nav__link--active,
+[data-md-color-scheme="vauchi-dark"] .md-nav__link:is(:focus, :hover) {
+  color: #74c7ec;
+}
+
+/* Search bar */
+[data-md-color-scheme="vauchi-dark"] .md-search__input {
+  background-color: #313244;
+}
+
+/* Table striping */
+[data-md-color-scheme="vauchi-dark"] .md-typeset table:not([class]) tr:hover {
+  background-color: rgba(116, 199, 236, 0.05);
+}
+
+/* ── Light scheme ──────────────────────────────────────────────────── */
+
+[data-md-color-scheme="vauchi-light"] {
+  --md-primary-fg-color: #1e66a0;
+  --md-primary-fg-color--light: #2b7ec2;
+  --md-primary-fg-color--dark: #164e7e;
+  --md-primary-bg-color: #ffffff;
+  --md-primary-bg-color--light: #f5f5f5;
+
+  --md-accent-fg-color: #8839ef;
+  --md-accent-fg-color--transparent: rgba(136, 57, 239, 0.1);
+  --md-accent-bg-color: #ffffff;
+
+  --md-default-fg-color: #4c4f69;
+  --md-default-fg-color--light: #6c6f85;
+  --md-default-fg-color--lighter: #8c8fa1;
+  --md-default-fg-color--lightest: #9ca0b0;
+
+  --md-default-bg-color: #eff1f5;
+  --md-default-bg-color--light: #e6e9ef;
+  --md-default-bg-color--lighter: #ccd0da;
+  --md-default-bg-color--lightest: #bcc0cc;
+
+  --md-code-fg-color: #4c4f69;
+  --md-code-bg-color: #e6e9ef;
+
+  --md-code-hl-color: rgba(136, 57, 239, 0.1);
+  --md-code-hl-number-color: #fe640b;
+  --md-code-hl-special-color: #ea76cb;
+  --md-code-hl-function-color: #1e66f5;
+  --md-code-hl-constant-color: #fe640b;
+  --md-code-hl-keyword-color: #8839ef;
+  --md-code-hl-string-color: #40a02b;
+  --md-code-hl-name-color: #04a5e5;
+  --md-code-hl-operator-color: #179299;
+  --md-code-hl-punctuation-color: #5c5f77;
+  --md-code-hl-comment-color: #8c8fa1;
+  --md-code-hl-generic-color: #40a02b;
+  --md-code-hl-variable-color: #d20f39;
+
+  --md-typeset-color: #4c4f69;
+  --md-typeset-a-color: #1e66a0;
+
+  --md-admonition-fg-color: #4c4f69;
+  --md-admonition-bg-color: #e6e9ef;
+
+  --md-footer-fg-color: #6c6f85;
+  --md-footer-fg-color--light: #8c8fa1;
+  --md-footer-fg-color--lighter: #9ca0b0;
+  --md-footer-bg-color: #dce0e8;
+  --md-footer-bg-color--dark: #ccd0da;
+}
+
+/* Header bar */
+[data-md-color-scheme="vauchi-light"] .md-header {
+  background-color: #dce0e8;
+  border-bottom: 1px solid rgba(136, 57, 239, 0.1);
+}
+
+/* Tabs bar */
+[data-md-color-scheme="vauchi-light"] .md-tabs {
+  background-color: #dce0e8;
+}
