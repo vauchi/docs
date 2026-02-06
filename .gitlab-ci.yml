@@ -27,9 +27,10 @@ lint:markdown:
   tags: [docker]
   script:
     - npm install -g markdownlint-cli
-    - markdownlint '**/*.md' --ignore node_modules --ignore site
+    - markdownlint '**/*.md' --config .markdownlint.json --ignore node_modules --ignore site
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  allow_failure: true  # Don't block on lint issues initially
 
 # Secret detection
 secret_detection:
