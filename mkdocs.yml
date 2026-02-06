@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 site_name: Vauchi Docs
 site_url: https://docs.vauchi.app
 site_description: Privacy-focused updatable contact cards
@@ -68,6 +71,7 @@ nav:
   - For Developers:
     - developers/index.md
     - Contributing: developers/contributing.md
+    - TDD Rules: developers/tdd-rules.md
     - Architecture: developers/architecture.md
     - Cryptography: developers/crypto.md
     - Tech Stack: developers/tech-stack.md
