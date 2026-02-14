@@ -10,7 +10,7 @@ Concise reference for all cryptographic operations in Vauchi.
 | Purpose | Algorithm | Library | Notes |
 |---------|-----------|---------|-------|
 | **Signing** | Ed25519 | `ring` | Identity, device registry, revocation |
-| **Key Exchange** | X25519 | `x25519-dalek` | Simplified X3DH for in-person exchange |
+| **Key Exchange** | X25519 | `x25519-dalek` | X3DH with identity binding for in-person exchange |
 | **Symmetric Encryption** | XChaCha20-Poly1305 | `chacha20poly1305` | Primary cipher |
 | **Legacy Symmetric** | AES-256-GCM | `ring` | Backward-compatible decryption |
 | **Forward Secrecy** | Double Ratchet | HKDF + HMAC (`ring`) | Chain limit 2000 |
@@ -84,17 +84,23 @@ Format: `[4-byte BE length prefix] [plaintext] [random padding]`
 
 ## X3DH Key Agreement
 
-Simplified X3DH for in-person exchange (no signed pre-keys):
+Full X3DH with identity binding (no signed pre-keys):
 
 ### QR One-Way (Asymmetric)
 
-```
-Responder (scans QR):
-  ephemeral ← generate X25519 keypair
-  shared ← DH(ephemeral_secret, initiator_public)
+Two DH operations per side — DH1 for identity binding, DH2 for forward secrecy:
 
-Initiator (shows QR):
-  shared ← DH(identity_secret, responder_ephemeral)
+```
+Responder (scans QR — X3DH initiator):
+  ephemeral ← generate X25519 keypair
+  DH1 ← DH(our_static, initiator_static)        // identity binding
+  DH2 ← DH(ephemeral_secret, initiator_static)   // forward secrecy
+  shared ← HKDF(DH1 ‖ DH2, info="vauchi-x3dh-key-v2")
+
+Initiator (shows QR — X3DH responder):
+  DH1 ← DH(our_static, responder_static)         // identity binding
+  DH2 ← DH(our_static, responder_ephemeral)      // forward secrecy
+  shared ← HKDF(DH1 ‖ DH2, info="vauchi-x3dh-key-v2")
 ```
 
 ### Mutual QR (Symmetric)
@@ -102,12 +108,13 @@ Initiator (shows QR):
 ```
 Both sides:
   ephemeral ← generate X25519 keypair
-  shared ← DH(our_ephemeral_secret, their_ephemeral_public)
+  shared_bytes ← DH(our_ephemeral_secret, their_ephemeral_public)
+  shared ← HKDF(shared_bytes, info="vauchi-x3dh-symmetric-v1")
 ```
 
 ### NFC/BLE Exchange
 
-Same as Mutual QR — fresh ephemeral keys on both sides for full forward secrecy.
+Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared secret.
 
 ## Double Ratchet
 
