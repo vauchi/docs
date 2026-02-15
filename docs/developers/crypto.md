@@ -86,24 +86,7 @@ Format: `[4-byte BE length prefix] [plaintext] [random padding]`
 
 Full X3DH with identity binding (no signed pre-keys):
 
-### QR One-Way (Asymmetric)
-
-Two DH operations per side — DH1 for identity binding, DH2 for forward secrecy:
-
-```
-Responder (scans QR — X3DH initiator):
-  ephemeral ← generate X25519 keypair
-  DH1 ← DH(our_static, initiator_static)        // identity binding
-  DH2 ← DH(ephemeral_secret, initiator_static)   // forward secrecy
-  shared ← HKDF(DH1 ‖ DH2, info="vauchi-x3dh-key-v2")
-
-Initiator (shows QR — X3DH responder):
-  DH1 ← DH(our_static, responder_static)         // identity binding
-  DH2 ← DH(our_static, responder_ephemeral)      // forward secrecy
-  shared ← HKDF(DH1 ‖ DH2, info="vauchi-x3dh-key-v2")
-```
-
-### Mutual QR (Symmetric)
+### QR / Mutual Exchange (Symmetric)
 
 ```
 Both sides:

@@ -52,17 +52,6 @@ The main method for exchanging contacts:
 
 QR codes expire after 5 minutes for security.
 
-### One-Way Sharing
-
-Share your card without receiving theirs:
-
-1. Enable **Share Only** mode
-2. Show your QR code
-3. They scan and receive your card
-4. You don't receive their card
-
-Useful for sharing business cards at events.
-
 ### Video Call Exchange
 
 For contacts you can't meet in person:
