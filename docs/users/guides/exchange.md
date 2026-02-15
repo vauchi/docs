@@ -15,7 +15,9 @@ Step-by-step guide for exchanging contact cards with other Vauchi users.
 
 ---
 
-## QR Code Exchange (Standard)
+## QR Code Exchange
+
+Both people show and scan each other's QR codes. This ensures fresh encryption keys are used for every exchange (forward secrecy).
 
 ### Step 1: Open Exchange
 
@@ -33,9 +35,8 @@ Step-by-step guide for exchanging contact cards with other Vauchi users.
 
 ### Step 3: They Scan Your Code
 
-1. The other person opens their camera/scanner
-2. They point it at your QR code
-3. Wait for proximity verification (you'll hear/feel a confirmation)
+1. The other person points their camera at your QR code
+2. Their device confirms a successful scan
 
 ### Step 4: Scan Their Code
 
@@ -48,37 +49,6 @@ Step-by-step guide for exchanging contact cards with other Vauchi users.
 Both devices show "Exchange Successful"
 
 You now have each other's contact cards.
-
----
-
-## Two-Way Exchange (Quick Version)
-
-For faster exchange when both are ready:
-
-1. Both open the Exchange tab
-2. Person A shows QR → Person B scans
-3. Person B shows QR → Person A scans
-4. Done!
-
----
-
-## One-Way Sharing
-
-To share your card without receiving theirs:
-
-### When to Use
-
-- Sharing business cards at conferences
-- Giving your info to someone you don't need to stay in touch with
-- Public sharing scenarios
-
-### Steps
-
-1. Open the **Exchange** tab
-2. Enable **Share Only** mode (toggle at top)
-3. Show your QR code
-4. They scan it
-5. They have your card; you don't have theirs
 
 ---
 
@@ -95,7 +65,7 @@ When you can't meet in person:
 5. Exchange complete
 
 !!! note
-    Video call exchange skips proximity verification. Use only with people you trust.
+    Video call exchange relies on you visually verifying the other person. Use only with people you trust.
 
 ---
 
@@ -108,13 +78,6 @@ When you can't meet in person:
 3. **Distance:** Try moving closer or farther
 4. **Clean lens:** Wipe your camera lens
 5. **Refresh:** Generate a new QR code (they expire after 5 minutes)
-
-### Proximity Verification Failed
-
-1. **Move closer:** Get within 1-2 meters
-2. **Reduce noise:** Background noise can interfere
-3. **Check audio:** Ensure speakers/microphones work
-4. **Try again:** Sometimes it takes a second attempt
 
 ### Exchange Keeps Failing
 
@@ -144,7 +107,8 @@ Once exchange completes:
 ## Security Notes
 
 - QR codes expire after 5 minutes (replay protection)
-- Proximity verification prevents remote attacks
+- Both parties must scan each other's QR codes (mutual verification)
+- Each exchange uses fresh ephemeral keys (forward secrecy)
 - Exchange uses encrypted key agreement
 - The relay never sees unencrypted data
 
