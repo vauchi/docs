@@ -144,14 +144,13 @@ sequenceDiagram
     AD->>R: Queue for Bob
     R->>R: Store encrypted message
 
-    Note over R: Relay coalesces updates
-
     BD->>R: Connect (back online)
-    R->>R: Coalesce: 3 updates → 1 combined
-    R-->>BD: Deliver combined update
+    R-->>BD: Deliver update 1
+    R-->>BD: Deliver update 2
+    R-->>BD: Deliver update 3
 
-    BD->>BD: Apply final state
-    Note over BD: Bob sees latest values only
+    BD->>BD: Apply all updates in order
+    Note over BD: Bob sees latest values after applying all updates
 ```
 
 ## Data Exchanged

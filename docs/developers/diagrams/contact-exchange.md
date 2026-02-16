@@ -34,7 +34,7 @@ sequenceDiagram
     AD->>AD: Generate ephemeral X25519 keypair
     AD->>AD: Create exchange token (expires 5 min)
     AD->>AD: Generate audio challenge seed
-    AD->>AD: Encode QR: [public_key, token, audio_seed]
+    AD->>AD: Encode QR: [public_key, token, audio_challenge]
     AD->>A: Display QR code
     deactivate AD
 
@@ -103,14 +103,15 @@ sequenceDiagram
 
 ### QR Code Contents
 
-```json
-{
-  "type": "exchange",
-  "pk": "base64(Alice's X25519 public key)",
-  "token": "random 32-byte exchange token",
-  "audio_seed": "random seed for audio challenge",
-  "expires": "timestamp (5 min from creation)"
-}
+Binary format with `WBEX` magic bytes:
+
+```
+WBEX (4 bytes magic)
+version (1 byte)
+Alice's X25519 public key (32 bytes)
+exchange token (32 bytes)
+audio_challenge seed (32 bytes)
+expiry timestamp (8 bytes)
 ```
 
 ### Contact Card (Encrypted)

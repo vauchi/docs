@@ -97,7 +97,7 @@ Social recovery uses your real-world relationships to verify your identity. You 
 2. Tap **Recover Old Identity**
 3. Enter your old public ID (if you know it)
    - If you don't know it, ask a contact — they can find it in your contact details
-4. A recovery claim is generated
+4. A recovery claim is generated (valid for 48 hours)
 
 ### Step 3: Collect Vouchers
 

@@ -70,7 +70,7 @@ For contacts you can't meet in person:
 On mobile devices, Vauchi verifies physical proximity using ultrasonic audio:
 
 - Both phones emit and listen for an audio handshake (18-20 kHz)
-- Range: approximately 2 meters
+- Range: approximately 3 meters
 - If verification fails, exchange is blocked
 - This prevents screenshot attacks
 
@@ -79,7 +79,7 @@ On mobile devices, Vauchi verifies physical proximity using ultrasonic audio:
 If proximity verification fails:
 
 1. Ensure both phones have working speakers/microphones
-2. Move closer together (within 1-2 meters)
+2. Move closer together (within 2-3 meters)
 3. Reduce background noise
 4. Disable any audio-blocking apps
 5. Try again

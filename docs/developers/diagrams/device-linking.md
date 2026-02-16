@@ -32,8 +32,8 @@ sequenceDiagram
     DA->>DA: Generate link token (expires 5 min)
     DA->>DA: Generate device-specific keypair for B
     DA->>DA: Encrypt identity seed for transfer
-    DA->>DA: Create link QR: [token, encrypted_seed, audio_seed]
-    DA->>U: Display QR code + numeric fallback "123-456-789"
+    DA->>DA: Create link QR: WBDL binary [token, encrypted_seed, audio_challenge]
+    DA->>U: Display QR code + numeric fallback (XXX-XXX)
     deactivate DA
 
     %% New Device Scans
@@ -75,8 +75,8 @@ sequenceDiagram
     %% Fingerprint Verification
     activate DA
     activate DB
-    DA->>U: Show Device B fingerprint: "ABCD-1234"
-    DB->>U: Show Device A fingerprint: "WXYZ-5678"
+    DA->>U: Show Device B fingerprint: "AB12-CD34-EF56-7890"
+    DB->>U: Show Device A fingerprint: "FE98-BA76-5432-1DCB"
     U->>DA: Confirm fingerprints match
     U->>DB: Confirm fingerprints match
     DA->>DA: Mark Device B as verified
@@ -110,16 +110,18 @@ sequenceDiagram
 
 ### Link QR Code Contents
 
-```json
-{
-  "type": "device_link",
-  "token": "random 32-byte link token",
-  "encrypted_seed": "encrypted master seed",
-  "audio_seed": "random seed for proximity check",
-  "expires": "timestamp (5 min from creation)",
-  "numeric_code": "123-456-789"
-}
+Binary format with `WBDL` magic bytes:
+
 ```
+WBDL (4 bytes magic)
+version (1 byte)
+link token (32 bytes)
+encrypted seed (variable)
+audio_challenge seed (32 bytes)
+expiry timestamp (8 bytes)
+```
+
+Numeric fallback code: 6-digit format `XXX-XXX`.
 
 ### Identity Bundle (Encrypted)
 
@@ -160,14 +162,14 @@ sequenceDiagram
     Note over U: Desktop has no camera
 
     U->>DA: Generate link code
-    DA->>U: Show: "123-456-789"
+    DA->>U: Show: "XXX-XXX"
 
     U->>DB: "Link to Existing Identity"
-    U->>DB: Enter code: "123-456-789"
+    U->>DB: Enter code: "XXX-XXX"
     DB->>DA: Request link via relay (using code)
 
     Note over DA,DB: Fingerprint verification required
-    DA->>U: "Confirm Device B fingerprint: ABCD-1234"
+    DA->>U: "Confirm Device B fingerprint: AB12-CD34-EF56-7890"
     U->>DA: Confirm
 
     DA->>DB: Send identity bundle (encrypted)

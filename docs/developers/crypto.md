@@ -16,7 +16,7 @@ Concise reference for all cryptographic operations in Vauchi.
 | **Forward Secrecy** | Double Ratchet | HKDF + HMAC (`ring`) | Chain limit 2000 |
 | **Key Derivation** | HKDF-SHA256 | `ring` | RFC 5869, domain-separated |
 | **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 (OWASP) |
-| **Legacy Password** | PBKDF2-HMAC-SHA256 | `ring` | 100k iterations, backups only |
+| **Legacy Password** | PBKDF2-HMAC-SHA256 | `ring` | 600k iterations (v18+) / 100k (pre-v18), backups only |
 | **CSPRNG** | SystemRandom | `ring` | All random generation |
 
 ## Key Types
@@ -45,6 +45,21 @@ Master Seed (256-bit)
 ```
 
 **HKDF Convention**: Master seed as IKM, no salt, domain string as info. All derivations use `HKDF::derive_key(None, &seed, info)`.
+
+**HKDF Context Strings**:
+
+| Context | Usage |
+|---------|-------|
+| `Vauchi_Exchange_Seed_v2` | Exchange key derivation from master seed |
+| `Vauchi_Shred_Key_v2` | SMK derivation from master seed |
+| `Vauchi_Storage_Key_v2` | SEK derivation from SMK |
+| `Vauchi_FileKey_Key_v2` | FKEK derivation from SMK |
+| `vauchi-x3dh-symmetric-v2` | X3DH transcript binding (4-key HKDF info) |
+| `vauchi-x3dh-key-v2` | X3DH key agreement derivation |
+| `Vauchi_Root_Ratchet` | DH ratchet root key step |
+| `Vauchi_Message_Key` | Symmetric ratchet message key |
+| `Vauchi_Chain_Key` | Symmetric ratchet chain key advance |
+| `Vauchi_AnonymousSender_v2` | Anonymous sender ID derivation |
 
 ### Ratchet Keys
 
@@ -115,7 +130,7 @@ Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared se
 │  │                                                      │   │
 │  │    our_dh_secret × their_dh_public                  │   │
 │  │              ↓                                       │   │
-│  │    HKDF(root_key, shared_secret)                    │   │
+│  │    HKDF(root_key, shared_secret, "Vauchi_Root_Ratchet") │   │
 │  │              ↓                                       │   │
 │  │    [new_root_key, new_chain_key]                    │   │
 │  │                                                      │   │
@@ -142,18 +157,19 @@ Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared se
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Message Header (Authenticated, Not Encrypted)
+### Ratchet Message (Authenticated, Not Encrypted Header)
 
 ```rust
-RatchetHeader {
+RatchetMessage {
     dh_public: [u8; 32],      // Current DH public key
     dh_generation: u32,       // DH ratchet step counter
     message_index: u32,       // Message index in current chain
     previous_chain_length: u32, // Messages sent in previous chain
+    ciphertext: Vec<u8>,      // Encrypted payload
 }
 ```
 
-Total: 44 bytes, bound as AEAD associated data (tag `0x03`).
+Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 
 ## Backup Format
 
@@ -173,7 +189,7 @@ Total: 44 bytes, bound as AEAD associated data (tag `0x03`).
 salt(16) || nonce(12) || ciphertext || tag(16)
 ```
 
-- Key derivation: PBKDF2-HMAC-SHA256 (100k iterations)
+- Key derivation: PBKDF2-HMAC-SHA256 (600k iterations v18+ / 100k pre-v18)
 - Cipher: AES-256-GCM
 
 Import auto-detects version by first byte.
@@ -205,6 +221,7 @@ Import auto-detects version by first byte.
 | Shredding | `core/vauchi-core/src/crypto/shredding.rs` |
 | Password KDF | `core/vauchi-core/src/crypto/password_kdf.rs` |
 | X3DH | `core/vauchi-core/src/exchange/x3dh.rs` |
+| X3DH Session (Symmetric) | `core/vauchi-core/src/exchange/session.rs` |
 | Padding | `core/vauchi-core/src/crypto/padding.rs` |
 
 ## Related Documentation

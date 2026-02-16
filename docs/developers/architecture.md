@@ -58,9 +58,9 @@ The Rust core library provides all cryptographic and protocol functionality:
 |--------|---------|-----------|
 | `crypto/` | Encryption, signing, key derivation | `encryption.rs`, `signing.rs`, `ratchet.rs` |
 | `exchange/` | Contact exchange protocol | `session.rs`, `qr.rs`, `x3dh.rs` |
-| `sync/` | Update propagation | `manager.rs`, `delta.rs` |
-| `recovery/` | Social recovery | `mod.rs`, `voucher.rs` |
-| `storage/` | Local encrypted database | `db.rs`, `schema.rs` |
+| `sync/` | Update propagation | `device_sync.rs`, `delta.rs` |
+| `recovery/` | Social recovery | `mod.rs` |
+| `storage/` | Local encrypted database | `contacts.rs`, `identity.rs`, `secure.rs` |
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
 | `i18n` | Internationalization | `i18n.rs` (runtime loading) |
 
