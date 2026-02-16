@@ -84,7 +84,7 @@
 | Max contact card size | 64KB (encrypted) |
 | Max contacts per user | 10,000 |
 | Max fields per card | 100 |
-| Max linked devices | 5 |
+| Max linked devices | 10 |
 
 ## Repository Dependencies
 

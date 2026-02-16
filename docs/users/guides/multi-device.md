@@ -25,7 +25,7 @@ On your **existing device**:
 2. Go to **Settings** (gear icon)
 3. Tap **Devices**
 4. Tap **Link New Device**
-5. A QR code appears (valid for 10 minutes)
+5. A QR code appears (valid for 5 minutes)
 
 ### Step 2: Join on New Device
 
@@ -120,7 +120,7 @@ If a device is lost, stolen, or no longer needed:
 
 ### Link Code Expired
 
-QR codes are valid for 10 minutes. If expired:
+QR codes are valid for 5 minutes. If expired:
 
 1. On your existing device, go back to Settings > Devices
 2. Tap **Link New Device** again
@@ -143,7 +143,7 @@ QR codes are valid for 10 minutes. If expired:
 
 ### "Too Many Devices" Error
 
-You can have up to 5 devices. To add another:
+You can have up to 10 devices. To add another:
 
 1. Go to **Settings > Devices**
 2. Revoke a device you no longer use
@@ -176,6 +176,6 @@ If you can't access your old phone:
 - Each device has its own derived keys
 - Revoking a device invalidates its keys immediately
 - The relay never sees plaintext data
-- Link codes expire after 10 minutes
+- Link codes expire after 5 minutes
 
 For more on security, see [Multi-Device Feature](../features/multi-device.md).

@@ -3,7 +3,7 @@
 
 # Architecture Overview
 
-Vauchi is a privacy-focused contact card system. Users exchange contact cards in person via QR code, NFC, or Bluetooth. After exchange, cards update automatically — when you change your phone number, everyone who has your card sees the change.
+Vauchi is a privacy-focused contact card system. Users exchange contact cards in person via QR code (with NFC and Bluetooth as additional transport options). After exchange, cards update automatically — when you change your phone number, everyone who has your card sees the change.
 
 ## System Architecture
 
@@ -62,7 +62,7 @@ The Rust core library provides all cryptographic and protocol functionality:
 | `recovery/` | Social recovery | `mod.rs`, `voucher.rs` |
 | `storage/` | Local encrypted database | `db.rs`, `schema.rs` |
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
-| `i18n/` | Internationalization | `mod.rs` (runtime loading) |
+| `i18n` | Internationalization | `i18n.rs` (runtime loading) |
 
 ### Relay Server
 
@@ -184,8 +184,8 @@ Master Seed (256-bit, generated at identity creation)
 Contact exchange requires in-person presence:
 
 - QR + ultrasonic audio verification (18-20 kHz)
-- NFC tap (centimeters range)
-- BLE with RSSI proximity check
+- NFC Active tap (centimeters range, Android<->Android / iOS->Android)
+- BLE with RSSI proximity check (GATT transport)
 
 ## Repository Structure
 

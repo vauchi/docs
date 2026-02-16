@@ -67,9 +67,9 @@ sequenceDiagram
     activate AD
     activate BD
     BD->>BD: Generate ephemeral X25519 keypair
-    BD->>AD: Send: [Bob's identity key, ephemeral key, prekey]
+    BD->>AD: Send: [Bob's identity key, ephemeral key]
     AD->>AD: X3DH: Derive shared secret
-    AD->>BD: Send: [Alice's identity key, ephemeral key, prekey]
+    AD->>BD: Send: [Alice's identity key, ephemeral key]
     BD->>BD: X3DH: Derive shared secret
     Note over AD,BD: Both have identical shared secret
     deactivate AD

@@ -28,7 +28,7 @@ All communication is encrypted so only you and your contacts can read it:
 | Contact cards | XChaCha20-Poly1305 |
 | Messages | XChaCha20-Poly1305 with Double Ratchet |
 | Backups | XChaCha20-Poly1305 with Argon2id KDF |
-| Local storage | AES-256-GCM |
+| Local storage | XChaCha20-Poly1305 (AES-256-GCM legacy) |
 
 The relay server only sees encrypted blobs. It cannot:
 

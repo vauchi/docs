@@ -44,7 +44,7 @@ graph TB
 
 1. On your **existing device**, go to **Settings > Devices**
 2. Tap **Link New Device**
-3. A QR code appears (valid for 10 minutes)
+3. A QR code appears (valid for 5 minutes)
 4. On your **new device**, install Vauchi
 5. Choose **Join Existing Identity**
 6. Scan the QR code from step 3
@@ -53,10 +53,10 @@ Both devices now share your identity and sync automatically.
 
 ## Device Limits
 
-- **Maximum:** 5 devices per identity
+- **Maximum:** 10 devices per identity
 - **Minimum:** 1 device (your primary)
 
-If you need to add a 6th device, revoke an existing one first.
+If you need to add an 11th device, revoke an existing one first.
 
 ## Managing Devices
 
@@ -150,7 +150,7 @@ Device linking is preferred because it preserves device-specific keys and ensure
 
 1. Wait a few minutes for sync
 2. Restart the app on both devices
-3. Check the link code hasn't expired (10 minutes)
+3. Check the link code hasn't expired (5 minutes)
 4. Try generating a new link code
 
 ## Security

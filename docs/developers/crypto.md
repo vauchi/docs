@@ -34,17 +34,17 @@ Concise reference for all cryptographic operations in Vauchi.
 ```
 Master Seed (256-bit)
 ├── Identity Signing Key       — raw seed (Ed25519 requirement)
-├── Exchange Key               — HKDF(seed, "Vauchi_Exchange_Seed")
-└── SMK (Shredding Master Key) — HKDF(seed, "Vauchi_Shred_Key")
-    ├── SEK (Storage Encryption Key) — HKDF(SMK, "Vauchi_Storage_Key")
+├── Exchange Key               — HKDF(seed, "Vauchi_Exchange_Seed_v2")
+└── SMK (Shredding Master Key) — HKDF(seed, "Vauchi_Shred_Key_v2")
+    ├── SEK (Storage Encryption Key) — HKDF(SMK, "Vauchi_Storage_Key_v2")
     │   └── encrypts all local SQLite data
-    ├── FKEK (File Key Encryption Key) — HKDF(SMK, "Vauchi_FileKey_Key")
+    ├── FKEK (File Key Encryption Key) — HKDF(SMK, "Vauchi_FileKey_Key_v2")
     │   └── encrypts file key storage
     └── Per-Contact CEK — random 256-bit per contact
         └── encrypts individual contact's card data
 ```
 
-**HKDF Convention**: Master seed as salt, empty IKM, domain string as info (documented as "DP-5").
+**HKDF Convention**: Master seed as IKM, no salt, domain string as info. All derivations use `HKDF::derive_key(None, &seed, info)`.
 
 ### Ratchet Keys
 
@@ -92,7 +92,11 @@ Full X3DH with identity binding (no signed pre-keys):
 Both sides:
   ephemeral ← generate X25519 keypair
   shared_bytes ← DH(our_ephemeral_secret, their_ephemeral_public)
-  shared ← HKDF(shared_bytes, info="vauchi-x3dh-symmetric-v1")
+
+  // Transcript binding: all four public keys sorted lexicographically
+  // and appended to info, preventing identity misbinding attacks
+  info ← "vauchi-x3dh-symmetric-v2" || sort(id_lo, id_hi) || sort(eph_lo, eph_hi)
+  shared ← HKDF(ikm=shared_bytes, salt=None, info=info)
 ```
 
 ### NFC/BLE Exchange
