@@ -64,9 +64,18 @@ The Rust core library provides all cryptographic and protocol functionality:
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
 | `i18n` | Internationalization | `i18n.rs` (runtime loading) |
 
+### vauchi-protocol
+
+Shared protocol message types used by both `vauchi-core` and the relay:
+
+- Serde-only crate (no crypto, no I/O)
+- Defines `MessageEnvelope`, `MessagePayload`, and all variant structs
+- Provides framing helpers (`encode_message`/`decode_message`)
+- Ensures wire format consistency between clients and relay
+
 ### Relay Server
 
-Standalone Rust server for message routing:
+Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
 - WebSocket-based store-and-forward
 - TLS required in production
@@ -191,8 +200,8 @@ Contact exchange requires in-person presence:
 
 ```
 vauchi/                    ← Orchestrator repo
-├── core/                  ← vauchi-core + vauchi-mobile
-├── relay/                 ← WebSocket relay server
+├── core/                  ← vauchi-core + vauchi-mobile + vauchi-protocol
+├── relay/                 ← WebSocket relay server (uses vauchi-protocol)
 ├── desktop/               ← Tauri + SolidJS
 ├── ios/                   ← SwiftUI app
 ├── android/               ← Kotlin/Compose app
