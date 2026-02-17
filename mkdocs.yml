@@ -73,6 +73,7 @@ nav:
     - TDD Rules: developers/tdd-rules.md
     - Architecture: developers/architecture.md
     - Cryptography: developers/crypto.md
+    - Threat Model: developers/threat-model.md
     - Tech Stack: developers/tech-stack.md
     - Diagrams:
       - developers/diagrams/index.md
