@@ -206,6 +206,117 @@ If an attacker tries to abuse social recovery:
 | Single relay is availability SPOF | Users can't sync if relay is down | Federation support |
 | Blocked contacts retain old data | Cannot "unsend" previously shared info | By design (accept tradeoff) |
 | Recovery reveals voucher public keys | Partial social graph leakage | Accepted tradeoff for recovery |
+| No key transparency post-exchange | Key history not auditable | Lightweight signed key log (future) |
+| Push notifications would leak metadata | APNs/FCM see delivery timing | Empty push + app-side fetch (required design) |
+
+## Core-UI Trust Boundary
+
+The `vauchi-core` library is consumed by multiple UI layers (Desktop/Tauri, CLI, TUI, mobile Swift/Kotlin via UniFFI). The trust relationship between core and its callers:
+
+**What core trusts from UI**:
+
+- UI provides correct file paths for storage
+- UI invokes lifecycle methods in the correct order (init before use)
+- UI does not hold references to sensitive data after core has zeroized them
+
+**What core does NOT trust from UI**:
+
+- **Input lengths**: Core enforces maximum lengths at its API boundary (display name: 100 chars, field value: 1000 chars, field label: 64 chars, card size: 64 KB, avatar: 256 KB)
+- **Field values**: Core validates phone/email format, URL safety, and rejects malformed data
+- **Contact IDs**: Core verifies contact existence before processing updates
+- **Ratchet messages**: Core validates signatures, AEAD tags, and replay nonces before accepting peer data
+- **File content**: Core verifies checksums on all content fetched from remote servers
+
+A compromised or buggy UI layer cannot cause `vauchi-core` to:
+
+- Decrypt data for an unauthorized recipient
+- Produce unsigned or weakly signed messages
+- Skip replay detection or signature verification
+- Bypass visibility label enforcement
+
+**UniFFI surface note**: The UniFFI binding layer does not add rate limiting at the API boundary. Rate limiting for relay operations is enforced server-side. UI layers should implement their own rate limiting for user-facing operations to prevent accidental rapid-fire calls.
+
+## Relay Metadata Exposure Analysis
+
+While the relay sees only encrypted blobs, it observes metadata that can reveal the social graph:
+
+**What the relay sees**:
+
+| Datum | Visibility | Example |
+|-------|-----------|---------|
+| Sender pseudonym (routing ID) | Per-session | `a3f8...` (rotated on reconnect) |
+| Recipient pseudonym | Per-message | `b7c2...` (stored message target) |
+| Message timing | Exact | Timestamp of send/receive |
+| Message size | Approximate | Encrypted blob size (padded to buckets) |
+| Connection frequency | Exact | How often a client connects |
+
+**What the relay CANNOT see**:
+
+- Message content (E2E encrypted, AEAD)
+- Contact card fields (encrypted under per-contact CEK)
+- Sender identity beyond pseudonymous routing ID
+- Which specific contact fields changed
+
+**Risk assessment for Vauchi**:
+
+The social graph inference risk is **lower than for messaging apps** because:
+
+1. Updates are infrequent (users rarely change contact info)
+2. Updates are small and padded to fixed buckets (256 B, 512 B, 1 KB, 4 KB)
+3. All locale files are downloaded in bulk to prevent language inference
+4. Routing IDs are pseudonymous and session-scoped
+
+**Current mitigations**: Routing token rotation, `suppress_presence` flag, optional Tor support, fixed-size message padding.
+
+**Future considerations**: Mixnet-based relay routing or Private Information Retrieval (PIR) could eliminate recipient pseudonym visibility entirely. These are not currently prioritized given Vauchi's low-frequency traffic pattern, but remain on the architectural roadmap for high-threat deployments.
+
+## Key Transparency
+
+### Current Model
+
+Vauchi uses a **trust-on-exchange** model: during the initial in-person exchange (QR/NFC/BLE), both parties verify each other's Ed25519 identity keys directly. This provides strong initial authentication.
+
+After the exchange, contacts receive updates via the Double Ratchet:
+
+- If a user adds a new device, it derives keys from the same master seed
+- Contacts receive a `DeviceRegistry` update signed by the existing identity key
+- The ratchet provides forward secrecy and break-in recovery
+
+### Gap
+
+There is no append-only, auditable log of a user's key history. A sophisticated attacker who compromises both a relay and a user's device could theoretically:
+
+1. Generate a new identity key for the victim
+2. Distribute it to the victim's contacts via the compromised relay
+3. Contacts would have no way to verify this is consistent with the victim's key history
+
+### Accepted Tradeoff
+
+This attack requires simultaneous compromise of both the relay and the target device, which is beyond Vauchi's primary threat model (relay-only compromise). The in-person exchange provides a strong root of trust that subsequent key changes cannot easily override without raising suspicion (contacts would see unexpected re-exchange requests).
+
+### Future Direction
+
+A lightweight key transparency mechanism could provide additional assurance:
+
+- **Signed key history**: Each user maintains a signed append-only log of their key changes. Contacts can audit this log to detect unauthorized key modifications.
+- **Cross-contact verification**: Contacts can compare their view of a user's key history with other contacts to detect divergence (split-world attack detection).
+
+This is not currently implemented but is documented as a future enhancement for high-assurance deployments. A full CONIKS-style transparency log is not necessary given Vauchi's decentralized architecture and low update frequency.
+
+## Push Notification Constraints
+
+Push notifications (APNs for iOS, FCM for Android) are **not currently implemented**. If they are added in the future, the following constraint is mandatory:
+
+**Threat**: Naive push notifications would expose message receipt timing to Apple/Google. Even though the relay sees only encrypted blobs, a push notification would link a specific device token (tied to a real Apple/Google account) to the exact moment a Vauchi message arrives. This undermines the zero-knowledge relay design.
+
+**Required pattern**: **Empty push + app-side fetch**.
+
+1. The relay sends a push notification with **no payload** and **no sender information** — only a "wake up" signal
+2. The app receives the push, connects to the relay independently over TLS
+3. The app fetches pending messages using its normal encrypted channel
+4. Apple/Google learn only that the app was woken up, not who sent a message or what it contains
+
+This pattern is used by Signal and other privacy-focused applications. Any implementation of push notifications in Vauchi **must** follow this pattern. Direct payload delivery via push is explicitly prohibited.
 
 ## Cryptographic Primitives
 
