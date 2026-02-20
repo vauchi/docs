@@ -41,11 +41,12 @@ secret_detection:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Build mkdocs site — use squidfunk/mkdocs-material (has all deps pre-installed)
+# Build mkdocs site — use self-hosted runner (mkdocs-material pre-installed)
 build:docs:
   stage: build
-  image: squidfunk/mkdocs-material:latest
-  tags: [docker]
+  tags:
+    - self-hosted
+    - mkdocs
   script:
     - mkdocs build --strict
   artifacts:
@@ -59,7 +60,9 @@ build:docs:
 # Deploy to GitLab Pages
 pages:
   stage: deploy
-  tags: [docker]
+  tags:
+    - self-hosted
+    - mkdocs
   script:
     - mv site public
   artifacts:
