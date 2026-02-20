@@ -26,8 +26,8 @@ stages:
 lint:markdown:
   stage: lint
   tags:
-    - linux
     - self-hosted
+    - markdownlint
   needs: []
   script:
     - markdownlint '**/*.md' --config .markdownlint.json --ignore node_modules --ignore site
