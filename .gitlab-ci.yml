@@ -13,6 +13,7 @@ include:
     ref: main
     file:
       - '/ci-templates/mr-rules.yml'
+      - '/ci-templates/reuse.yml'
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 stages:
@@ -21,27 +22,14 @@ stages:
   - build
   - deploy
 
-# REUSE compliance check
-reuse-lint:
-  stage: lint
-  image:
-    name: fsfe/reuse:latest
-    entrypoint: [""]
-  tags: [docker]
-  script:
-    - reuse lint
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-  allow_failure: true  # Don't block on REUSE issues initially
-
-# Markdown linting
+# Markdown linting — use self-hosted runner (markdownlint pre-installed)
 lint:markdown:
   stage: lint
-  image: node:20-alpine
-  tags: [docker]
+  tags:
+    - linux
+    - self-hosted
+  needs: []
   script:
-    - npm install -g markdownlint-cli
     - markdownlint '**/*.md' --config .markdownlint.json --ignore node_modules --ignore site
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -53,13 +41,12 @@ secret_detection:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Build mkdocs site
+# Build mkdocs site — use squidfunk/mkdocs-material (has all deps pre-installed)
 build:docs:
   stage: build
-  image: python:3.11-slim
+  image: squidfunk/mkdocs-material:latest
   tags: [docker]
   script:
-    - pip install mkdocs-material pymdown-extensions
     - mkdocs build --strict
   artifacts:
     paths:
