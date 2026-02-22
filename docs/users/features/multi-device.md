@@ -47,9 +47,15 @@ graph TB
 3. A QR code appears (valid for 5 minutes)
 4. On your **new device**, install Vauchi
 5. Choose **Join Existing Identity**
-6. Scan the QR code from step 3
+6. Scan the QR code (or paste the data string on desktop/CLI)
+7. Verify the **confirmation code** matches on both devices
+8. Confirm to complete linking
 
 Both devices now share your identity and sync automatically.
+
+### Confirmation Code
+
+When linking, both devices display a 6-digit code (e.g., `123-456`). This code is derived cryptographically from the shared link data — only the two devices involved can compute it. If the codes match, you know the link is authentic.
 
 ## Device Limits
 
@@ -57,6 +63,16 @@ Both devices now share your identity and sync automatically.
 - **Minimum:** 1 device (your primary)
 
 If you need to add an 11th device, revoke an existing one first.
+
+## Platform Support
+
+| Platform | Link (Generate) | Join (Scan/Paste) | Manage Devices |
+|----------|-----------------|-------------------|----------------|
+| iOS | Planned | Planned | Planned |
+| Android | Planned | Planned | Planned |
+| Desktop | Yes | Yes (paste) | Yes |
+| TUI | Yes | Planned | Yes |
+| CLI | Yes | Yes | Yes |
 
 ## Managing Devices
 
@@ -69,15 +85,8 @@ If you need to add an 11th device, revoke an existing one first.
 Each device shows:
 
 - Device name
-- Platform (iOS, Android, Desktop)
-- Last sync time
-
-### Renaming a Device
-
-1. Go to **Settings > Devices**
-2. Select a device
-3. Tap **Rename**
-4. Enter a new name
+- Platform (iOS, Android, Desktop, CLI, TUI)
+- Status (active, revoked)
 
 ### Revoking a Device
 
@@ -159,6 +168,7 @@ Device linking is preferred because it preserves device-specific keys and ensure
 - Revoking a device invalidates its keys immediately
 - The relay server never sees plaintext data
 - Device-to-device communication is end-to-end encrypted
+- Confirmation codes prevent man-in-the-middle attacks during linking
 
 ## Related
 

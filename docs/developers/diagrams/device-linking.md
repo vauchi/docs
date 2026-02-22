@@ -5,14 +5,13 @@
 
 **Interaction Type:** :handshake: **IN-PERSON (Proximity Required)**
 
-User links a new device to their existing identity. The new device receives the full identity and syncs all data. Proximity verification prevents unauthorized remote linking.
+User links a new device to their existing identity. The new device receives the master seed and syncs all data. A confirmation code and proximity verification prevent unauthorized remote linking.
 
 ## Participants
 
 - **User** - Person owning both devices
 - **Device A (Primary)** - Existing device with identity
 - **Device B (New)** - New device to be linked
-- **Relay** - WebSocket relay server
 
 ## Sequence Diagram
 
@@ -22,86 +21,65 @@ sequenceDiagram
     participant U as User
     participant DA as Device A (Primary)
     participant DB as Device B (New)
-    participant R as Relay
 
     Note over U: IN-PERSON: User has both devices physically present
 
-    %% Generate Link Code
-    U->>DA: Settings > Link New Device
+    %% Generate Link QR
+    U->>DA: Settings > Devices > Link New Device
     activate DA
-    DA->>DA: Generate link token (expires 5 min)
-    DA->>DA: Generate device-specific keypair for B
-    DA->>DA: Encrypt identity seed for transfer
-    DA->>DA: Create link QR: WBDL binary [token, encrypted_seed, audio_challenge]
-    DA->>U: Display QR code + numeric fallback (XXX-XXX)
+    DA->>DA: Generate ephemeral link_key (32 bytes)
+    DA->>DA: Sign QR fields with identity Ed25519 key
+    DA->>DA: Create QR: WBDL | version | identity_pubkey | link_key | timestamp | signature
+    DA->>U: Display QR code (expires in 5 minutes)
     deactivate DA
 
     %% New Device Scans
     U->>DB: "Link to Existing Identity"
     activate DB
     DB->>DB: Scan QR code from Device A
-    DB->>DB: Decode link data
-    DB->>DB: Validate token not expired
+    DB->>DB: Validate WBDL magic, version, signature, expiry
+    DB->>DB: Create DeviceLinkRequest (device_name, random nonce, timestamp)
+    DB->>DB: Encrypt request with link_key (ChaCha20-Poly1305)
+    DB->>DA: Send encrypted request
     deactivate DB
 
-    Note over DA,DB: PROXIMITY VERIFICATION
+    Note over DA,DB: CONFIRMATION & PROXIMITY VERIFICATION
 
-    %% Proximity Check
+    %% Confirmation Code
     activate DA
+    DA->>DA: Decrypt request using link_key
+    DA->>DA: Derive confirmation code: HMAC-SHA256(link_key, nonce) → XXX-XXX
+    DA->>U: Show: "Link device 'Device B'? Code: XXX-XXX"
     activate DB
-    DA->>DA: Emit ultrasonic challenge
-    DB->>DB: Detect ultrasonic challenge
-    DB->>DA: Signed response (ultrasonic)
-    DA->>DA: Verify proximity
-    DB->>DB: Verify proximity
-    deactivate DA
+    DB->>DB: Derive same confirmation code from link_key + nonce
+    DB->>U: Show: "Confirmation code: XXX-XXX"
+    U->>U: Verify codes match on both screens
+    U->>DA: Confirm link
+    DA->>DA: Set proximity verified
     deactivate DB
 
     Note over DA,DB: IDENTITY TRANSFER
 
-    %% Key Derivation
-    activate DA
+    %% Build and send response
+    DA->>DA: Derive new device keys from master_seed + device_index
+    DA->>DA: Add Device B to registry, re-sign
+    DA->>DA: Build response: master_seed + display_name + device_index + registry + sync_payload
+    DA->>DA: Encrypt response with link_key (ChaCha20-Poly1305)
+    DA->>DB: Send encrypted response
+    deactivate DA
+
+    %% New device processes
     activate DB
-    DA->>DB: Encrypted identity bundle
-    Note right of DB: Bundle contains:<br/>- Master seed<br/>- Identity keypair<br/>- Device registry
-    DB->>DB: Decrypt identity bundle
-    DB->>DB: Derive device-specific keys
+    DB->>DB: Decrypt response
+    DB->>DB: Extract master_seed, registry, sync_payload
+    DB->>DB: Derive own device keys from master_seed + device_index
     DB->>DB: Store identity locally
-    deactivate DA
-    deactivate DB
-
-    Note over DA,DB: MUTUAL VERIFICATION
-
-    %% Fingerprint Verification
-    activate DA
-    activate DB
-    DA->>U: Show Device B fingerprint: "AB12-CD34-EF56-7890"
-    DB->>U: Show Device A fingerprint: "FE98-BA76-5432-1DCB"
-    U->>DA: Confirm fingerprints match
-    U->>DB: Confirm fingerprints match
-    DA->>DA: Mark Device B as verified
-    DB->>DB: Mark Device A as verified
-    deactivate DA
-    deactivate DB
-
-    Note over DA,R: REMOTE: Sync via Relay
-
-    %% Sync Full State
-    activate DA
-    activate DB
-    DA->>R: Register Device B in device registry
-    R-->>DB: Acknowledge registration
-
-    DA->>R: Push full state (encrypted)
-    Note right of R: State includes:<br/>- Contact card<br/>- All contacts<br/>- Visibility rules<br/>- Settings
-    R-->>DB: Forward encrypted state
-    DB->>DB: Decrypt and store state
-    deactivate DA
+    DB->>DB: Apply sync payload (contacts, card)
     deactivate DB
 
     %% Success
     DA->>U: "Device B linked successfully"
-    DB->>U: "Linked to your identity"
+    DB->>U: "Welcome back, [Your Name]"
 
     Note over DA,DB: Both devices now share the same identity
 ```
@@ -110,46 +88,84 @@ sequenceDiagram
 
 ### Link QR Code Contents
 
-Binary format with `WBDL` magic bytes:
+Binary format with `WBDL` magic bytes, base64-encoded for QR:
 
 ```
-WBDL (4 bytes magic)
-version (1 byte)
-link token (32 bytes)
-encrypted seed (variable)
-audio_challenge seed (32 bytes)
-expiry timestamp (8 bytes)
+WBDL              (4 bytes magic)
+version           (1 byte, currently 1)
+identity_pubkey   (32 bytes, Ed25519 public key)
+link_key          (32 bytes, random ephemeral key)
+timestamp         (8 bytes, big-endian u64 unix seconds)
+signature         (64 bytes, Ed25519 over all preceding fields)
+─────────────────
+Total: 141 bytes  (before base64 encoding)
 ```
 
-Numeric fallback code: 6-digit format `XXX-XXX`.
+The QR expires after 300 seconds (5 minutes). Signature is verified by the new device using the embedded identity public key.
 
-### Identity Bundle (Encrypted)
+### Confirmation Code
 
-```json
-{
-  "master_seed": "32-byte seed for key derivation",
-  "identity_keypair": {
-    "public": "Ed25519 public key",
-    "private": "encrypted Ed25519 private key"
-  },
-  "device_registry": {
-    "version": 2,
-    "devices": [
-      {"id": "device_a_id", "name": "iPhone", "added": "timestamp"},
-      {"id": "device_b_id", "name": "New Device", "added": "timestamp"}
-    ]
-  }
-}
+Derived independently by both devices:
+
+```
+HMAC-SHA256(link_key, request_nonce)
+  → first 4 bytes as big-endian u32
+  → modulo 1,000,000
+  → formatted as XXX-XXX
+```
+
+Both devices display the same code. User verifies they match.
+
+### Proximity Challenge
+
+For external proximity verification (NFC, ultrasonic, etc.):
+
+```
+HKDF(ikm=link_key, info="vauchi-device-link-proximity-v1", len=16)
+  → 16-byte challenge
+```
+
+Both devices derive the same challenge from the shared link key.
+
+### DeviceLinkRequest (New → Existing)
+
+Encrypted with ChaCha20-Poly1305 using `link_key`:
+
+```
+device_name_len   (4 bytes, little-endian u32)
+device_name       (variable, UTF-8)
+nonce             (32 bytes, random)
+timestamp         (8 bytes, little-endian u64)
+```
+
+### DeviceLinkResponse (Existing → New)
+
+Encrypted with ChaCha20-Poly1305 using `link_key`:
+
+```
+master_seed       (32 bytes, zeroized after use)
+display_name_len  (4 bytes, little-endian u32)
+display_name      (variable, UTF-8)
+device_index      (4 bytes, little-endian u32)
+registry_json_len (4 bytes, little-endian u32)
+registry_json     (variable, signed DeviceRegistry)
+sync_payload_len  (4 bytes, little-endian u32)
+sync_payload_json (variable, contacts + card)
 ```
 
 ## Security Properties
 
 | Property | Mechanism |
 |----------|-----------|
-| **Proximity Required** | Ultrasonic audio + fingerprint confirmation |
-| **Unauthorized Link Prevention** | Token expires in 5 min, proximity verified |
-| **Identity Isolation** | Each device has unique device key |
-| **Compromise Containment** | Revoking one device doesn't expose others |
+| **Seed Encryption** | ChaCha20-Poly1305 with ephemeral link_key |
+| **QR Authentication** | Ed25519 signature over QR fields |
+| **Confirmation Code** | HMAC-SHA256(link_key, nonce) displayed on both devices |
+| **Proximity Verification** | HKDF-derived 16-byte challenge; enforced before confirm |
+| **Replay Prevention** | Random 32-byte nonce in each request |
+| **Token Expiry** | QR expires after 5 minutes |
+| **Registry Integrity** | Ed25519 signature over version + device list |
+| **Memory Safety** | Master seed zeroized on Drop |
+| **Device Limit** | Maximum 10 devices per identity |
 
 ## Numeric Code Fallback (No Camera)
 
@@ -157,26 +173,27 @@ Numeric fallback code: 6-digit format `XXX-XXX`.
 sequenceDiagram
     participant U as User
     participant DA as Device A
-    participant DB as Device B (Desktop)
+    participant DB as Device B (Desktop/CLI)
 
-    Note over U: Desktop has no camera
+    Note over U: Device B has no camera
 
     U->>DA: Generate link code
-    DA->>U: Show: "XXX-XXX"
+    DA->>U: Show QR code + data string
 
     U->>DB: "Link to Existing Identity"
-    U->>DB: Enter code: "XXX-XXX"
-    DB->>DA: Request link via relay (using code)
+    U->>DB: Paste data string from Device A
+    DB->>DB: Parse WBDL data, validate signature + expiry
 
-    Note over DA,DB: Fingerprint verification required
-    DA->>U: "Confirm Device B fingerprint: AB12-CD34-EF56-7890"
+    Note over DA,DB: Same confirmation code flow as above
+    DA->>U: "Code: XXX-XXX"
+    DB->>U: "Code: XXX-XXX"
     U->>DA: Confirm
 
-    DA->>DB: Send identity bundle (encrypted)
+    DA->>DB: Encrypted identity bundle
     DB->>DB: Complete linking
 ```
 
-## Unlinking a Device
+## Revoking a Device
 
 ```mermaid
 sequenceDiagram
@@ -185,23 +202,36 @@ sequenceDiagram
     participant DB as Device B
     participant R as Relay
 
-    Note over U: REMOTE: Can unlink from any device
+    Note over U: REMOTE: Can revoke from any device
 
-    U->>DA: Settings > Devices > Remove Device B
-    U->>DA: Confirm removal
+    U->>DA: Settings > Devices > Revoke Device B
+    U->>DA: Confirm revocation
 
     activate DA
-    DA->>DA: Update device registry (remove B)
-    DA->>R: Push updated registry
+    DA->>DA: Mark Device B as revoked in registry
+    DA->>DA: Re-sign registry with identity key
+    DA->>DA: Increment registry version
+    DA->>R: Push updated registry (encrypted)
     R-->>DB: Forward revocation
     DB->>DB: Receive revocation notice
     DB->>DB: Wipe all identity data
     DB->>DB: Return to welcome screen
     deactivate DA
 
-    DA->>U: "Device B removed"
+    DA->>U: "Device B revoked"
     DB->>U: "This device has been unlinked"
 ```
+
+## Platform Implementation Status
+
+| Platform | Status | Notes |
+|----------|--------|-------|
+| **Core API** | Complete | Full protocol with tests |
+| **CLI** | Complete | 7 commands: list, link, join, complete, finish, revoke, info |
+| **Desktop (Tauri)** | Complete | SolidJS UI with QR display, confirmation overlay |
+| **TUI** | Complete | ratatui UI with QR overlay, vim-style navigation |
+| **iOS** | Planned | Awaiting mobile bindings |
+| **Android** | Planned | Awaiting mobile bindings |
 
 ## Related Features
 

@@ -21,20 +21,64 @@ Step-by-step guide for using Vauchi on multiple devices.
 
 On your **existing device**:
 
-1. Open Vauchi
-2. Go to **Settings** (gear icon)
-3. Tap **Devices**
-4. Tap **Link New Device**
-5. A QR code appears (valid for 5 minutes)
+=== "Mobile (iOS/Android)"
+
+    1. Open Vauchi
+    2. Go to **Settings** (gear icon)
+    3. Tap **Devices**
+    4. Tap **Link New Device**
+    5. A QR code appears (valid for 5 minutes)
+
+=== "Desktop"
+
+    1. Open Vauchi Desktop
+    2. Go to **Devices** (from the sidebar)
+    3. Click **Link New Device**
+    4. A QR code and data string appear (valid for 5 minutes)
+
+=== "TUI"
+
+    1. Open Vauchi TUI
+    2. Press **d** to go to Devices
+    3. Press **l** to generate a link
+    4. A QR code and data string appear in an overlay
+
+=== "CLI"
+
+    ```bash
+    vauchi device link
+    ```
+    A QR code and data string are displayed in the terminal.
 
 ### Step 2: Join on New Device
 
 On your **new device**:
 
-1. Open Vauchi
-2. On the welcome screen, tap **Join Existing Identity**
-3. Point your camera at the QR code from Step 1
-4. Wait for the linking to complete
+=== "Mobile (iOS/Android)"
+
+    1. Open Vauchi
+    2. On the welcome screen, tap **Join Existing Identity**
+    3. Point your camera at the QR code from Step 1
+    4. Verify the confirmation code matches on both devices
+    5. Wait for the linking to complete
+
+=== "Desktop"
+
+    1. Open Vauchi Desktop
+    2. On the setup screen, click **Join Existing Identity**
+    3. Paste the data string from the existing device
+    4. Verify the confirmation code matches on both devices
+    5. Click **Confirm** to complete linking
+
+=== "CLI"
+
+    ```bash
+    vauchi device join <data-string>
+    ```
+    Then verify the confirmation code and run:
+    ```bash
+    vauchi device complete <confirmation-code>
+    ```
 
 ### Step 3: Confirm
 
@@ -88,25 +132,47 @@ Data syncs automatically:
 
 ### Viewing All Devices
 
-1. Go to **Settings > Devices**
-2. See all linked devices
-3. Your current device is marked
+=== "Mobile/Desktop"
 
-### Renaming a Device
+    1. Go to **Settings > Devices**
+    2. See all linked devices
+    3. Your current device is marked
 
-1. Go to **Settings > Devices**
-2. Tap on a device
-3. Tap **Rename**
-4. Enter a new name (e.g., "Work Laptop", "iPad")
+=== "TUI"
+
+    1. Press **d** to open the Devices screen
+    2. Navigate with **j/k** or arrow keys
+    3. Current device is marked `[this device]`
+
+=== "CLI"
+
+    ```bash
+    vauchi device list
+    ```
 
 ### Revoking a Device
 
 If a device is lost, stolen, or no longer needed:
 
-1. Go to **Settings > Devices** on **another** device
-2. Find the device to revoke
-3. Tap **Revoke**
-4. Confirm by tapping **Revoke Device**
+=== "Mobile/Desktop"
+
+    1. Go to **Settings > Devices** on **another** device
+    2. Find the device to revoke
+    3. Tap **Revoke**
+    4. Confirm by tapping **Revoke Device**
+
+=== "TUI"
+
+    1. Press **d** to open Devices
+    2. Navigate to the device with **j/k**
+    3. Press **r** to revoke
+    4. Press **y** to confirm
+
+=== "CLI"
+
+    ```bash
+    vauchi device revoke <device-index>
+    ```
 
 !!! warning
     You cannot revoke your current device. Use another linked device.
@@ -122,10 +188,8 @@ If a device is lost, stolen, or no longer needed:
 
 QR codes are valid for 5 minutes. If expired:
 
-1. On your existing device, go back to Settings > Devices
-2. Tap **Link New Device** again
-3. A fresh QR code appears
-4. Scan it quickly
+1. On your existing device, generate a new link code
+2. Scan or paste the new code quickly
 
 ### New Device Not Syncing
 
@@ -133,13 +197,6 @@ QR codes are valid for 5 minutes. If expired:
 2. Wait a few minutes for initial sync
 3. Pull to refresh on the new device
 4. Check Settings > Sync for last sync time
-
-### Device Not Appearing in List
-
-1. On both devices, go to Settings > Devices
-2. Pull to refresh
-3. Wait 1-2 minutes
-4. If still missing, try unlinking and relinking
 
 ### "Too Many Devices" Error
 
@@ -177,5 +234,6 @@ If you can't access your old phone:
 - Revoking a device invalidates its keys immediately
 - The relay never sees plaintext data
 - Link codes expire after 5 minutes
+- A 6-digit confirmation code ensures you're linking the right devices
 
 For more on security, see [Multi-Device Feature](../features/multi-device.md).
