@@ -1,6 +1,12 @@
-<!-- Strip Material's hardcoded color-scheme from body so theme-picker.js controls it -->
+<!-- Set default scheme for theme-picker.js (overrides Material's palette JS) -->
 <script>
-  document.body.removeAttribute("data-md-color-scheme");
+  document.body.setAttribute(
+    "data-md-color-scheme",
+    window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "vauchi-light"
+      : "vauchi-dark"
+  );
   document.body.removeAttribute("data-md-color-primary");
   document.body.removeAttribute("data-md-color-accent");
 </script>

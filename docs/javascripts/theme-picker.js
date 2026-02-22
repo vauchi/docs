@@ -154,10 +154,12 @@
     css += "  --md-footer-bg-color: " + bg2 + ";\n";
     css += "  color-scheme: " + (theme.mode === "dark" ? "dark" : "light") + ";\n";
     css += "}\n";
-    // Header & tabs
+    // Header, tabs, and mobile drawer header
     css += "[data-md-color-scheme] .md-header,\n";
-    css += "[data-md-color-scheme] .md-tabs {\n";
+    css += "[data-md-color-scheme] .md-tabs,\n";
+    css += "[data-md-color-scheme] .md-nav--primary .md-nav__title[for=__drawer] {\n";
     css += "  background-color: " + bg2 + ";\n";
+    css += "  color: " + fg1 + ";\n";
     css += "}\n";
     styleEl.textContent = css;
 

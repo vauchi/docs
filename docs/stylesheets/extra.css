@@ -127,6 +127,14 @@
   color: var(--v-text-primary);
 }
 
+/* Mobile drawer header — match top bar, not Material primary */
+[data-md-color-scheme="vauchi-dark"]
+  .md-nav--primary
+  .md-nav__title[for="__drawer"] {
+  background-color: var(--v-bg-secondary);
+  color: var(--v-text-primary);
+}
+
 /* Sidebar */
 [data-md-color-scheme="vauchi-dark"] .md-sidebar__scrollwrap {
   border-right-color: var(--v-bg-tertiary);
@@ -252,5 +260,13 @@
 [data-md-color-scheme="vauchi-light"] .md-header__topic,
 [data-md-color-scheme="vauchi-light"] .md-tabs__link,
 [data-md-color-scheme="vauchi-light"] .md-header__button {
+  color: var(--v-text-primary);
+}
+
+/* Mobile drawer header — match top bar, not Material primary */
+[data-md-color-scheme="vauchi-light"]
+  .md-nav--primary
+  .md-nav__title[for="__drawer"] {
+  background-color: var(--v-crust);
   color: var(--v-text-primary);
 }
