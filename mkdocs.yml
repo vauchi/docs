@@ -11,6 +11,7 @@ copyright: Copyright &copy; 2026 Vauchi Contributors
 
 theme:
   name: material
+  custom_dir: overrides
   logo: assets/logo.svg
   favicon: assets/logo.png
   palette:
@@ -106,6 +107,9 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/theme-picker.js
 
 extra:
   social:
