@@ -1,1 +1,6 @@
-<!-- Vauchi theme picker replaces Material palette JS (see theme-picker.js) -->
+<!-- Strip Material's hardcoded color-scheme from body so theme-picker.js controls it -->
+<script>
+  document.body.removeAttribute("data-md-color-scheme");
+  document.body.removeAttribute("data-md-color-primary");
+  document.body.removeAttribute("data-md-color-accent");
+</script>

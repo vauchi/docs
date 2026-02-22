@@ -5,8 +5,8 @@
  * Theme picker for Vauchi docs.
  *
  * Loads themes.json, renders a dropdown in the header (replacing Material's
- * built-in 2-scheme palette toggle), and applies theme colors via CSS
- * custom properties + Material's data-md-color-scheme attribute.
+ * built-in 2-scheme palette toggle), and applies theme colors via an injected
+ * <style> element that overrides the scheme defaults in extra.css.
  */
 (function () {
   "use strict";
@@ -26,6 +26,12 @@
   var themes = [];
   var currentIdx = -1;
   var menuOpen = false;
+
+  // Injected <style> element for theme overrides — beats the selectors in
+  // extra.css by using higher specificity: body[data-md-color-scheme]
+  var styleEl = document.createElement("style");
+  styleEl.id = "vauchi-theme-override";
+  document.head.appendChild(styleEl);
 
   // --- DOM creation ---
 
@@ -96,17 +102,64 @@
   // --- Theme application ---
 
   function applyTheme(theme) {
-    var root = document.documentElement;
+    var body = document.body;
 
-    // Set Material color scheme
+    // Set Material color scheme on body (where mkdocs-material reads it)
     var scheme = theme.mode === "dark" ? "vauchi-dark" : "vauchi-light";
-    root.setAttribute("data-md-color-scheme", scheme);
+    body.setAttribute("data-md-color-scheme", scheme);
 
-    // Override CSS custom properties with theme-specific values
-    for (var i = 0; i < TOKEN_NAMES.length; i++) {
-      var value = theme.colors[TOKEN_NAMES[i]];
-      if (value) root.style.setProperty("--v-" + TOKEN_NAMES[i], value);
-    }
+    // Build CSS that overrides BOTH the --v-* tokens AND the --md-*
+    // Material variables, so we don't rely on var() re-resolution.
+    var bg1 = theme.colors["bg-primary"] || "";
+    var bg2 = theme.colors["bg-secondary"] || "";
+    var bg3 = theme.colors["bg-tertiary"] || "";
+    var fg1 = theme.colors["text-primary"] || "";
+    var fg2 = theme.colors["text-secondary"] || "";
+    var acc = theme.colors["accent"] || "";
+    var acd = theme.colors["accent-dark"] || "";
+    var suc = theme.colors["success"] || "";
+    var err = theme.colors["error"] || "";
+    var wrn = theme.colors["warning"] || "";
+    var brd = theme.colors["border"] || "";
+
+    var css = "body[data-md-color-scheme] {\n";
+    // Core tokens
+    css += "  --v-bg-primary: " + bg1 + ";\n";
+    css += "  --v-bg-secondary: " + bg2 + ";\n";
+    css += "  --v-bg-tertiary: " + bg3 + ";\n";
+    css += "  --v-text-primary: " + fg1 + ";\n";
+    css += "  --v-text-secondary: " + fg2 + ";\n";
+    css += "  --v-accent: " + acc + ";\n";
+    css += "  --v-accent-dark: " + acd + ";\n";
+    css += "  --v-success: " + suc + ";\n";
+    css += "  --v-error: " + err + ";\n";
+    css += "  --v-warning: " + wrn + ";\n";
+    css += "  --v-border: " + brd + ";\n";
+    // Material overrides (duplicate what extra.css derives from --v-*)
+    css += "  --md-default-bg-color: " + bg1 + ";\n";
+    css += "  --md-default-bg-color--light: " + bg2 + ";\n";
+    css += "  --md-default-bg-color--lighter: " + bg3 + ";\n";
+    css += "  --md-default-bg-color--lightest: " + brd + ";\n";
+    css += "  --md-default-fg-color: " + fg1 + ";\n";
+    css += "  --md-default-fg-color--light: " + fg2 + ";\n";
+    css += "  --md-primary-fg-color: " + (scheme === "vauchi-dark" ? acd : acc) + ";\n";
+    css += "  --md-accent-fg-color: " + acc + ";\n";
+    css += "  --md-typeset-color: " + fg1 + ";\n";
+    css += "  --md-typeset-a-color: " + (scheme === "vauchi-dark" ? acd : acc) + ";\n";
+    css += "  --md-code-fg-color: " + fg1 + ";\n";
+    css += "  --md-code-bg-color: " + bg2 + ";\n";
+    css += "  --md-admonition-fg-color: " + fg1 + ";\n";
+    css += "  --md-admonition-bg-color: " + (scheme === "vauchi-dark" ? bg3 : bg2) + ";\n";
+    css += "  --md-footer-fg-color: " + fg2 + ";\n";
+    css += "  --md-footer-bg-color: " + bg2 + ";\n";
+    css += "  color-scheme: " + (theme.mode === "dark" ? "dark" : "light") + ";\n";
+    css += "}\n";
+    // Header & tabs
+    css += "[data-md-color-scheme] .md-header,\n";
+    css += "[data-md-color-scheme] .md-tabs {\n";
+    css += "  background-color: " + bg2 + ";\n";
+    css += "}\n";
+    styleEl.textContent = css;
 
     // Update button icon
     btn.textContent = theme.mode === "dark" ? "\uD83C\uDF19" : "\u2600\uFE0F";
