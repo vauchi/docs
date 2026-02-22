@@ -73,8 +73,10 @@ Use `just commit` for interactive commits across all repos with changes.
 ### Step 3: Create a Merge Request
 
 ```bash
-git push -u origin feature/my-feature
-glab mr create --title "feat: My feature" --target-branch main
+git push -u origin feature/my-feature \
+  -o merge_request.create \
+  -o merge_request.target=main \
+  -o merge_request.title="feat: My feature"
 ```
 
 CI must pass (security scans + tests) before merge.
