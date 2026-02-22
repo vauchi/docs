@@ -197,15 +197,54 @@ If an attacker tries to abuse social recovery:
 - Conflicting claims detected and flagged by relay
 - Voucher timestamps prevent replay (48-hour window)
 
+## Federation Security
+
+When relays federate (forward blobs to peer relays for redundancy), additional trust boundaries apply.
+
+**What a federated relay CAN see**:
+
+- Recipient routing IDs (pseudonymous public key hashes)
+- Blob sizes (padded to fixed buckets: 256, 512, 1024, 4096 bytes)
+- Message creation timestamps and hop count
+- Network topology via gossip protocol
+
+**What a federated relay CANNOT see**:
+
+- Message content (E2E encrypted)
+- Sender identity (not included in federation protocol)
+- Real identity behind routing IDs
+- Client IP addresses (federation is relay-to-relay)
+
+**Guarantees**:
+
+- mTLS authentication prevents unauthorized peers
+- Hop count limit prevents amplification attacks
+- SHA-256 integrity verification on all federated blobs
+- DNS rebinding protection: explicit resolution + SSRF validation before connecting to peer relays
+
+## Device Linking (STRIDE)
+
+| Category | Threat | Mitigation |
+|----------|--------|------------|
+| **Spoofing** | Attacker scans device link QR | QR expires in 5 min, physical proximity required |
+| **Tampering** | Modified QR code | QR is signed by identity key |
+| **Information Disclosure** | Master seed intercepted during transfer | Encrypted with ephemeral link key (XChaCha20-Poly1305) |
+| **Denial of Service** | Excessive device linking | Maximum 10 devices per identity |
+| **Elevation of Privilege** | Unauthorized device added to registry | Registry is cryptographically signed, version counter prevents rollback |
+
+**Known limitation**: Currently, the full master seed is shared during device linking (not per-device subkeys). A compromised linked device gains full identity control. Per-device subkey isolation is planned for 1.0 release.
+
 ## Known Limitations
 
 | Limitation | Impact | Mitigation Path |
 |-----------|--------|-----------------|
 | Relay sees connection metadata | Social graph inference possible | Routing token rotation, Tor support |
-| Device compromise exposes master seed | All-or-nothing with master seed | Strong passwords, platform keychain |
-| Single relay is availability SPOF | Users can't sync if relay is down | Federation support |
+| Device compromise exposes master seed | All-or-nothing with master seed | Per-device subkeys (planned), strong passwords |
+| Linked device receives full seed | Compromised device = full identity | Per-device subkeys (planned) |
+| Single relay is availability SPOF | Users can't sync if relay is down | Federation, multi-relay failover (planned) |
 | Blocked contacts retain old data | Cannot "unsend" previously shared info | By design (accept tradeoff) |
 | Recovery reveals voucher public keys | Partial social graph leakage | Accepted tradeoff for recovery |
+| No guardian diversity enforcement | All guardians from same circle | UX warnings (planned) |
 | No key transparency post-exchange | Key history not auditable | Lightweight signed key log (future) |
 | Push notifications would leak metadata | APNs/FCM see delivery timing | Empty push + app-side fetch (required design) |
 
