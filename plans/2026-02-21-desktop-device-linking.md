@@ -517,6 +517,7 @@ type DeviceLinkState =
 ```
 
 Replace existing signals:
+
 ```typescript
 const [linkState, setLinkState] = createSignal<DeviceLinkState>({ step: 'idle' });
 ```
