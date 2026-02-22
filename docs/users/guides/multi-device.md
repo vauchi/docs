@@ -21,64 +21,67 @@ Step-by-step guide for using Vauchi on multiple devices.
 
 On your **existing device**:
 
-=== "Mobile (iOS/Android)"
+**Mobile (iOS/Android):**
 
-    1. Open Vauchi
-    2. Go to **Settings** (gear icon)
-    3. Tap **Devices**
-    4. Tap **Link New Device**
-    5. A QR code appears (valid for 5 minutes)
+1. Open Vauchi
+2. Go to **Settings** (gear icon)
+3. Tap **Devices**
+4. Tap **Link New Device**
+5. A QR code appears (valid for 5 minutes)
 
-=== "Desktop"
+**Desktop:**
 
-    1. Open Vauchi Desktop
-    2. Go to **Devices** (from the sidebar)
-    3. Click **Link New Device**
-    4. A QR code and data string appear (valid for 5 minutes)
+1. Open Vauchi Desktop
+2. Go to **Devices** (from the sidebar)
+3. Click **Link New Device**
+4. A QR code and data string appear (valid for 5 minutes)
 
-=== "TUI"
+**TUI:**
 
-    1. Open Vauchi TUI
-    2. Press **d** to go to Devices
-    3. Press **l** to generate a link
-    4. A QR code and data string appear in an overlay
+1. Open Vauchi TUI
+2. Press **d** to go to Devices
+3. Press **l** to generate a link
+4. A QR code and data string appear in an overlay
 
-=== "CLI"
+**CLI:**
 
-    ```bash
-    vauchi device link
-    ```
-    A QR code and data string are displayed in the terminal.
+```bash
+vauchi device link
+```
+
+A QR code and data string are displayed in the terminal.
 
 ### Step 2: Join on New Device
 
 On your **new device**:
 
-=== "Mobile (iOS/Android)"
+**Mobile (iOS/Android):**
 
-    1. Open Vauchi
-    2. On the welcome screen, tap **Join Existing Identity**
-    3. Point your camera at the QR code from Step 1
-    4. Verify the confirmation code matches on both devices
-    5. Wait for the linking to complete
+1. Open Vauchi
+2. On the welcome screen, tap **Join Existing Identity**
+3. Point your camera at the QR code from Step 1
+4. Verify the confirmation code matches on both devices
+5. Wait for the linking to complete
 
-=== "Desktop"
+**Desktop:**
 
-    1. Open Vauchi Desktop
-    2. On the setup screen, click **Join Existing Identity**
-    3. Paste the data string from the existing device
-    4. Verify the confirmation code matches on both devices
-    5. Click **Confirm** to complete linking
+1. Open Vauchi Desktop
+2. On the setup screen, click **Join Existing Identity**
+3. Paste the data string from the existing device
+4. Verify the confirmation code matches on both devices
+5. Click **Confirm** to complete linking
 
-=== "CLI"
+**CLI:**
 
-    ```bash
-    vauchi device join <data-string>
-    ```
-    Then verify the confirmation code and run:
-    ```bash
-    vauchi device complete <confirmation-code>
-    ```
+```bash
+vauchi device join <data-string>
+```
+
+Then verify the confirmation code and run:
+
+```bash
+vauchi device complete <confirmation-code>
+```
 
 ### Step 3: Confirm
 
@@ -132,47 +135,39 @@ Data syncs automatically:
 
 ### Viewing All Devices
 
-=== "Mobile/Desktop"
+**Mobile/Desktop:** Go to **Settings > Devices** to see all linked devices. Your current device is marked.
 
-    1. Go to **Settings > Devices**
-    2. See all linked devices
-    3. Your current device is marked
+**TUI:** Press **d** to open the Devices screen. Navigate with **j/k** or arrow keys. Current device is marked `[this device]`.
 
-=== "TUI"
+**CLI:**
 
-    1. Press **d** to open the Devices screen
-    2. Navigate with **j/k** or arrow keys
-    3. Current device is marked `[this device]`
-
-=== "CLI"
-
-    ```bash
-    vauchi device list
-    ```
+```bash
+vauchi device list
+```
 
 ### Revoking a Device
 
 If a device is lost, stolen, or no longer needed:
 
-=== "Mobile/Desktop"
+**Mobile/Desktop:**
 
-    1. Go to **Settings > Devices** on **another** device
-    2. Find the device to revoke
-    3. Tap **Revoke**
-    4. Confirm by tapping **Revoke Device**
+1. Go to **Settings > Devices** on **another** device
+2. Find the device to revoke
+3. Tap **Revoke**
+4. Confirm by tapping **Revoke Device**
 
-=== "TUI"
+**TUI:**
 
-    1. Press **d** to open Devices
-    2. Navigate to the device with **j/k**
-    3. Press **r** to revoke
-    4. Press **y** to confirm
+1. Press **d** to open Devices
+2. Navigate to the device with **j/k**
+3. Press **r** to revoke
+4. Press **y** to confirm
 
-=== "CLI"
+**CLI:**
 
-    ```bash
-    vauchi device revoke <device-index>
-    ```
+```bash
+vauchi device revoke <device-index>
+```
 
 !!! warning
     You cannot revoke your current device. Use another linked device.

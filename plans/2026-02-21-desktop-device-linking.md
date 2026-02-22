@@ -13,9 +13,12 @@
 
 ---
 
+## Tasks
+
 ### Task 1: Add QR SVG Generation Command
 
 **Files:**
+
 - Modify: `desktop/src-tauri/src/commands/devices.rs`
 
 **Step 1: Write the failing test**
@@ -139,6 +142,7 @@ git commit -m "feat: add QR SVG generation command for device linking"
 ### Task 2: Split Confirmation into Prepare + Confirm + Deny
 
 **Files:**
+
 - Modify: `desktop/src-tauri/src/commands/devices.rs`
 - Modify: `desktop/src-tauri/src/state.rs` (add initiator field)
 - Modify: `desktop/src-tauri/src/lib.rs` (register commands)
@@ -289,6 +293,7 @@ git commit -m "feat: split device link confirmation into prepare/confirm/deny"
 ### Task 3: Add Responder Confirmation Code Command
 
 **Files:**
+
 - Modify: `desktop/src-tauri/src/commands/devices.rs`
 - Modify: `desktop/src-tauri/src/lib.rs`
 
@@ -358,10 +363,12 @@ git commit -m "feat: add responder confirmation code command"
 ### Task 4: Add Relay Transport Commands
 
 **Files:**
+
 - Modify: `desktop/src-tauri/src/commands/devices.rs`
 - Modify: `desktop/src-tauri/src/lib.rs`
 
 The relay logic from `vauchi-mobile/src/device_link_relay.rs` uses `tokio-tungstenite` which desktop already depends on. We can either:
+
 - (a) Copy the relay functions into the desktop crate
 - (b) Add `vauchi-mobile` as a dependency (heavy — includes UniFFI)
 - (c) Extract relay functions to `vauchi-core` (best long-term, but scope creep)
@@ -486,6 +493,7 @@ git commit -m "feat: add relay transport commands for device linking"
 ### Task 5: Frontend State Machine and Transport Selector
 
 **Files:**
+
 - Modify: `desktop/ui/src/pages/Devices.tsx`
 
 **Step 1: Define state types and signal**
@@ -547,6 +555,7 @@ git commit -m "feat: add device linking state machine and transport selector"
 ### Task 6: Frontend Initiator Flow (QR Display + Confirmation)
 
 **Files:**
+
 - Modify: `desktop/ui/src/pages/Devices.tsx`
 
 **Step 1: Implement QR generation step**
@@ -647,6 +656,7 @@ git commit -m "feat: add initiator flow UI with QR display and confirmation"
 ### Task 7: Frontend Responder Flow (Join)
 
 **Files:**
+
 - Modify: `desktop/ui/src/pages/Devices.tsx`
 
 **Step 1: Implement paste/input step**
@@ -720,6 +730,7 @@ git commit -m "feat: add responder join flow with confirmation code"
 ### Task 8: Offline Multipart QR Flow
 
 **Files:**
+
 - Modify: `desktop/ui/src/pages/Devices.tsx`
 - Modify: `desktop/src-tauri/src/commands/devices.rs` (add multipart QR commands)
 
@@ -781,6 +792,7 @@ git commit -m "feat: add offline multipart QR display for device linking"
 ### Task 9: CSS Styling for Link Flow
 
 **Files:**
+
 - Modify: `desktop/ui/src/styles/app.css` (or wherever device styles live)
 
 **Step 1: Add styles for linking flow components**
@@ -830,6 +842,7 @@ git commit -m "feat: add CSS styles for device linking flow"
 ### Task 10: i18n Keys
 
 **Files:**
+
 - Modify: `locales/en.json` (add `devices.link.*` keys)
 - Modify: other locale files (de, fr, es) with placeholder translations
 
@@ -872,6 +885,7 @@ git commit -m "feat: add i18n keys for device linking flow"
 ### Task 11: Integration Testing and Cleanup
 
 **Files:**
+
 - Modify: `desktop/src-tauri/src/commands/devices.rs` (deprecate old `complete_device_link`)
 - Modify: `desktop/ui/src/pages/Devices.tsx` (remove old dialog code)
 
