@@ -38,6 +38,7 @@ Open Collective is dropped. All surfaces must list both platforms.
 
 **Current:** No sponsorship content.
 **Change:**
+
 - Add `support` page type to the router (`Page` union type in `App.tsx`)
 - Create `SupportUs.tsx` page component with:
   - Brief "community-funded, no VC" message
@@ -78,6 +79,7 @@ Open Collective is dropped. All surfaces must list both platforms.
 **Repo:** `gitlab.com/vauchi/github-profile` (source for `github.com/vauchi/.github`)
 **Current:** GitHub Sponsors commented out, only Liberapay active.
 **Change:**
+
 - Uncomment GitHub Sponsors badge in header
 - Update "Support the project" section to show both platforms with separate badges
 - Keep `README.md` and `profile/README.md` in sync

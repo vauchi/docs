@@ -13,9 +13,10 @@
 
 ---
 
-### Task 1: Add locale keys for Support Us
+## Task 1: Add locale keys for Support Us
 
 **Files:**
+
 - Modify: `locales/en.json`
 - Modify: `locales/de.json`
 - Modify: `locales/fr.json`
@@ -104,9 +105,10 @@ git -C locales commit -m "feat: add support-us locale keys for all languages"
 
 ---
 
-### Task 2: Add GitHub Sponsors link to website landing page
+## Task 2: Add GitHub Sponsors link to website landing page
 
 **Files:**
+
 - Modify: `website/public/index.html` (around line 1624, the `.links` div)
 
 **Step 1: Add GitHub Sponsors link before the existing Liberapay link**
@@ -139,9 +141,10 @@ git -C website commit -m "feat: add GitHub Sponsors link to landing page footer"
 
 ---
 
-### Task 3: Replace Open Collective with Liberapay in docs
+## Task 3: Replace Open Collective with Liberapay in docs
 
 **Files:**
+
 - Modify: `docs/docs/about/supporters.md` (line 39)
 
 **Step 1: Replace Open Collective line**
@@ -167,9 +170,10 @@ git -C docs commit -m "docs: replace Open Collective with Liberapay on supporter
 
 ---
 
-### Task 4: Add Support Us page to desktop app
+## Task 4: Add Support Us page to desktop app
 
 **Files:**
+
 - Modify: `desktop/ui/src/App.tsx` (lines 18-26 Page type, lines 60-82 switch)
 - Create: `desktop/ui/src/pages/SupportUs.tsx`
 - Modify: `desktop/ui/src/pages/Settings.tsx` (lines 1917-1949 help section)
@@ -340,9 +344,10 @@ git -C desktop commit -m "feat: add Support Us page accessible from settings"
 
 ---
 
-### Task 5: Add support-us subcommand to CLI
+## Task 5: Add support-us subcommand to CLI
 
 **Files:**
+
 - Modify: `cli/src/main.rs` (Commands enum around line 49, dispatch around line 617)
 - Create: `cli/src/commands/support.rs`
 - Modify: `cli/src/commands/mod.rs`
@@ -415,9 +420,10 @@ git -C cli commit -m "feat: add support-us subcommand"
 
 ---
 
-### Task 6: Add Support Us screen to TUI
+## Task 6: Add Support Us screen to TUI
 
 **Files:**
+
 - Modify: `tui/src/app.rs` (Screen enum line 12, go_back around line 380)
 - Create: `tui/src/ui/support.rs`
 - Modify: `tui/src/ui/mod.rs` (draw dispatch around line 27)
@@ -618,9 +624,10 @@ git -C tui commit -m "feat: add Support Us screen accessible from settings"
 
 ---
 
-### Task 7: Add Support Us screen to Android app
+## Task 7: Add Support Us screen to Android app
 
 **Files:**
+
 - Modify: `android/app/src/main/kotlin/com/vauchi/ui/SettingsScreen.kt` (around line 774, help section)
 
 **Step 1: Add Support Us links to the Help & Support section**
@@ -664,9 +671,10 @@ git -C android commit -m "feat: add Support Us links in settings"
 
 ---
 
-### Task 8: Add Support Us screen to iOS app
+## Task 8: Add Support Us screen to iOS app
 
 **Files:**
+
 - Modify: `ios/Vauchi/Views/SettingsView.swift` (around line 389, help section)
 
 **Step 1: Add Support Us section**
@@ -712,9 +720,10 @@ git -C ios commit -m "feat: add Support Us section in settings"
 
 ---
 
-### Task 9: Add support section to GitLab profile
+## Task 9: Add support section to GitLab profile
 
 **Files:**
+
 - Modify: `gitlab-profile/README.md`
 
 **Step 1: Add support section at the bottom of `gitlab-profile/README.md`**
@@ -740,9 +749,10 @@ git -C gitlab-profile commit -m "docs: add sponsorship links to profile"
 
 ---
 
-### Task 10: Fix GitHub profile sponsorship links
+## Task 10: Fix GitHub profile sponsorship links
 
 **Files:**
+
 - Modify: `github-profile/profile/README.md`
 - Modify: `github-profile/README.md`
 
