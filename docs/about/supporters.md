@@ -36,7 +36,7 @@ Thank you to everyone who supports Vauchi's mission to build privacy-respecting 
 ## How to Support
 
 - **GitHub Sponsors:** [https://github.com/sponsors/vauchi](https://github.com/sponsors/vauchi)
-- **Open Collective:** [https://opencollective.com/vauchi](https://opencollective.com/vauchi)
+- **Liberapay:** [https://liberapay.com/Vauchi/donate](https://liberapay.com/Vauchi/donate)
 
 Every contribution helps us build privacy-respecting software without compromising on principles.
 
