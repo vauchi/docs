@@ -31,6 +31,7 @@ A shared helper script `scripts/scripts/resolve-repo.sh` provides `_resolve_repo
 used by all daily recipes.
 
 **Resolution order:**
+
 1. Explicit argument given → use it (`just test cli`)
 2. pwd is inside a sub-repo → auto-detect that repo
 3. pwd is workspace root → `all` (iterate applicable repos)
@@ -47,6 +48,7 @@ used by all daily recipes.
 | `fix` | core, cli, relay, tui, e2e, desktop/src-tauri | desktop/ui | ios | — |
 
 The helper maps repo names to:
+
 - Directory path (e.g., `core` → `core/`, `desktop-rust` → `desktop/src-tauri/`)
 - Toolchain type: `rust`, `gradle`, `xcode`, `npm`, `python`, `mkdocs`, `shell`
 
@@ -90,6 +92,7 @@ within the core workspace.
 ### 3. GitLab module (`just/gitlab.just`)
 
 New module exposed as `just gitlab <subcommand>`. All recipes:
+
 - Require `glab` CLI to be authenticated
 - Error immediately with actionable message if not: `ERROR: glab not authenticated — run 'glab auth login'`
 - Use `glab -R vauchi/<repo>` to target the correct project

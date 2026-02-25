@@ -15,14 +15,16 @@
 
 ---
 
-### Task 1: Create resolve-repo.sh helper
+## Task 1: Create resolve-repo.sh helper
 
 **Files:**
+
 - Create: `scripts/scripts/resolve-repo.sh`
 
 **Step 1: Create the helper script**
 
 This is the shared brain that all daily recipes source. It provides two functions:
+
 - `resolve_repo <arg>` — returns the repo name(s) to operate on
 - `repo_dir <name>` — returns the working directory for a repo name
 - `repo_toolchain <name>` — returns the toolchain type for a repo
@@ -201,27 +203,35 @@ Run: `chmod +x scripts/scripts/resolve-repo.sh`
 **Step 3: Smoke test the helper**
 
 Run from workspace root:
+
 ```bash
 source scripts/scripts/resolve-repo.sh && resolve_repo "" "test"
 ```
+
 Expected: all test-capable repos listed
 
 Run from core/:
+
 ```bash
 cd core && source ../scripts/scripts/resolve-repo.sh && resolve_repo "" "test"
 ```
+
 Expected: `core`
 
 Run with explicit arg:
+
 ```bash
 source scripts/scripts/resolve-repo.sh && resolve_repo "cli" "test"
 ```
+
 Expected: `cli`
 
 Run with desktop:
+
 ```bash
 source scripts/scripts/resolve-repo.sh && resolve_repo "desktop" "test"
 ```
+
 Expected: `desktop-rust desktop-ui`
 
 **Step 4: Commit**
@@ -239,9 +249,10 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 ---
 
-### Task 2: Refactor justfile daily recipes
+## Task 2: Refactor justfile daily recipes
 
 **Files:**
+
 - Modify: `justfile` (lines 48–148, daily + extended commands section)
 
 The daily recipes lose their `[working-directory('core')]` directives and instead
@@ -251,6 +262,7 @@ call into a dispatch script that sources resolve-repo.sh. Each recipe becomes a
 **Step 1: Replace the daily commands section**
 
 Replace lines 48–148 of `justfile` with the following. The key changes:
+
 - Each recipe accepts an optional `repo=''` parameter
 - Each recipe sources `resolve-repo.sh` and iterates resolved repos
 - Per-toolchain dispatch logic for build/test/fmt/lint
@@ -525,9 +537,10 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 ---
 
-### Task 3: Create gitlab.just module
+## Task 3: Create gitlab.just module
 
 **Files:**
+
 - Create: `just/gitlab.just`
 
 **Step 1: Create the GitLab module**
@@ -838,9 +851,10 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 ---
 
-### Task 4: Update CLAUDE.md
+## Task 4: Update CLAUDE.md
 
 **Files:**
+
 - Modify: `CLAUDE.md`
 
 **Step 1: Add Tool Usage section**
@@ -881,7 +895,7 @@ Insert after the "Pre-Push Rules (MANDATORY)" section (after line ~70), before
 
 Replace the existing Commands section with:
 
-```markdown
+````markdown
 ## Commands
 
 ```bash
@@ -931,7 +945,7 @@ just install-dev-deps       # Install toolchain
 just clean                  # Clean all build artifacts
 just help                   # Show all commands
 ```
-```
+````
 
 **Step 3: Verify CLAUDE.md is well-formed**
 
@@ -952,9 +966,10 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 
 ---
 
-### Task 5: Update help recipe and verify end-to-end
+## Task 5: Update help recipe and verify end-to-end
 
 **Files:**
+
 - Modify: `justfile` (help recipe)
 
 **Step 1: Update help recipe**
