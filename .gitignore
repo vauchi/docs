@@ -1,1 +1,4 @@
 site/
+
+# CI local testing
+.gitlab-ci-local/
