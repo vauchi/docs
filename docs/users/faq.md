@@ -32,7 +32,7 @@ The relay is essentially a "dumb pipe" that passes encrypted blobs between devic
 
 Only:
 
-- Encrypted message envelopes (deleted after delivery or 7 days)
+- Encrypted message envelopes (deleted after delivery or 30 days)
 - Connection metadata for rate limiting (IP address, timestamps — deleted after 24 hours)
 
 ### Is Vauchi truly private?
@@ -130,7 +130,7 @@ Yes! Vauchi supports multi-device sync:
 
 ### How many devices can I link?
 
-Up to 5 devices can be linked to one identity.
+Up to 10 devices can be linked to one identity.
 
 ### How do I migrate to a new phone?
 

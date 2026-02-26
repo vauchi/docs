@@ -133,7 +133,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 - Connection limit (max 1000 concurrent, RAII guard)
 - Multi-layer timeout protection: handshake timeout, idle timeout (5 min)
 - Message size limit (1 MB)
-- Automatic message expiration (90-day TTL)
+- Automatic message expiration (30-day TTL; recovery store: 90-day TTL)
 - Federation support for relay redundancy
 
 **Residual risk**: Sustained DDoS from many source IPs can overwhelm a single relay.
