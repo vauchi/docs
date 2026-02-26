@@ -103,7 +103,7 @@ Social recovery uses your real-world relationships to verify your identity. You 
 
 For each voucher, you need to meet a contact in person:
 
-1. **Meet in person** (video call as last resort)
+1. **Meet in person** (physical presence required)
 2. Show them your recovery claim
 3. They open **Settings > Recovery > Help Someone Recover**
 4. They paste your claim

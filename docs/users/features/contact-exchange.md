@@ -52,19 +52,6 @@ The main method for exchanging contacts:
 
 QR codes expire after 5 minutes for security.
 
-### Video Call Exchange
-
-For contacts you can't meet in person:
-
-1. Start a video call
-2. Share your screen showing the QR code
-3. They scan it from the video
-4. Switch roles
-5. Exchange complete
-
-!!! note
-    Video call exchange is less secure than in-person because you can't verify physical proximity.
-
 ## Proximity Verification
 
 On mobile devices, Vauchi verifies physical proximity using ultrasonic audio:

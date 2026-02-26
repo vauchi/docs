@@ -86,7 +86,7 @@ No. Your identity is created on your device. There's nothing to sign up for.
 
 ### How do I exchange contacts?
 
-1. Meet the person in real life (or video call)
+1. Meet the person in real life
 2. Open the Exchange screen
 3. Show them your QR code to scan
 4. Scan their QR code
@@ -102,7 +102,7 @@ In-person exchange ensures:
 
 ### Can I exchange contacts remotely?
 
-Yes, via video call — share your screen showing the QR code while the other person scans it, then switch. However, in-person is more secure because you can verify identity directly.
+Not currently. Exchange requires physical proximity — both people must be in the same location so the devices can verify co-presence. This is a deliberate security design to prevent man-in-the-middle attacks.
 
 ### Can I remove a contact?
 
@@ -124,7 +124,7 @@ This removes them from your device. They still have your data (whatever was visi
 Yes! Vauchi supports multi-device sync:
 
 1. Set up Vauchi on your first device
-2. Go to Settings > Devices > Link New Device
+2. Go to Settings, open the Devices screen, and generate a device link
 3. Follow the linking process on your second device
 4. Both devices now share the same identity
 
@@ -136,7 +136,7 @@ Up to 10 devices can be linked to one identity.
 
 **Method 1: Device Linking**
 
-1. On old phone: Settings > Devices > Link New Device
+1. On old phone: Go to Settings, then open the Devices screen and generate a device link
 2. On new phone: Install Vauchi and join existing identity
 3. Once synced, you can uninstall from old phone
 
@@ -153,8 +153,8 @@ Up to 10 devices can be linked to one identity.
 
 1. You create a backup with a password you choose
 2. Vauchi encrypts all your data using that password
-3. You receive a backup code (Base64 encoded data)
-4. To restore: backup code + password = your identity
+3. You receive a backup file or code (format varies by platform)
+4. To restore: backup data + password = your identity
 
 ### What's included in a backup?
 

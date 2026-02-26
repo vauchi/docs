@@ -10,7 +10,7 @@ Step-by-step guide for exchanging contact cards with other Vauchi users.
 ## Prerequisites
 
 - Both you and the other person have Vauchi installed
-- You're physically together (or on a video call)
+- You're physically together (proximity verification required)
 - Both devices have working cameras
 
 ---
@@ -49,23 +49,6 @@ Both people show and scan each other's QR codes. This ensures fresh encryption k
 Both devices show "Exchange Successful"
 
 You now have each other's contact cards.
-
----
-
-## Video Call Exchange
-
-When you can't meet in person:
-
-### Steps
-
-1. Start a video call with the other person
-2. **You:** Share your screen showing your QR code
-3. **Them:** Scan it from the video
-4. Switch roles — they share screen, you scan
-5. Exchange complete
-
-!!! note
-    Video call exchange relies on you visually verifying the other person. Use only with people you trust.
 
 ---
 
