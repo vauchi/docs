@@ -1,4 +1,7 @@
 site/
 
+# IDE
+.claude/
+
 # CI local testing
 .gitlab-ci-local/
