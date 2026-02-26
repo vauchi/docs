@@ -46,8 +46,8 @@ Vauchi is a contact card that updates automatically. When you change your phone 
 
 ## Get the App
 
-- **Desktop**: Available (macOS, Windows, Linux)
-- **CLI/TUI**: Available for developers
+- **Desktop**: Coming soon (macOS, Windows, Linux)
+- **CLI/TUI**: Coming soon
 - **iOS**: Coming soon
 - **Android**: Coming soon
 
