@@ -71,6 +71,7 @@ These are the scenarios from `features/accessibility.feature` that apply to the 
 Run the existing 7 automated accessibility tests against the Tauri mock frontend. Capture all WCAG 2.1 violations per page.
 
 **Files:**
+
 - Read: `desktop/ui/e2e/tests/accessibility.spec.ts`
 - Read: `desktop/ui/playwright.config.ts`
 
@@ -99,6 +100,7 @@ cd /Users/megloff1/Workspace/vauchi-3/desktop/ui && npx playwright test e2e/test
 **Step 4: Record findings**
 
 Create a working notes file at `/tmp/audit-task1-axe-results.md` with:
+
 - Per-page pass/fail status (Setup, Home, Contacts, Settings, Exchange)
 - Any violations with axe rule ID, impact level, affected nodes
 - High contrast and reduce motion test results
@@ -113,12 +115,14 @@ Create a working notes file at `/tmp/audit-task1-axe-results.md` with:
 Systematically check each component file for required ARIA patterns. This catches gaps that axe-core cannot detect (e.g., missing live regions for dynamic content, absent keyboard handlers).
 
 **Files:**
+
 - Read: All 11 component files listed in the table above
 - Read: `desktop/ui/src/styles/app.css` (for focus styles)
 
 **Step 1: Check landmark coverage**
 
 Verify each page component has these minimum landmarks:
+
 - `role="main"` with `aria-labelledby` — **required on every page**
 - `role="navigation"` on nav bars
 - `role="banner"` on headers (where present)
@@ -130,6 +134,7 @@ cd /Users/megloff1/Workspace/vauchi-3/desktop/ui/src && grep -n 'role="main"\|ro
 ```
 
 **Expected findings from prior inventory:**
+
 - App.tsx: no landmarks (delegates to children) — acceptable
 - SupportUs.tsx: no `role="main"` — **gap**
 - main.tsx: no landmarks — acceptable (entry point only)
@@ -181,11 +186,12 @@ grep -A2 'high-contrast.*focus\|focus.*high-contrast' /Users/megloff1/Workspace/
 **Step 6: Record findings**
 
 Create `/tmp/audit-task2-static-scan.md` with:
-- Landmark coverage table (page × landmark type)
-- Dialog completeness table (dialog × required attribute)
-- Form validation coverage (input × aria-invalid × aria-describedby)
-- Live region coverage (dynamic content × live region type)
-- Focus style coverage (element type × :focus-visible rule)
+
+- Landmark coverage table (page x landmark type)
+- Dialog completeness table (dialog x required attribute)
+- Form validation coverage (input x aria-invalid x aria-describedby)
+- Live region coverage (dynamic content x live region type)
+- Focus style coverage (element type x :focus-visible rule)
 - Gaps identified with severity classification
 
 ---
@@ -195,103 +201,116 @@ Create `/tmp/audit-task2-static-scan.md` with:
 Map each of the 25 desktop-relevant scenarios to its concrete ARIA implementation. This is the core of the audit — does the code actually satisfy each feature requirement?
 
 **Files:**
+
 - Read: `features/accessibility.feature` (already read — use line numbers above)
 - Read: All component files from Task 2
 - Write: `/tmp/audit-task3-traceability.md`
 
-**Step 1: Evaluate screen reader scenarios (S1–S8)**
+**Step 1: Evaluate screen reader scenarios (S1-S8)**
 
 For each scenario, check the specific "Then" clauses against the implementation:
 
 **S1: Screen reader announces app structure on desktop** (line 36)
-- "ARIA landmarks should identify regions" → Check `role="main"`, `role="navigation"`, `role="banner"` across all pages
-- "navigate by landmarks" → Landmarks must be present and correctly nested
+
+- "ARIA landmarks should identify regions" — Check `role="main"`, `role="navigation"`, `role="banner"` across all pages
+- "navigate by landmarks" — Landmarks must be present and correctly nested
 
 **S2: Contact list is navigable with screen reader** (line 44)
-- "each contact announced with their name" → Check `Contacts.tsx` for `aria-label` on contact items
-- "list count announced" → Check for `aria-label` with count on the list container
-- "navigate between contacts" → Check `role="listitem"` and keyboard support
+
+- "each contact announced with their name" — Check `Contacts.tsx` for `aria-label` on contact items
+- "list count announced" — Check for `aria-label` with count on the list container
+- "navigate between contacts" — Check `role="listitem"` and keyboard support
 
 **S3: Contact details are fully announced** (line 52)
-- "field label announced before value" → Check contact detail view for `aria-label` on fields
-- "actionable fields indicate actions" → Check for `role="button"` or button elements
-- "card structure logical" → Check heading hierarchy and landmark nesting
+
+- "field label announced before value" — Check contact detail view for `aria-label` on fields
+- "actionable fields indicate actions" — Check for `role="button"` or button elements
+- "card structure logical" — Check heading hierarchy and landmark nesting
 
 **S4: QR code exchange is accessible** (line 60)
-- "QR code has accessible description" → Check `Exchange.tsx` for `aria-describedby` on QR container
-- "Scan QR button clearly labeled" → Check button `aria-label`
-- "instructions announced" → Check for descriptive text or `aria-describedby`
+
+- "QR code has accessible description" — Check `Exchange.tsx` for `aria-describedby` on QR container
+- "Scan QR button clearly labeled" — Check button `aria-label`
+- "instructions announced" — Check for descriptive text or `aria-describedby`
 
 **S5: Form fields announce validation errors** (line 68)
-- "error announced immediately" → Check `aria-live` or `role="alert"` on error containers
-- "focus moves to first error" → Check focus management code on form submit
-- "error associated with field" → Check `aria-describedby` linking input to error
+
+- "error announced immediately" — Check `aria-live` or `role="alert"` on error containers
+- "focus moves to first error" — Check focus management code on form submit
+- "error associated with field" — Check `aria-describedby` linking input to error
 
 **S6: Dialogs and modals are announced** (line 77)
-- "dialog title announced" → Check `aria-labelledby` on all dialogs
-- "dialog content read" → Check dialog has readable content structure
-- "focus trapped" → Check `aria-modal="true"` and `tabIndex={-1}` + keyboard Escape handler
-- "actions announced" → Check buttons inside dialogs have labels
+
+- "dialog title announced" — Check `aria-labelledby` on all dialogs
+- "dialog content read" — Check dialog has readable content structure
+- "focus trapped" — Check `aria-modal="true"` and `tabIndex={-1}` + keyboard Escape handler
+- "actions announced" — Check buttons inside dialogs have labels
 
 **S7: Loading states are announced** (line 85)
-- "loading state announced" → Check for `role="status" aria-live="polite"` on loading indicators
-- "progress updates announced" → Check `aria-busy` usage
-- "completion announced" → Check state transitions update live regions
+
+- "loading state announced" — Check for `role="status" aria-live="polite"` on loading indicators
+- "progress updates announced" — Check `aria-busy` usage
+- "completion announced" — Check state transitions update live regions
 
 **S8: Notifications are announced** (line 93)
-- "live region" → Check `role="alert"` or `aria-live` for notification content
-- "not interrupt current reading" → Should use `polite` not `assertive` (unless critical)
 
-**Step 2: Evaluate keyboard scenarios (S9–S12)**
+- "live region" — Check `role="alert"` or `aria-live` for notification content
+- "not interrupt current reading" — Should use `polite` not `assertive` (unless critical)
+
+**Step 2: Evaluate keyboard scenarios (S9-S12)**
 
 **S9: Full keyboard navigation** (line 104)
-- "reach all interactive elements" → Check `tabindex` on custom interactive elements
-- "focus visible at all times" → Check `:focus-visible` CSS rules (45 rules found)
-- "tab order logical" → Check DOM order matches visual layout
+
+- "reach all interactive elements" — Check `tabindex` on custom interactive elements
+- "focus visible at all times" — Check `:focus-visible` CSS rules (45 rules found)
+- "tab order logical" — Check DOM order matches visual layout
 
 **S10: Keyboard shortcuts** (line 112)
-- "Ctrl+N opens exchange" → Check for keyboard shortcut handler in App.tsx or pages
-- "Escape closes dialogs" → Check `onKeyDown` Escape handlers (found in Home, Contacts, Settings, Devices)
-- "shortcuts documented in help" → Check Help.tsx for keyboard shortcut section
+
+- "Ctrl+N opens exchange" — Check for keyboard shortcut handler in App.tsx or pages
+- "Escape closes dialogs" — Check `onKeyDown` Escape handlers (found in Home, Contacts, Settings, Devices)
+- "shortcuts documented in help" — Check Help.tsx for keyboard shortcut section
 
 **S11: Arrow key navigation in lists** (line 120)
-- "Up/Down move between contacts" → Check `onKeyDown` for ArrowUp/ArrowDown in Contacts.tsx
-- "Enter opens selected" → Check Enter handler on contact items
-- "Escape clears selection" → Check Escape handler
+
+- "Up/Down move between contacts" — Check `onKeyDown` for ArrowUp/ArrowDown in Contacts.tsx
+- "Enter opens selected" — Check Enter handler on contact items
+- "Escape clears selection" — Check Escape handler
 
 **S12: Focus management** (line 128)
-- "focus moves to detail view" → Check focus management when opening contact detail
-- "focus returns on close" → Check focus restore pattern (save + restore previous focus)
 
-**Step 3: Evaluate visual scenarios (S13–S16)**
+- "focus moves to detail view" — Check focus management when opening contact detail
+- "focus returns on close" — Check focus restore pattern (save + restore previous focus)
 
-**S13: Sufficient color contrast** → Verified by axe-core (Task 1). Note any violations.
+**Step 3: Evaluate visual scenarios (S13-S16)**
 
-**S14: High contrast mode** → Test in Task 1 checks `data-high-contrast` attribute. Verify CSS has high-contrast overrides.
+**S13: Sufficient color contrast** — Verified by axe-core (Task 1). Note any violations.
 
-**S15: Information not by color alone** → Manual review: check status indicators, error states for icon/text alongside color.
+**S14: High contrast mode** — Test in Task 1 checks `data-high-contrast` attribute. Verify CSS has high-contrast overrides.
 
-**S16: Text zoom 200%** → Check CSS for responsive layout (`max-width`, `overflow`, no `px` on text). Note: no automated test for this currently.
+**S15: Information not by color alone** — Manual review: check status indicators, error states for icon/text alongside color.
 
-**Step 4: Evaluate remaining scenarios (S17–S25)**
+**S16: Text zoom 200%** — Check CSS for responsive layout (`max-width`, `overflow`, no `px` on text). Note: no automated test for this currently.
 
-**S17: No time-limited interactions** → Check for any `setTimeout` on user input, session timeouts with no extend option.
+**Step 4: Evaluate remaining scenarios (S17-S25)**
 
-**S18: Clear language** → Out of scope for automated audit (locale string review). Mark as "requires manual review."
+**S17: No time-limited interactions** — Check for any `setTimeout` on user input, session timeouts with no extend option.
 
-**S19: Consistent navigation** → Check nav bar position is identical across all pages. Verify `role="navigation"` placement.
+**S18: Clear language** — Out of scope for automated audit (locale string review). Mark as "requires manual review."
 
-**S20: Helpful error messages** → Check error strings in components — do they explain what happened and suggest fixes?
+**S19: Consistent navigation** — Check nav bar position is identical across all pages. Verify `role="navigation"` placement.
 
-**S21: Confirmation for destructive actions** → Check delete flows in Contacts.tsx and Settings.tsx for `role="alertdialog"`.
+**S20: Helpful error messages** — Check error strings in components — do they explain what happened and suggest fixes?
 
-**S22: Reduced motion** → Test in Task 1 checks `data-reduce-motion`. Verify CSS has `prefers-reduced-motion` media query.
+**S21: Confirmation for destructive actions** — Check delete flows in Contacts.tsx and Settings.tsx for `role="alertdialog"`.
 
-**S23: In-app accessibility settings** → Check Settings.tsx for accessibility section with: Reduce animations, Increase touch targets, High contrast, Screen reader hints.
+**S22: Reduced motion** — Test in Task 1 checks `data-reduce-motion`. Verify CSS has `prefers-reduced-motion` media query.
 
-**S24: Preferences persist** → Check if settings use IPC backend storage (not just localStorage). Note SP-10 #55 dependency.
+**S23: In-app accessibility settings** — Check Settings.tsx for accessibility section with: Reduce animations, Increase touch targets, High contrast, Screen reader hints.
 
-**S25: WCAG 2.1 AA compliance** → Composite result from axe-core (Task 1) + static analysis (Task 2).
+**S24: Preferences persist** — Check if settings use IPC backend storage (not just localStorage). Note SP-10 #55 dependency.
+
+**S25: WCAG 2.1 AA compliance** — Composite result from axe-core (Task 1) + static analysis (Task 2).
 
 **Step 5: Record traceability matrix**
 
@@ -309,18 +328,20 @@ Write `/tmp/audit-task3-traceability.md` with a table:
 Review the ARIA attributes for correctness against WAI-ARIA Authoring Practices. This catches "technically present but wrongly used" patterns.
 
 **Files:**
-- Read: Component files with identified patterns from Task 2–3
+
+- Read: Component files with identified patterns from Task 2-3
 
 **Step 1: Dialog pattern review**
 
 For each dialog, verify the complete pattern:
-```
+
+```text
 role="dialog" (or "alertdialog" for confirmations)
 aria-modal="true"
-aria-labelledby="<id>" → verify the referenced ID exists as a heading inside the dialog
-tabIndex={-1} → programmatic focus management
-onKeyDown Escape → closes dialog
-Focus trap → keyboard cannot Tab outside dialog
+aria-labelledby="<id>" -> verify the referenced ID exists as a heading inside the dialog
+tabIndex={-1} -> programmatic focus management
+onKeyDown Escape -> closes dialog
+Focus trap -> keyboard cannot Tab outside dialog
 ```
 
 Check each dialog in: Home.tsx (3), Contacts.tsx (3), Settings.tsx (3), Devices.tsx (1).
@@ -328,15 +349,17 @@ Check each dialog in: Home.tsx (3), Contacts.tsx (3), Settings.tsx (3), Devices.
 **Step 2: Live region pattern review**
 
 Verify live regions follow correct patterns:
-- `role="alert"` = implicit `aria-live="assertive"` → should NOT also have `aria-live` (redundant but harmless)
-- `role="status"` = implicit `aria-live="polite"` → same
+
+- `role="alert"` = implicit `aria-live="assertive"` — should NOT also have `aria-live` (redundant but harmless)
+- `role="status"` = implicit `aria-live="polite"` — same
 - Loading indicators: should have `aria-busy="true"` while loading, removed when done
-- Timer: `role="timer"` with `aria-atomic="true"` → verify in Exchange.tsx countdown
+- Timer: `role="timer"` with `aria-atomic="true"` — verify in Exchange.tsx countdown
 
 **Step 3: Form validation pattern review**
 
 Verify inputs follow the complete pattern:
-```
+
+```html
 <input aria-invalid={hasError} aria-describedby="error-id" aria-required={isRequired} />
 <span id="error-id" role="alert">{errorMessage}</span>
 ```
@@ -346,6 +369,7 @@ Check that `aria-describedby` IDs actually match existing element IDs in the DOM
 **Step 4: Listbox/option pattern review**
 
 If any component uses `role="listbox"` with `role="option"`, verify:
+
 - `aria-activedescendant` for current selection
 - `aria-selected` on options
 - Keyboard: Up/Down to navigate, Enter to select
@@ -355,6 +379,7 @@ Check Contacts.tsx contact list and Settings.tsx theme grid (`role="radiogroup"`
 **Step 5: Navigation landmark pattern review**
 
 Verify:
+
 - Multiple `role="navigation"` elements each have unique `aria-label`
 - `role="main"` appears exactly once per page
 - No nested landmarks of the same type
@@ -362,7 +387,8 @@ Verify:
 **Step 6: Record findings**
 
 Write `/tmp/audit-task4-pattern-review.md` with:
-- Pattern compliance table (pattern × component × compliant/issue)
+
+- Pattern compliance table (pattern x component x compliant/issue)
 - Specific issues found with line numbers
 - Severity classification for each issue
 
@@ -370,9 +396,10 @@ Write `/tmp/audit-task4-pattern-review.md` with:
 
 ### Task 5: Write Audit Report
 
-Synthesize findings from Tasks 1–4 into the formal audit report.
+Synthesize findings from Tasks 1-4 into the formal audit report.
 
 **Files:**
+
 - Read: `/tmp/audit-task1-axe-results.md`
 - Read: `/tmp/audit-task2-static-scan.md`
 - Read: `/tmp/audit-task3-traceability.md`
@@ -419,12 +446,15 @@ Create `_private/docs/problems/2026-02-01-accessibility-audit/audit-report.md` w
 ## 5. Findings by Severity
 
 ### Critical
+
 [Findings that block screen reader users from completing core flows]
 
 ### Major
+
 [Findings that cause significant difficulty]
 
 ### Minor
+
 [Suboptimal but functional issues]
 
 ## 6. Recommendations

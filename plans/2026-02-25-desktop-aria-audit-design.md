@@ -25,6 +25,7 @@ Execute the existing 7 accessibility test cases in `desktop/ui/e2e/tests/accessi
 ### Step 2: Static ARIA completeness scan
 
 Analyze all component files for required ARIA attribute patterns:
+
 - Landmarks: `role="navigation"`, `role="main"`, `role="banner"`
 - Dialogs: `role="dialog"` + `aria-modal="true"` + `aria-labelledby`
 - Forms: `aria-invalid`, `aria-describedby` for error association
