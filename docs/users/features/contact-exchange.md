@@ -54,14 +54,16 @@ QR codes expire after 5 minutes for security.
 
 ## Proximity Verification
 
-On mobile devices, Vauchi verifies physical proximity using ultrasonic audio:
+On iOS, Vauchi verifies physical proximity using ultrasonic audio:
 
 - Both phones emit and listen for an audio handshake (18-20 kHz)
 - Range: approximately 3 meters
-- If verification fails, exchange is blocked
+- If verification fails, exchange falls back to manual confirmation
 - This prevents screenshot attacks
 
-### Troubleshooting Proximity
+Android proximity verification is planned.
+
+### Troubleshooting Proximity (iOS)
 
 If proximity verification fails:
 
@@ -69,9 +71,9 @@ If proximity verification fails:
 2. Move closer together (within 2-3 meters)
 3. Reduce background noise
 4. Disable any audio-blocking apps
-5. Try again
+5. Try again — or confirm manually when prompted
 
-On desktop, proximity verification is skipped — manual confirmation is required instead.
+On desktop and CLI/TUI, proximity verification is not available — manual confirmation is required instead.
 
 ## After Exchange
 
@@ -86,7 +88,7 @@ Once exchange completes:
 
 | Property | Mechanism |
 |----------|-----------|
-| Proximity required | Ultrasonic audio handshake |
+| Proximity required | Ultrasonic audio handshake (iOS); manual confirmation (other platforms) |
 | No man-in-the-middle | X3DH key agreement with identity keys |
 | Forward secrecy | Ephemeral keys discarded after exchange |
 | Replay prevention | One-time token, 5-minute expiry |

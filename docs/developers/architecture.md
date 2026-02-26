@@ -192,9 +192,9 @@ Master Seed (256-bit, generated at identity creation)
 
 Contact exchange requires in-person presence:
 
-- QR + ultrasonic audio verification (18-20 kHz)
-- NFC Active tap (centimeters range, Android<->Android / iOS->Android)
-- BLE with RSSI proximity check (GATT transport)
+- QR + ultrasonic audio verification (18-20 kHz) — implemented on iOS, planned for Android
+- NFC Active tap (planned — centimeters range)
+- BLE with RSSI proximity check (planned — GATT transport)
 
 ## Repository Structure
 
