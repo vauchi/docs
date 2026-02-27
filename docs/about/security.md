@@ -78,7 +78,7 @@ Each message uses a unique key derived via Double Ratchet:
 | Threat | Mitigation |
 |--------|------------|
 | **Server compromise** | E2E encryption — server can't read data |
-| **Network surveillance** | TLS + E2E encryption — traffic is encrypted twice |
+| **Network surveillance** | TLS + Noise NK + E2E encryption — traffic is encrypted three layers deep |
 | **Man-in-the-middle** | In-person verification — you verify identity yourself |
 | **Spam/harvesting** | Proximity required — can't be added remotely |
 | **Device theft** | Hardware-backed key storage, optional biometrics |

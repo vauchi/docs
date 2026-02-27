@@ -194,6 +194,55 @@ salt(16) || nonce(12) || ciphertext || tag(16)
 
 Import auto-detects version by first byte.
 
+## Transport Encryption (Noise NK)
+
+Client-to-relay communication uses a Noise NK inner transport layer as defense-in-depth inside TLS.
+
+### Pattern
+
+```
+Noise_NK_25519_ChaChaPoly_BLAKE2s
+```
+
+**NK** means the relay's static public key is known to the client before the handshake (distributed via the `/info` HTTP endpoint as base64url). The client does **not** authenticate to the relay (anonymous initiator).
+
+### Handshake
+
+```
+Pre-message:  <- s   (relay's static public key, known to client)
+Message 1:    -> e, es   (client sends ephemeral, DH with relay static)
+Message 2:    <- e, ee   (relay sends ephemeral, DH between ephemerals)
+```
+
+After Message 2, both sides derive symmetric keys for bidirectional encryption.
+
+### v2 Framing
+
+v2 (Noise-encrypted) connections are identified by a 3-byte magic prefix:
+
+```
+0x00 'V' '2' || 48-byte NK handshake message
+```
+
+The `0x00` first byte distinguishes v2 from v1 (plaintext JSON, which always starts with `{`). After the handshake completes, all subsequent WebSocket frames are Noise-encrypted.
+
+### Why NK?
+
+| Property | Benefit |
+|----------|---------|
+| **No client authentication** | Preserves anonymity — relay cannot link connections to identities |
+| **Forward secrecy** | Ephemeral DH keys ensure past sessions can't be decrypted |
+| **Relay authentication** | Client verifies the relay's identity via its static key |
+| **Defense-in-depth** | If TLS is compromised, routing metadata (recipient IDs, message types) stays encrypted |
+
+### Configuration
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `RELAY_REQUIRE_NOISE` | `false` | Reject v1 (plaintext) connections |
+
+The relay's Noise keypair is auto-generated on first start and persisted to `{data_dir}/relay_noise_key.bin`.
+
 ## Security Properties
 
 | Property | Mechanism |
@@ -207,6 +256,7 @@ Import auto-detects version by first byte.
 | **Memory Safety** | `zeroize` on drop for all keys |
 | **Traffic Analysis Prevention** | Fixed-size message padding |
 | **Replay Prevention** | Double Ratchet counters |
+| **Transport Encryption** | Noise NK inside TLS (defense-in-depth) |
 
 ## Source Files
 
