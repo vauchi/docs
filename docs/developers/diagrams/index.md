@@ -15,6 +15,8 @@ Sequence diagrams for core Vauchi flows.
 | [Device Linking](device-linking.md) | Multi-device setup |
 | [Sync Updates](sync-updates.md) | How card updates propagate |
 | [Contact Recovery](contact-recovery.md) | Social recovery flow |
+| [Message Delivery](message-delivery.md) | End-to-end message delivery flow |
+| [Crypto Hierarchy](crypto-hierarchy.md) | Key derivation and storage hierarchy |
 
 ---
 
