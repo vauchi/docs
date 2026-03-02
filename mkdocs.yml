@@ -68,6 +68,9 @@ nav:
     - Community: about/community.md
     - Supporters: about/supporters.md
 
+  - Legal:
+    - Privacy Policy: legal/privacy-policy.md
+
   - For Developers:
     - developers/index.md
     - Contributing: developers/contributing.md
