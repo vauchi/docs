@@ -35,6 +35,7 @@ Branch naming: `{type}/{short-description}`
 | `feature/` | New functionality |
 | `bugfix/` | Bug fixes |
 | `refactor/` | Code restructuring |
+| `tidy/` | Structural-only cleanup (Tidy First) |
 | `investigation/` | Research/exploration |
 
 For **multi-repo features**, use the **same branch name** in every affected repo:
@@ -47,11 +48,12 @@ git -C docs checkout -b feature/remote-content-updates
 
 ### Step 2: Do the work — commit often
 
-- **If changing code: strict TDD.** Red → Green → Refactor. No exceptions.
-  1. Write failing test first (Red)
-  2. Write minimal code to pass (Green)
-  3. Refactor
-  4. Tests must trace to `features/*.feature` scenarios
+- **If changing code: strict TDD.** Tidy → Red → Green → Refactor. No exceptions.
+  1. Tidy first — small structural improvement if the code is hard to change (own `tidy:` commit)
+  2. Write failing test first (Red)
+  3. Write minimal code to pass (Green)
+  4. Refactor
+  5. Tests must trace to `features/*.feature` scenarios
 - Commit atomically — each commit should be a single logical change.
 - Run `just check` before pushing (formats, lints, tests).
 - See [Principles](../about/principles.md) for core values.
@@ -64,7 +66,7 @@ Commit message format:
 {Longer description if needed}
 ```
 
-Types: `feat`, `fix`, `refactor`, `docs`, `test`, `chore`
+Types: `feat`, `fix`, `refactor`, `tidy`, `docs`, `test`, `chore`
 
 Use imperative mood: "Add feature" not "Added feature". Keep first line under 72 characters.
 

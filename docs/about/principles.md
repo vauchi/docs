@@ -87,7 +87,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 
 | Principle | Statement |
 |-----------|-----------|
-| **TDD Mandatory** | Red→Green→Refactor. Test FIRST. No exceptions |
+| **TDD Mandatory** | Tidy→Red→Green→Refactor. Tidy first, test first. No exceptions |
 | **90%+ Coverage** | For vauchi-core; real crypto in tests (no mocking) |
 | **Rust Core** | Memory safety, no GC, cross-platform compilation |
 | **Clean Dependencies** | vauchi-core standalone; downstream repos use git deps |
