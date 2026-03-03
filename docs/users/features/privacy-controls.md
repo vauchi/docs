@@ -13,9 +13,9 @@ Every field on your contact card can be shown to or hidden from each contact. Th
 
 ```
 Your Contact Card
-┌─────────────────────────────────────────────┐
-│  Name: Alice Smith                          │
-│                                             │
+┌────────────────────────────────────────────┐
+│  Name: Alice Smith                         │
+│                                            │
 │  ┌─────────────────┬─────────┬─────────┐   │
 │  │ Field           │ Family  │ Work    │   │
 │  ├─────────────────┼─────────┼─────────┤   │
@@ -25,9 +25,9 @@ Your Contact Card
 │  │ Work Phone      │   ✓     │   ✓     │   │
 │  │ Home Address    │   ✓     │   ✗     │   │
 │  └─────────────────┴─────────┴─────────┘   │
-│                                             │
-│  Family sees 5 fields, Work sees 2 fields   │
-└─────────────────────────────────────────────┘
+│                                            │
+│  Family sees 5 fields, Work sees 2 fields  │
+└────────────────────────────────────────────┘
 ```
 
 ## Per-Contact Visibility

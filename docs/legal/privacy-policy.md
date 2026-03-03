@@ -7,7 +7,7 @@
 
 ## Overview
 
-Vauchi is a privacy-focused contact card exchange application. This privacy policy explains how we handle your data. The short version: **your data stays on your device, encrypted, and under your control.**
+Vauchi is a privacy-focused contact card exchange application. This privacy policy explains how we handle your data. The short version: **your data stays on your devices, encrypted, and under your control.**
 
 ## Data Collection
 

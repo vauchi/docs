@@ -122,40 +122,40 @@ Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared se
 ## Double Ratchet
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    DOUBLE RATCHET                           │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │                  DH RATCHET                          │   │
-│  │                                                      │   │
-│  │    our_dh_secret × their_dh_public                  │   │
-│  │              ↓                                       │   │
-│  │    HKDF(root_key, shared_secret, "Vauchi_Root_Ratchet") │   │
-│  │              ↓                                       │   │
-│  │    [new_root_key, new_chain_key]                    │   │
-│  │                                                      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                          ↓                                  │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │              SYMMETRIC RATCHET                       │   │
-│  │                                                      │   │
-│  │    chain_key                                        │   │
-│  │        ↓                                            │   │
-│  │    HKDF(chain_key, "Vauchi_Message_Key")           │   │
-│  │        → message_key (single use)                   │   │
-│  │        ↓                                            │   │
-│  │    HKDF(chain_key, "Vauchi_Chain_Key")             │   │
-│  │        → next_chain_key                             │   │
-│  │                                                      │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                                                             │
-│  Limits:                                                    │
-│    • Max chain generations: 2000                           │
-│    • Max skipped keys stored: 1000                         │
-│    • Message key deleted immediately after use             │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                         DOUBLE RATCHET                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                        DH RATCHET                         │  │
+│  │                                                           │  │
+│  │    our_dh_secret × their_dh_public                        │  │
+│  │              ↓                                            │  │
+│  │    HKDF(root_key, shared_secret, "Vauchi_Root_Ratchet")   │  │
+│  │              ↓                                            │  │
+│  │    [new_root_key, new_chain_key]                          │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                              ↓                                  │
+│  ┌───────────────────────────────────────────────────────────┐  │
+│  │                   SYMMETRIC RATCHET                       │  │
+│  │                                                           │  │
+│  │    chain_key                                              │  │
+│  │        ↓                                                  │  │
+│  │    HKDF(chain_key, "Vauchi_Message_Key")                  │  │
+│  │        → message_key (single use)                         │  │
+│  │        ↓                                                  │  │
+│  │    HKDF(chain_key, "Vauchi_Chain_Key")                    │  │
+│  │        → next_chain_key                                   │  │
+│  │                                                           │  │
+│  └───────────────────────────────────────────────────────────┘  │
+│                                                                 │
+│  Limits:                                                        │
+│    • Max chain generations: 2000                                │
+│    • Max skipped keys stored: 1000                              │
+│    • Message key deleted immediately after use                  │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ### Ratchet Message (Authenticated, Not Encrypted Header)

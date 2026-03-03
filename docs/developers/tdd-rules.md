@@ -16,7 +16,7 @@
 TIDY     → Small structural improvement  → COMMIT (no behavior change)
 RED      → Write failing test
 GREEN    → Minimal code to pass          → COMMIT (tests green)
-REFACTOR → Improve design               → COMMIT (tests still green)
+REFACTOR → Improve design                → COMMIT (tests still green)
 ```
 
 Inspired by Kent Beck's *Tidy First?*: make the change easy, then make the easy change.
