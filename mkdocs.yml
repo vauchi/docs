@@ -86,6 +86,8 @@ nav:
       - Device Linking: developers/diagrams/device-linking.md
       - Sync Updates: developers/diagrams/sync-updates.md
       - Recovery: developers/diagrams/contact-recovery.md
+      - Message Delivery: developers/diagrams/message-delivery.md
+      - Crypto Hierarchy: developers/diagrams/crypto-hierarchy.md
 
 plugins:
   - search

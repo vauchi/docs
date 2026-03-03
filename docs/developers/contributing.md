@@ -8,8 +8,7 @@
 
 ```bash
 # Clone and setup workspace
-git clone https://github.com/vauchi/vauchi.git
-# or: git clone git@gitlab.com:vauchi/vauchi.git
+git clone git@gitlab.com:vauchi/vauchi.git
 cd vauchi
 just setup
 
@@ -41,9 +40,7 @@ Branch naming: `{type}/{short-description}`
 For **multi-repo features**, use the **same branch name** in every affected repo:
 
 ```bash
-git -C features checkout -b feature/remote-content-updates
-git -C core checkout -b feature/remote-content-updates
-git -C docs checkout -b feature/remote-content-updates
+just git branch feature/remote-content-updates features core docs
 ```
 
 ### Step 2: Do the work — commit often
@@ -75,10 +72,11 @@ Use `just commit` for interactive commits across all repos with changes.
 ### Step 3: Create a Merge Request
 
 ```bash
-git push -u origin feature/my-feature \
-  -o merge_request.create \
-  -o merge_request.target=main \
-  -o merge_request.title="feat: My feature"
+# Push all repos with changes (runs pre-push checks)
+just git push-all
+
+# Create MR for a specific repo
+just gitlab mr-create core
 ```
 
 CI must pass (security scans + tests) before merge.
@@ -188,8 +186,7 @@ vauchi/                          ← root repo (justfile, CI config)
 ├── docs/                        ← Public documentation (this site)
 ├── scripts/                     ← Dev tools, hooks, utilities
 ├── website/                     ← Landing page source
-├── assets/                      ← Brand assets, logos
-└── _private/                    ← Sensitive content (infra, strategy)
+└── assets/                      ← Brand assets, logos
 ```
 
 **Mobile bindings** (`vauchi-mobile-swift/`, `vauchi-mobile-android/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
@@ -198,10 +195,10 @@ vauchi/                          ← root repo (justfile, CI config)
 
 ```bash
 just help              # Show all commands
-just feature-audit     # Check test coverage vs features
-just dev-relay         # Start local relay for testing
-just dev-cli alice     # Run CLI with isolated data
-just sync-repos        # Pull all repos
+just check-annotations # Check test coverage vs features
+just relay             # Start local relay for testing
+just run cli           # Run CLI
+just git sync          # Fetch all + pull where on main
 ```
 
 ## Getting Help

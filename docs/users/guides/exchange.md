@@ -83,7 +83,7 @@ Once exchange completes:
 ### Next Steps
 
 - [Control what they see](visibility.md)
-- [Verify their identity](../features/contact-exchange.md#verifying-contacts)
+- [Verify their identity](../features/contact-exchange.md#security-properties)
 
 ---
 

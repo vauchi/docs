@@ -15,7 +15,6 @@ Join the Vauchi community.
 Found a bug or have a feature request?
 
 - **GitLab Issues:** [https://gitlab.com/vauchi/vauchi/-/issues](https://gitlab.com/vauchi/vauchi/-/issues)
-- **GitHub Issues:** [https://github.com/vauchi/vauchi/issues](https://github.com/vauchi/vauchi/issues)
 
 ### Contribute Code
 

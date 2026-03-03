@@ -3,7 +3,7 @@
 
 # Message Delivery Flow
 
-**Interaction Type:** 🌐 **REMOTE (Via Relay)**
+**Interaction Type:** :globe_with_meridians: **REMOTE (Via Relay)**
 
 End-to-end message delivery from card update to acknowledgment.
 
