@@ -191,6 +191,34 @@ vauchi/                          ← root repo (justfile, CI config)
 
 **Mobile bindings** (`vauchi-mobile-swift/`, `vauchi-mobile-android/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
 
+## Release Workflow
+
+Vauchi uses a 3-tier versioning system. Each tier triggers a different CI pipeline scope:
+
+| Tier | Tag Format | What Runs | Publishes? |
+|------|-----------|-----------|------------|
+| **Dev** | `v0.2.3-dev.N` | Lint + test only | No |
+| **RC** | `v0.2.3-rc.N` | Lint + test + coverage + mutation + security | No |
+| **PROD** | `v0.2.3` | Full release: build, package, publish, deploy, trigger mobile bindings | Yes |
+
+### Creating releases
+
+```bash
+just release-dev      # Fast feedback — creates next v0.2.3-dev.N
+just release-rc       # Full quality gate — creates next v0.2.3-rc.N
+just release-prod     # Full release — reads version from Cargo.toml
+just release-history  # Show promotion chain for current version
+```
+
+### Typical flow
+
+1. Merge feature MRs to `main`
+2. `just release-dev` — verify basic CI passes (~2 min)
+3. `just release-rc` — full quality gate with coverage + mutation (~15 min)
+4. `just release-prod` — publish to package registry, trigger mobile binding distribution
+
+Dev and RC tags never publish artifacts, trigger mobile repos, or create GitLab releases. Only PROD tags do.
+
 ## Useful Commands
 
 ```bash
