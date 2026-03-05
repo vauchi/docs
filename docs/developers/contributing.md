@@ -204,10 +204,10 @@ Vauchi uses a 3-tier versioning system. Each tier triggers a different CI pipeli
 ### Creating releases
 
 ```bash
-just release-dev      # Fast feedback — creates next v0.2.3-dev.N
-just release-rc       # Full quality gate — creates next v0.2.3-rc.N
-just release-prod     # Full release — reads version from Cargo.toml
-just release-history  # Show promotion chain for current version
+just release-dev [repo]      # Fast feedback — default: core. E.g., just release-dev cli
+just release-rc [repo]       # Full quality gate. E.g., just release-rc relay
+just release-prod [repo]     # Full release. E.g., just release-prod desktop
+just release-history [repo]  # Show promotion chain. E.g., just release-history tui
 ```
 
 ### Typical flow
