@@ -63,6 +63,7 @@ The Rust core library provides all cryptographic and protocol functionality:
 | `recovery/` | Social recovery | `mod.rs` |
 | `storage/` | Local encrypted database | `contacts.rs`, `identity.rs`, `secure.rs` |
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
+| `ui/` | Core-driven UI types and workflow engines | `screen.rs`, `component.rs`, `action.rs`, `engine.rs` |
 | `i18n` | Internationalization | `i18n.rs` (runtime loading) |
 
 ### vauchi-protocol
@@ -92,6 +93,59 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 | Desktop | Tauri + SolidJS | Direct Rust linkage |
 | CLI | Rust | Direct library use |
 | TUI | Rust (ratatui) | Direct library use |
+
+## Core-Driven UI
+
+Core defines what to show; frontends only decide how to render natively. New workflows are pure Rust — zero frontend code unless a new component type is needed.
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      Core (Rust)                         │
+│                                                         │
+│  WorkflowEngine trait                                   │
+│    ├─ current_screen() → ScreenModel                    │
+│    └─ handle_action(UserAction) → ActionResult           │
+│                                                         │
+│  ScreenModel  { title, subtitle, components, actions,   │
+│                 progress }                               │
+│  Component    { TextInput, ToggleList, FieldList,       │
+│                 CardPreview, InfoPanel, Text, Divider }  │
+│  UserAction   { TextChanged, ItemToggled,               │
+│                 ActionPressed, ... }                     │
+│  ActionResult { UpdateScreen, NavigateTo,               │
+│                 ValidationError, Complete }              │
+└────────────────────────┬────────────────────────────────┘
+                         │  ScreenModel (JSON or direct)
+                         │  UserAction (JSON or direct)
+┌────────────────────────▼────────────────────────────────┐
+│                Frontend (per platform)                    │
+│                                                         │
+│  Component Library (one native widget per Component)    │
+│    TextInput → TextField / OutlinedTextField / <input>  │
+│    ToggleList → Toggle list / Checkboxes / [x]/[ ]      │
+│    ...                                                  │
+│                                                         │
+│  ScreenRenderer                                         │
+│    Maps ScreenModel → native UI                         │
+│    Sends UserAction back to core                        │
+└─────────────────────────────────────────────────────────┘
+```
+
+Each frontend implements a **component library** (one native component per `Component` variant) and a **ScreenRenderer** that maps `ScreenModel` to native UI. The component library is built once and reused across all workflows.
+
+| Component | Desktop (SolidJS) | iOS (SwiftUI) | Android (Compose) | TUI (Ratatui) | CLI |
+|-----------|-------------------|---------------|-------------------|---------------|-----|
+| TextInput | `<input>` | TextField | OutlinedTextField | Input widget | stdin prompt |
+| ToggleList | Checkboxes | List + Toggle | LazyColumn + Checkbox | [x]/[ ] list | numbered choice |
+| FieldList | Field rows | List + chips | LazyColumn + chips | Table rows | formatted output |
+| CardPreview | Card component | Card view | Card composable | Box render | text output |
+| InfoPanel | Styled div | VStack | Column | Block | println sections |
+
+**Transport**: Rust clients (CLI, TUI, Desktop) call `WorkflowEngine` directly. Mobile clients (iOS, Android) use JSON over UniFFI.
+
+**Adding workflows**: Implement a new `WorkflowEngine` in core. All frontends render it automatically via the existing component library — no frontend changes needed.
+
+**Adding component types**: Define a new `Component` variant in core, then implement the corresponding native widget in each frontend's component library. This is rare — the vocabulary stabilizes quickly.
 
 ## Data Flow
 
