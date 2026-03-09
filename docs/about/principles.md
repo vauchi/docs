@@ -78,7 +78,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 | Principle | Statement |
 |-----------|-----------|
 | **Proximity Required** | QR + BLE/ultrasonic prevents remote harvesting |
-| **Audited Crypto Only** | `ring` crate primary; `x25519-dalek`, `chacha20poly1305`, and `argon2` are spec-mandated exceptions; no custom cryptography |
+| **Audited Crypto Only** | `aws-lc-rs` crate primary (FIPS 140-3); `x25519-dalek`, `chacha20poly1305`, and `argon2` are spec-mandated exceptions; no custom cryptography |
 | **Forward Secrecy** | Double Ratchet ensures past messages safe if keys compromised |
 | **Memory Safety** | Rust enforces safety; no unsafe in crypto paths |
 | **Defense in Depth** | Multiple layers: encryption, signing, verification |

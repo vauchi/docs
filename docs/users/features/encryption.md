@@ -79,7 +79,7 @@ Vauchi uses the Double Ratchet protocol (same as Signal):
 | Key derivation | HKDF-SHA256 | Derives keys from seeds |
 | Password KDF | Argon2id | Protects backups |
 
-All cryptography uses audited libraries (`ring`, `chacha20poly1305`, `argon2`).
+All cryptography uses audited libraries (`aws-lc-rs`, `chacha20poly1305`, `argon2`).
 
 ## What the Relay Server Sees
 

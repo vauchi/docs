@@ -10,15 +10,15 @@ Concise reference for all cryptographic operations in Vauchi.
 
 | Purpose | Algorithm | Library | Notes |
 |---------|-----------|---------|-------|
-| **Signing** | Ed25519 | `ring` | Identity, device registry, revocation |
+| **Signing** | Ed25519 | `aws-lc-rs` | Identity, device registry, revocation |
 | **Key Exchange** | X25519 | `x25519-dalek` | X3DH with identity binding for in-person exchange |
 | **Symmetric Encryption** | XChaCha20-Poly1305 | `chacha20poly1305` | Primary cipher |
-| **Legacy Symmetric** | AES-256-GCM | `ring` | Backward-compatible decryption |
-| **Forward Secrecy** | Double Ratchet | HKDF + HMAC (`ring`) | Chain limit 2000 |
-| **Key Derivation** | HKDF-SHA256 | `ring` | RFC 5869, domain-separated |
+| **Legacy Symmetric** | AES-256-GCM | `aws-lc-rs` | Backward-compatible decryption |
+| **Forward Secrecy** | Double Ratchet | HKDF + HMAC (`aws-lc-rs`) | Chain limit 2000 |
+| **Key Derivation** | HKDF-SHA256 | `aws-lc-rs` | RFC 5869, domain-separated |
 | **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 (OWASP) |
-| **Legacy Password** | PBKDF2-HMAC-SHA256 | `ring` | 600k iterations (v18+) / 100k (pre-v18), backups only |
-| **CSPRNG** | SystemRandom | `ring` | All random generation |
+| **Legacy Password** | PBKDF2-HMAC-SHA256 | `aws-lc-rs` | 600k iterations (v18+) / 100k (pre-v18), backups only |
+| **CSPRNG** | SystemRandom | `aws-lc-rs` | All random generation |
 
 ## Key Types
 
@@ -78,7 +78,7 @@ algorithm_tag (1 byte) || nonce || ciphertext || tag
 
 | Tag | Algorithm | Nonce | Notes |
 |-----|-----------|-------|-------|
-| `0x01` | AES-256-GCM | 12 bytes | Legacy (ring-only era) |
+| `0x01` | AES-256-GCM | 12 bytes | Legacy (pre-XChaCha20 era) |
 | `0x02` | XChaCha20-Poly1305 | 24 bytes | Default since v0.1.2 |
 | `0x03` | XChaCha20-Poly1305 + AD | 24 bytes | Double Ratchet (header-bound) |
 

@@ -8,7 +8,7 @@
 | Component | Technology | Notes |
 |-----------|------------|-------|
 | Language | Rust | Memory safety, cross-platform |
-| Crypto | `ring`, `chacha20poly1305`, `argon2` | Audited libraries |
+| Crypto | `aws-lc-rs`, `chacha20poly1305`, `argon2` | Audited, FIPS 140-3 |
 | Storage | SQLite | Encrypted with AES-256-GCM |
 | Serialization | serde + JSON | Protocol messages |
 | FFI | UniFFI | Swift/Kotlin bindings |

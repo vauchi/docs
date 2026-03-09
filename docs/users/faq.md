@@ -222,7 +222,7 @@ Partially:
 - **Key Derivation:** Argon2id (for passwords)
 - **Forward Secrecy:** Double Ratchet protocol
 
-All cryptography uses audited libraries (`ring`, `chacha20poly1305`, `argon2`).
+All cryptography uses audited libraries (`aws-lc-rs`, `chacha20poly1305`, `argon2`).
 
 ### Is Vauchi open source?
 

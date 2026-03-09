@@ -362,13 +362,13 @@ This pattern is used by Signal and other privacy-focused applications. Any imple
 
 | Purpose | Algorithm | Library |
 |---------|-----------|---------|
-| Signing | Ed25519 | `ring` |
+| Signing | Ed25519 | `aws-lc-rs` |
 | Key exchange | X25519 | `x25519-dalek` |
 | Symmetric encryption | XChaCha20-Poly1305 | `chacha20poly1305` |
-| Legacy encryption | AES-256-GCM | `ring` |
+| Legacy encryption | AES-256-GCM | `aws-lc-rs` |
 | Password KDF | Argon2id | `argon2` |
-| Key derivation | HKDF-SHA256 | `ring` |
-| CSPRNG | SystemRandom | `ring` |
+| Key derivation | HKDF-SHA256 | `aws-lc-rs` |
+| CSPRNG | SystemRandom | `aws-lc-rs` |
 
 For the full cryptographic specification, see the [Cryptography Reference](crypto.md).
 

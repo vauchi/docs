@@ -53,11 +53,11 @@ Vauchi uses battle-tested cryptographic libraries:
 
 | Purpose | Algorithm | Library |
 |---------|-----------|---------|
-| Signing | Ed25519 | `ring` |
+| Signing | Ed25519 | `aws-lc-rs` |
 | Key exchange | X25519 | `x25519-dalek` |
 | Symmetric encryption | XChaCha20-Poly1305 | `chacha20poly1305` |
 | Password KDF | Argon2id | `argon2` |
-| Key derivation | HKDF-SHA256 | `ring` |
+| Key derivation | HKDF-SHA256 | `aws-lc-rs` |
 
 All libraries are:
 

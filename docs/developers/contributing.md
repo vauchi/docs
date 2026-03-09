@@ -107,7 +107,7 @@ Use GitLab MR reference format: `{group}/{project}!{mr_number}`
 
 ### Rust
 
-- Use `ring` crate for all cryptography
+- Use `aws-lc-rs` crate for all cryptography (FIPS 140-3 Level 1)
 - Never mock crypto in tests
 - 90%+ test coverage for vauchi-core
 - Use `Result`/`Option`, fail fast
