@@ -4,9 +4,9 @@
 <!-- SSOT: This is the single source of truth for GUI design guidelines -->
 # GUI Design Guidelines
 
-**Cross-platform design rules for all vauchi client interfaces (desktop, Android, iOS).**
+**Cross-platform design rules for all vauchi client interfaces — smartphones, dumb-phones, smartwatches, tablets, laptops, desktops (Windows, macOS, Linux, Android, iOS).**
 
-These rules enforce [Principle 4: Simplicity serves the user](../about/principles.md#4-simplicity-serves-the-user) — vauchi stays out of your way. All GUI contributions must follow these guidelines.
+These rules enforce [Principle 4: Simplicity serves the user](../about/principles.md#4-simplicity-serves-the-user) — vauchi stays out of your way. All GUI contributions must follow these guidelines. For interaction-level guidelines (flows, physical device usage, navigation philosophy), see the sibling document [UX Interaction Guidelines](ux-guidelines.md).
 
 ---
 
@@ -89,13 +89,13 @@ Show only what the user needs now. Advanced options, secondary actions, and deta
 
 Each platform adapts these rules using native idioms. Users expect their platform's patterns — don't invent new ones.
 
-| Concept | Desktop (SolidJS) | Android (Compose) | iOS (SwiftUI) |
-|---------|-------------------|-------------------|---------------|
-| **Toast/Undo** | Custom snackbar component | `SnackbarHost` + `showSnackbar` | Custom overlay or SwiftUI toast |
-| **Inline confirm** | Expand-in-place div | Inline `Row` with action buttons | Swipe action + confirm state |
-| **Inline edit** | `contenteditable` or input swap | `TextField` replacing `Text` | `TextField` replacing `Text` |
-| **Navigation** | Sidebar + page transitions | `NavHost` / Material3 | `NavigationStack` |
-| **Loading** | Inline skeleton / spinner | `CircularProgressIndicator` | `ProgressView` |
+| Concept | Linux GTK4 | Linux Qt/QML | Windows (WinUI3) | macOS (SwiftUI) | Android (Compose) | iOS (SwiftUI) | watchOS / Wear OS | KaiOS (Web) |
+|---------|------------|-------------|-----------------|-----------------|-------------------|---------------|-------------------|-------------|
+| **Toast/Undo** | `adw::Toast` | Custom QML popup | `InfoBar` | Custom overlay | `SnackbarHost` | Custom overlay | Haptic + brief text | Soft-key toast |
+| **Inline confirm** | In-place `gtk::Box` | Inline `Row` | Inline `StackPanel` | Inline `VStack` | Inline `Row` | Swipe + confirm | Crown press-hold | Confirm soft-key |
+| **Inline edit** | `gtk::Entry` swap | `TextInput` swap | `TextBox` swap | `TextField` swap | `TextField` swap | `TextField` swap | Voice or companion | D-pad select |
+| **Navigation** | `adw::NavigationView` | `StackView` | `NavigationView` | `NavigationStack` | `NavHost` / M3 | `NavigationStack` | Vertical page list | Soft-key tabs |
+| **Loading** | `gtk::Spinner` | `BusyIndicator` | `ProgressRing` | `ProgressView` | `CircularProgress` | `ProgressView` | Dots animation | Inline text |
 
 **When platform convention conflicts with these rules:** Platform convention wins for interaction patterns (gestures, navigation, system dialogs). These rules win for information architecture (what triggers a dialog vs. inline action).
 

@@ -99,6 +99,7 @@ If the work spans multiple repos, each MR **must list the related MRs** it depen
 - [ ] Follows TDD
 - [ ] Documentation updated
 - [ ] Feature file updated (if applicable)
+- [ ] Follows [GUI Guidelines](gui-guidelines.md) and [UX Guidelines](ux-guidelines.md) (if UI changes)
 ```
 
 Use GitLab MR reference format: `{group}/{project}!{mr_number}`

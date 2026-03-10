@@ -13,13 +13,16 @@ New to the project? Start here:
 
 1. [**Contributing Guide**](contributing.md) — Set up your environment and learn the workflow
 2. [**Architecture Overview**](architecture.md) — Understand how the system works
-3. [**Cryptography Reference**](crypto.md) — Deep dive into encryption
+3. [**GUI Guidelines**](gui-guidelines.md) & [**UX Guidelines**](ux-guidelines.md) — Design rules for all platforms
+4. [**Cryptography Reference**](crypto.md) — Deep dive into encryption
 
 ## Documentation
 
 | Document | Description |
 |----------|-------------|
 | [Contributing](contributing.md) | Development workflow, code guidelines, PR process |
+| [GUI Guidelines](gui-guidelines.md) | Component-level design rules — toasts, inline editing, confirmations |
+| [UX Interaction Guidelines](ux-guidelines.md) | Interaction philosophy — physical-first, offline-first, flow design |
 | [Architecture](architecture.md) | System overview, components, data flow |
 | [Cryptography](crypto.md) | Encryption algorithms, key management, protocols |
 | [Tech Stack](tech-stack.md) | Languages, frameworks, libraries |
@@ -34,7 +37,10 @@ Vauchi is a multi-repo project under the [`vauchi` GitLab group](https://gitlab.
 | `vauchi/` | Orchestrator repo (this documentation) |
 | `core/` | Rust workspace: vauchi-core + UniFFI bindings |
 | `relay/` | WebSocket relay server |
-| `desktop/` | Tauri + SolidJS desktop app |
+| `linux-gtk/` | GTK4 Linux desktop app |
+| `linux-qt/` | Qt6/QML Linux desktop app |
+| `macos/` | macOS native app (SwiftUI) |
+| `windows/` | Windows native app (WinUI3) |
 | `ios/` | SwiftUI app |
 | `android/` | Kotlin/Compose app |
 | `features/` | Gherkin specs |

@@ -18,7 +18,7 @@ Vauchi is a privacy-focused contact card system. Users exchange contact cards in
 │  │                                                                      │   │
 │  │   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐    │   │
 │  │   │   iOS   │  │ Android │  │ Desktop │  │   CLI   │  │   TUI   │    │   │
-│  │   │ SwiftUI │  │ Compose │  │  Tauri  │  │  Rust   │  │  Rust   │    │   │
+│  │   │ SwiftUI │  │ Compose │  │ Native  │  │  Rust   │  │  Rust   │    │   │
 │  │   └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘    │   │
 │  │        │            │            │            │            │         │   │
 │  │        └────────────┴─────┬──────┴────────────┴────────────┘         │   │
@@ -90,7 +90,10 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 |----------|-------|---------|
 | iOS | SwiftUI | `vauchi-mobile-swift` (SPM) |
 | Android | Kotlin/Compose | `vauchi-mobile-android` (Gradle) |
-| Desktop | Tauri + SolidJS | Direct Rust linkage |
+| Linux (GTK) | GTK4 (`gtk4-rs`) | Direct Rust linkage |
+| Linux (Qt) | Qt6/QML | cbindgen C FFI |
+| macOS | SwiftUI | UniFFI (shared with iOS) |
+| Windows | WinUI3 (`windows-rs`) | Direct Rust linkage |
 | CLI | Rust | Direct library use |
 | TUI | Rust (ratatui) | Direct library use |
 
@@ -133,13 +136,13 @@ Core defines what to show; frontends only decide how to render natively. New wor
 
 Each frontend implements a **component library** (one native component per `Component` variant) and a **ScreenRenderer** that maps `ScreenModel` to native UI. The component library is built once and reused across all workflows.
 
-| Component | Desktop (SolidJS) | iOS (SwiftUI) | Android (Compose) | TUI (Ratatui) | CLI |
-|-----------|-------------------|---------------|-------------------|---------------|-----|
-| TextInput | `<input>` | TextField | OutlinedTextField | Input widget | stdin prompt |
-| ToggleList | Checkboxes | List + Toggle | LazyColumn + Checkbox | [x]/[ ] list | numbered choice |
-| FieldList | Field rows | List + chips | LazyColumn + chips | Table rows | formatted output |
-| CardPreview | Card component | Card view | Card composable | Box render | text output |
-| InfoPanel | Styled div | VStack | Column | Block | println sections |
+| Component | Linux GTK4 | Linux Qt/QML | macOS/iOS (SwiftUI) | Android (Compose) | Windows (WinUI3) | TUI (Ratatui) | CLI |
+|-----------|------------|-------------|---------------------|-------------------|-----------------|---------------|-----|
+| TextInput | `gtk::Entry` | `TextField` | `TextField` | `OutlinedTextField` | `TextBox` | Input widget | stdin prompt |
+| ToggleList | `gtk::CheckButton` | `CheckBox` | List + Toggle | LazyColumn + Checkbox | `ToggleSwitch` | [x]/[ ] list | numbered choice |
+| FieldList | `gtk::ListBox` | `ListView` | List + chips | LazyColumn + chips | `ListView` | Table rows | formatted output |
+| CardPreview | `gtk::Frame` | `Frame` | Card view | Card composable | `Border` | Box render | text output |
+| InfoPanel | `gtk::Box` | `ColumnLayout` | VStack | Column | `StackPanel` | Block | println sections |
 
 **Transport**: Rust clients (CLI, TUI, Desktop) call `WorkflowEngine` directly. Mobile clients (iOS, Android) use JSON over UniFFI.
 
@@ -255,9 +258,12 @@ Contact exchange requires in-person presence:
 
 ```
 vauchi/                    ← Orchestrator repo
-├── core/                  ← vauchi-core + vauchi-mobile + vauchi-protocol
+├── core/                  ← vauchi-core + vauchi-platform + vauchi-protocol
 ├── relay/                 ← WebSocket relay server (uses vauchi-protocol)
-├── desktop/               ← Tauri + SolidJS
+├── linux-gtk/             ← GTK4 Linux desktop app
+├── linux-qt/              ← Qt6/QML Linux desktop app
+├── macos/                 ← macOS native app (SwiftUI)
+├── windows/               ← Windows native app (WinUI3)
 ├── ios/                   ← SwiftUI app
 ├── android/               ← Kotlin/Compose app
 ├── cli/                   ← Command-line interface
@@ -270,6 +276,8 @@ vauchi/                    ← Orchestrator repo
 
 ## Related Documentation
 
+- [GUI Guidelines](gui-guidelines.md) — Component-level design rules (toasts, inline editing, confirmations)
+- [UX Interaction Guidelines](ux-guidelines.md) — Interaction philosophy (physical-first, offline-first, flow design)
 - [Crypto Reference](crypto.md) — Cryptographic operations
 - [Tech Stack](tech-stack.md) — Technology choices
 - [Diagrams](diagrams/index.md) — Sequence diagrams

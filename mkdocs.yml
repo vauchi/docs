@@ -75,6 +75,7 @@ nav:
     - developers/index.md
     - Contributing: developers/contributing.md
     - GUI Guidelines: developers/gui-guidelines.md
+    - UX Interaction Guidelines: developers/ux-guidelines.md
     - TDD Rules: developers/tdd-rules.md
     - Architecture: developers/architecture.md
     - Cryptography: developers/crypto.md
