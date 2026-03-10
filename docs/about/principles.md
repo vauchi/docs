@@ -27,7 +27,7 @@ All design starts with: *"How would we build this if users were our only concern
 
 Human recognition is the security anchor, not passwords or platforms.
 
-- QR exchange with physical proximity verification
+- QR exchange with physical proximity verification for full trust; opt-in remote discovery at reduced trust
 - No accounts or registration (device IS the identity)
 - Social vouching for recovery (people you've actually met)
 - No trust-on-first-use, no platform-mediated relationships
@@ -77,7 +77,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 
 | Principle | Statement |
 |-----------|-----------|
-| **Proximity Required** | QR + BLE/ultrasonic prevents remote harvesting |
+| **Proximity Anchors Full Trust** | QR + BLE/ultrasonic required for full trust; opt-in remote contact at restricted visibility, no recovery/introduction privileges |
 | **Audited Crypto Only** | `aws-lc-rs` crate primary (FIPS 140-3); `x25519-dalek`, `chacha20poly1305`, and `argon2` are spec-mandated exceptions; no custom cryptography |
 | **Forward Secrecy** | Double Ratchet ensures past messages safe if keys compromised |
 | **Memory Safety** | Rust enforces safety; no unsafe in crypto paths |

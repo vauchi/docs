@@ -82,8 +82,9 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 **Mitigations**:
 
 - Ed25519 identity keys bound to each user
-- Contact exchange requires **physical presence** (QR, NFC, or BLE with proximity check)
-- No trust-on-first-use: you verify who you connect with in person
+- Full-trust contact exchange requires **physical presence** (QR, NFC, or BLE with proximity check)
+- Opt-in remote discovery establishes reduced-trust contacts (Tier 0/1) with restricted visibility
+- No trust-on-first-use for full trust: you verify who you connect with in person
 - Device registry is cryptographically signed; unauthorized devices cannot be added
 
 **Residual risk**: Social engineering (convincing someone to scan a QR code under false pretenses).
@@ -161,7 +162,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 | **Forward secrecy** | Double Ratchet with ephemeral DH keys |
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Zero-knowledge relay** | Relay sees only encrypted blobs, no decryption keys |
-| **Physical verification** | QR + ultrasonic audio / NFC / BLE proximity |
+| **Physical verification** | QR + ultrasonic audio / NFC / BLE proximity (full trust); SAS + liveness (video, intermediate trust) |
 | **Traffic analysis resistance** | Fixed-size message padding + routing tokens |
 | **Memory safety** | Rust (no unsafe in crypto paths) + `zeroize` on drop |
 | **Replay prevention** | Double Ratchet counters + version numbers |
@@ -235,11 +236,59 @@ When relays federate (forward blobs to peer relays for redundancy), additional t
 
 **Known limitation**: Currently, the full master seed is shared during device linking (not per-device subkeys). A compromised linked device gains full identity control. Per-device subkey isolation is planned for 1.0 release.
 
+## Remote Discovery (Opt-In)
+
+When remote discovery is enabled, users can generate discovery tokens that allow contacts to be established without physical proximity. This introduces a new attack surface that is mitigated by graduated trust tiers.
+
+### Trust Tiers
+
+| Tier | Name | Established Via | Capabilities |
+|------|------|----------------|--------------|
+| 0 | Pending | Token-based contact request | View-only, expires after 30 days |
+| 1 | Accepted | Recipient accepts request | `Everyone`-visibility fields only |
+| 2 | VideoVerified | SAS + liveness over video call | Label-based visibility (configurable) |
+| 3 | InPerson | Physical QR/NFC/BLE exchange | Full access, recovery, introductions |
+
+Recovery and facilitated introductions remain gated to Tier 3 (InPerson) only.
+
+### Attack Surface
+
+| Threat | Mitigation |
+|--------|------------|
+| **Token spam/harvesting** | Token expiry timestamps, one-time use flag, relay rate limiting (existing) |
+| **Phishing via discovery token** | Tokens establish Tier 0 (Pending) only — no sensitive fields visible until manual acceptance |
+| **Social engineering to Tier 1** | Tier 1 sees only `Everyone` fields; cannot access recovery, introductions, or restricted labels |
+| **Video verification MITM** | SAS (Short Authentication String) mismatch detection — 6-digit code read aloud |
+| **Video deepfake/replay** | Shared-secret-derived finger-count liveness challenge (not automatable without real-time interaction) |
+| **Sender identity leakage to relay** | Sealed sender: ephemeral session IDs, no identity key in handshake |
+| **Recipient identity leakage to relay** | Mailbox tokens: HKDF-derived, hourly rotation, opaque to relay |
+| **Token replay** | Ed25519 signature + expiry timestamp + optional one-time use flag |
+| **Metadata correlation via mailbox tokens** | Hourly rotation (`epoch = unix_timestamp / 3600`), derived per-contact pair |
+
+### Sealed Sender Properties
+
+Sealed sender is **always enabled** — it improves metadata protection for all users, not just remote contacts. With sealed sender delivery, the relay sees:
+
+- **Session ID**: Ephemeral, per-connection (no identity key)
+- **Mailbox token**: Opaque, hourly rotation, derived from shared key
+- **Encrypted blob**: AEAD ciphertext, padded to fixed buckets
+
+The relay **cannot** determine: who sent a message, who the real recipient is (beyond the opaque token), or whether two sessions belong to the same user across reconnections.
+
+### Residual Risks
+
+| Risk | Severity | Notes |
+|------|----------|-------|
+| Remote contacts with weak trust | Low | Mitigated by tier gating — Tier 1 cannot exceed `Everyone` visibility |
+| Token distribution on untrusted channels | Medium | User responsibility; tokens are self-generated and self-published |
+| Video verification over compromised platform | Low | SAS provides cryptographic binding independent of video platform security |
+| Correlation of mailbox tokens across epoch boundaries | Low | Brief overlap window during rotation; complementary to Tor support |
+
 ## Known Limitations
 
 | Limitation | Impact | Mitigation Path |
 |-----------|--------|-----------------|
-| Relay sees connection metadata | Social graph inference possible | Routing token rotation, Tor support |
+| Relay sees connection metadata | Social graph inference possible | Sealed sender (ephemeral sessions + mailbox tokens), Tor support |
 | Device compromise exposes master seed | All-or-nothing with master seed | Per-device subkeys (planned), strong passwords |
 | Linked device receives full seed | Compromised device = full identity | Per-device subkeys (planned) |
 | Single relay is availability SPOF | Users can't sync if relay is down | Federation, multi-relay failover (planned) |
@@ -247,6 +296,7 @@ When relays federate (forward blobs to peer relays for redundancy), additional t
 | Recovery reveals voucher public keys | Partial social graph leakage | Accepted tradeoff for recovery |
 | No guardian diversity enforcement | All guardians from same circle | UX warnings (planned) |
 | No key transparency post-exchange | Key history not auditable | Lightweight signed key log (future) |
+| Remote contacts have weaker trust | Tier 1/2 lack in-person verification | Graduated trust tiers gate capabilities; upgrade via in-person meeting |
 | Push notifications would leak metadata | APNs/FCM see delivery timing | Empty push + app-side fetch (required design) |
 
 ## Core-UI Trust Boundary
@@ -284,8 +334,8 @@ While the relay sees only encrypted blobs, it observes metadata that can reveal 
 
 | Datum | Visibility | Example |
 |-------|-----------|---------|
-| Sender pseudonym (routing ID) | Per-session | `a3f8...` (rotated on reconnect) |
-| Recipient pseudonym | Per-message | `b7c2...` (stored message target) |
+| Sender pseudonym (session ID) | Per-connection | Ephemeral, no identity key (sealed sender) |
+| Recipient pseudonym (mailbox token) | Hourly rotation | HKDF-derived, opaque to relay |
 | Message timing | Exact | Timestamp of send/receive |
 | Message size | Approximate | Encrypted blob size (padded to buckets) |
 | Connection frequency | Exact | How often a client connects |
