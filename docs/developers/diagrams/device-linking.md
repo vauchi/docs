@@ -228,7 +228,7 @@ sequenceDiagram
 |----------|--------|-------|
 | **Core API** | Complete | Full protocol with tests |
 | **CLI** | Complete | 7 commands: list, link, join, complete, finish, revoke, info |
-| **Desktop (Tauri)** | Complete | SolidJS UI with QR display, confirmation overlay |
+| **Desktop (native)** | Complete | Native UI (SwiftUI/GTK/Qt) with QR display, confirmation overlay |
 | **TUI** | Complete | ratatui UI with QR overlay, vim-style navigation |
 | **iOS** | Planned | Awaiting mobile bindings |
 | **Android** | Planned | Awaiting mobile bindings |

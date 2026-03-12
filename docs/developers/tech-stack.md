@@ -33,14 +33,22 @@
 | Bindings | UniFFI (Gradle dependency) |
 | Min SDK | 26 (Android 8.0) |
 
-## Desktop App
+## Desktop Apps (Native)
+
+| Platform | Framework | Language | Bindings |
+|----------|-----------|----------|----------|
+| macOS | SwiftUI | Swift | UniFFI (SPM) |
+| Linux (GTK) | GTK4 + libadwaita | Rust | Direct (same process) |
+| Linux (Qt) | Qt 6 | C++ | C ABI (vauchi-cabi) |
+| Windows | WinUI 3 | C# (.NET 8) | C ABI (vauchi-cabi) |
+
+## Web Demo
 
 | Component | Technology | Notes |
 |-----------|------------|-------|
-| Framework | Tauri 2.0 | Rust backend + web frontend |
-| Frontend | SolidJS | Lightweight, reactive |
-| Styling | Tailwind CSS | Utility-first |
-| Platforms | macOS, Windows, Linux | |
+| Framework | SolidJS | TypeScript, WASM bridge |
+| Core | vauchi-core (WASM) | `wasm32-unknown-unknown` target |
+| Crypto | Hybrid WebCrypto + RustCrypto | Browser-native where possible |
 
 ## CLI & TUI
 
@@ -91,7 +99,7 @@
 ```
 vauchi-core (standalone, no workspace deps)
     ↑ (git dependency)
-cli/, tui/, desktop/, e2e/
+cli/, tui/, macos/, linux-gtk/, linux-qt/, e2e/
 
 relay/ (standalone, no vauchi-core dependency)
 ```

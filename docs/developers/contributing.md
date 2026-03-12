@@ -123,7 +123,7 @@ crate/
 
 ## Mobile Bindings Workflow
 
-UniFFI generates Swift/Kotlin bindings from Rust. When modifying `vauchi-mobile` or `vauchi-core`:
+UniFFI generates Swift/Kotlin bindings from Rust. When modifying `vauchi-platform` or `vauchi-core`:
 
 ### When to Regenerate Bindings
 
@@ -139,7 +139,7 @@ Regenerate bindings when you:
 cd core
 
 # IMPORTANT: Build without symbol stripping to preserve metadata
-RUSTFLAGS="-Cstrip=none" cargo build -p vauchi-mobile --release
+RUSTFLAGS="-Cstrip=none" cargo build -p vauchi-platform --release
 
 # Regenerate for both platforms (macOS required for iOS)
 ./scripts/build-bindings.sh
@@ -170,16 +170,20 @@ This is a multi-repo project under the [`vauchi` GitLab group](https://gitlab.co
 ```
 vauchi/                          ← root repo (justfile, CI config)
 │
-├── core/                        ← Rust workspace: vauchi-core + vauchi-mobile (UniFFI)
+├── core/                        ← Rust workspace: vauchi-core + vauchi-platform (UniFFI)
 ├── relay/                       ← WebSocket relay server (standalone Rust)
 ├── cli/                         ← Command-line interface
 ├── tui/                         ← Terminal user interface
-├── desktop/                     ← Tauri + SolidJS desktop app
 │
 ├── android/                     ← Kotlin/Compose native app
 ├── ios/                         ← SwiftUI native app
-├── vauchi-mobile-android/       ← Generated Kotlin bindings + JNI libs (Gradle distribution)
-├── vauchi-mobile-swift/         ← Generated Swift bindings + XCFramework (SPM distribution)
+├── macos/                       ← SwiftUI macOS app
+├── linux-gtk/                   ← GTK4 + libadwaita Linux app
+├── linux-qt/                    ← Qt6 Linux app
+├── windows/                     ← WinUI 3 Windows app
+├── web-demo/                    ← SolidJS + WASM demo app
+├── vauchi-platform-kotlin/      ← Generated Kotlin bindings + JNI libs (Gradle distribution)
+├── vauchi-platform-swift/       ← Generated Swift bindings + XCFramework (SPM distribution)
 │
 ├── e2e/                         ← End-to-end tests
 ├── features/                    ← Gherkin specs (shared across all platforms)
@@ -190,7 +194,7 @@ vauchi/                          ← root repo (justfile, CI config)
 └── assets/                      ← Brand assets, logos
 ```
 
-**Mobile bindings** (`vauchi-mobile-swift/`, `vauchi-mobile-android/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
+**Platform bindings** (`vauchi-platform-swift/`, `vauchi-platform-kotlin/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
 
 ## Release Workflow
 
@@ -207,7 +211,7 @@ Vauchi uses a 3-tier versioning system. Each tier triggers a different CI pipeli
 ```bash
 just release-dev [repo]      # Fast feedback — default: core. E.g., just release-dev cli
 just release-rc [repo]       # Full quality gate. E.g., just release-rc relay
-just release-prod [repo]     # Full release. E.g., just release-prod desktop
+just release-prod [repo]     # Full release. E.g., just release-prod core
 just release-history [repo]  # Show promotion chain. E.g., just release-history tui
 ```
 

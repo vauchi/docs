@@ -301,7 +301,7 @@ The relay **cannot** determine: who sent a message, who the real recipient is (b
 
 ## Core-UI Trust Boundary
 
-The `vauchi-core` library is consumed by multiple UI layers (Desktop/Tauri, CLI, TUI, mobile Swift/Kotlin via UniFFI). The trust relationship between core and its callers:
+The `vauchi-core` library is consumed by multiple UI layers (macOS/SwiftUI, Linux-GTK, Linux-Qt, CLI, TUI, mobile Swift/Kotlin via UniFFI). The trust relationship between core and its callers:
 
 **What core trusts from UI**:
 
