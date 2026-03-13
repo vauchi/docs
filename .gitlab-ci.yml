@@ -69,6 +69,12 @@ pages:
     - mkdocs
   script:
     - mv site public
+    - |
+      curl --silent --fail \
+        "${CI_API_V4_URL}/projects/vauchi%2Fscripts/repository/files/scripts%2Fci%2Fgenerate-badges.sh/raw?ref=main" \
+        -o generate-badges.sh
+      chmod +x generate-badges.sh
+    - ./generate-badges.sh public/badges
   artifacts:
     paths:
       - public
