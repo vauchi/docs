@@ -99,9 +99,18 @@
 ```
 vauchi-core (standalone, no workspace deps)
     ↑ (git dependency)
-cli/, tui/, macos/, linux-gtk/, linux-qt/, e2e/
+cli/, tui/, e2e/, macos/, windows/, linux-gtk/, linux-qt/, web-demo/
 
-relay/ (standalone, no vauchi-core dependency)
+vauchi-platform (UniFFI bindings, in core/ workspace)
+    ↑ (via generated binding repos)
+android/ ← vauchi-platform-kotlin (Gradle)
+ios/     ← vauchi-platform-swift (SPM)
+
+vauchi-cabi (C ABI exports, in core/ workspace)
+    ↑ (cbindgen)
+linux-qt/, windows/
+
+relay/ (standalone, uses vauchi-protocol for shared types only)
 ```
 
 Downstream repos use git dependencies with branch-based pinning (`branch = "main"`).
