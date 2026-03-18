@@ -78,7 +78,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 | Principle | Statement |
 |-----------|-----------|
 | **Proximity Anchors Full Trust** | QR + BLE/ultrasonic required for full trust; opt-in remote contact at restricted visibility, no recovery/introduction privileges |
-| **Audited Crypto Only** | `aws-lc-rs` crate primary (FIPS 140-3); `x25519-dalek`, `chacha20poly1305`, and `argon2` are spec-mandated exceptions; no custom cryptography |
+| **Audited Crypto Only** | RustCrypto audited crates primary (`ed25519-dalek`, `x25519-dalek`: Trail of Bits; `sha2`, `hmac`, `hkdf`: RustCrypto); `chacha20poly1305` and `argon2` spec-mandated; `aws-lc-rs` retained for TLS only (via rustls); no custom cryptography |
 | **Forward Secrecy** | Double Ratchet ensures past messages safe if keys compromised |
 | **Memory Safety** | Rust enforces safety; no unsafe in crypto paths |
 | **Defense in Depth** | Multiple layers: encryption, signing, verification |
