@@ -108,7 +108,7 @@ Use GitLab MR reference format: `{group}/{project}!{mr_number}`
 
 ### Rust
 
-- Use `aws-lc-rs` crate for all cryptography (FIPS 140-3 Level 1)
+- Use RustCrypto audited crates (`ed25519-dalek`, `x25519-dalek`, `sha2`, `hmac`, `hkdf`, `chacha20poly1305`, `argon2`); `aws-lc-rs` for TLS only (via rustls)
 - Never mock crypto in tests
 - 90%+ test coverage for vauchi-core
 - Use `Result`/`Option`, fail fast

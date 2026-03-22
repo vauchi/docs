@@ -77,7 +77,7 @@ algorithm_tag (1 byte) || nonce || ciphertext || tag
 
 | Tag | Algorithm | Nonce | Notes |
 |-----|-----------|-------|-------|
-| `0x01` | AES-256-GCM | 12 bytes | Legacy (pre-XChaCha20 era) |
+| `0x01` | AES-256-GCM | 12 bytes | Removed — no longer supported |
 | `0x02` | XChaCha20-Poly1305 | 24 bytes | Default since v0.1.2 |
 | `0x03` | XChaCha20-Poly1305 + AD | 24 bytes | Double Ratchet (header-bound) |
 
@@ -183,16 +183,15 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 - Cipher: XChaCha20-Poly1305
 - Plaintext: `display_name_len(4) || display_name || master_seed(32) || device_index(4) || device_name_len(4) || device_name`
 
-### v1 (Legacy)
+### v1 (Removed)
 
 ```
 salt(16) || nonce(12) || ciphertext || tag(16)
 ```
 
-- Key derivation: PBKDF2-HMAC-SHA256 (600k iterations v18+ / 100k pre-v18)
+- Key derivation: PBKDF2-HMAC-SHA256
 - Cipher: AES-256-GCM
-
-Import auto-detects version by first byte.
+- **Status:** Removed from codebase. Documented for format reference only.
 
 ## Transport Encryption (Noise NK)
 

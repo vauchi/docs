@@ -88,12 +88,12 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
 | Platform | Stack | Binding |
 |----------|-------|---------|
-| iOS | SwiftUI | `vauchi-mobile-swift` (SPM) |
-| Android | Kotlin/Compose | `vauchi-mobile-android` (Gradle) |
+| iOS | SwiftUI | `vauchi-platform-swift` (SPM) |
+| Android | Kotlin/Compose | `vauchi-platform-kotlin` (Gradle) |
 | Linux (GTK) | GTK4 (`gtk4-rs`) | Direct Rust linkage |
 | Linux (Qt) | Qt6/QML | cbindgen C FFI |
 | macOS | SwiftUI | UniFFI (shared with iOS) |
-| Windows | WinUI3 (`windows-rs`) | Direct Rust linkage |
+| Windows | WinUI3 (C# .NET 8) | C ABI (`vauchi-cabi`) |
 | CLI | Rust | Direct library use |
 | TUI | Rust (ratatui) | Direct library use |
 

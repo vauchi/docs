@@ -9,7 +9,7 @@
 |-----------|------------|-------|
 | Language | Rust | Memory safety, cross-platform |
 | Crypto | `ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2` | RustCrypto audited crates |
-| Storage | SQLite | Encrypted with AES-256-GCM |
+| Storage | SQLite | Encrypted with XChaCha20-Poly1305 |
 | Serialization | serde + JSON | Protocol messages |
 | FFI | UniFFI | Swift/Kotlin bindings |
 

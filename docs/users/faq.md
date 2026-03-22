@@ -13,7 +13,7 @@ Answers to common questions about Vauchi.
 
 **Yes, comprehensively:**
 
-- **At rest:** All data on your device is encrypted with AES-256-GCM using a key stored in your device's secure hardware (iOS Keychain / Android KeyStore)
+- **At rest:** All data on your device is encrypted with XChaCha20-Poly1305 using a key stored in your device's secure hardware (iOS Keychain / Android KeyStore)
 - **In transit:** All communication uses end-to-end encryption (X25519 + XChaCha20-Poly1305)
 - **Backups:** Protected with Argon2id key derivation and XChaCha20-Poly1305
 
@@ -222,7 +222,7 @@ Partially:
 - **Key Derivation:** Argon2id (for passwords)
 - **Forward Secrecy:** Double Ratchet protocol
 
-All cryptography uses audited libraries (`aws-lc-rs`, `chacha20poly1305`, `argon2`).
+All cryptography uses audited libraries (`ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2`).
 
 ### Is Vauchi open source?
 
