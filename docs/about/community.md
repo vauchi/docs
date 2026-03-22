@@ -22,20 +22,20 @@ We welcome contributions! See our [Contributing Guide](../developers/contributin
 
 - Development setup
 - Code guidelines
-- Pull request process
+- Merge request process
 
 ### Translations
 
 Help translate Vauchi to your language:
 
 - Locale files: [https://gitlab.com/vauchi/locales](https://gitlab.com/vauchi/locales)
-- Submit PRs with new translations or fixes
+- Submit merge requests with new translations or fixes
 
 ### Discussions
 
 Have questions or ideas?
 
-- **GitHub Discussions:** [https://github.com/vauchi/vauchi/discussions](https://github.com/vauchi/vauchi/discussions)
+- **GitLab Issues:** [https://gitlab.com/vauchi/vauchi/-/issues](https://gitlab.com/vauchi/vauchi/-/issues) (use the `question` or `idea` label)
 
 ---
 
@@ -61,7 +61,7 @@ Vauchi is built on trust earned in person. We extend that same spirit to our com
 
 ### Scope
 
-This applies to all project spaces: issues, pull requests, discussions, and any public space where you represent Vauchi.
+This applies to all project spaces: issues, merge requests, discussions, and any public space where you represent Vauchi.
 
 ### Enforcement
 

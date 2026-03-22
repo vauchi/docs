@@ -8,7 +8,7 @@
 | Component | Technology | Notes |
 |-----------|------------|-------|
 | Language | Rust | Memory safety, cross-platform |
-| Crypto | `aws-lc-rs`, `chacha20poly1305`, `argon2` | Audited, FIPS 140-3 |
+| Crypto | `ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2` | RustCrypto audited crates |
 | Storage | SQLite | Encrypted with AES-256-GCM |
 | Serialization | serde + JSON | Protocol messages |
 | FFI | UniFFI | Swift/Kotlin bindings |
@@ -48,7 +48,7 @@
 |-----------|------------|-------|
 | Framework | SolidJS | TypeScript, WASM bridge |
 | Core | vauchi-core (WASM) | `wasm32-unknown-unknown` target |
-| Crypto | Hybrid WebCrypto + RustCrypto | Browser-native where possible |
+| Crypto | Pure RustCrypto (WASM) | No WebCrypto bridge needed (SP-30) |
 
 ## CLI & TUI
 

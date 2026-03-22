@@ -79,5 +79,5 @@ All development follows our [core principles](../about/principles.md):
 ## Getting Help
 
 - **Issues:** [GitLab Issues](https://gitlab.com/vauchi/vauchi/-/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/vauchi/vauchi/discussions)
+- **Discussions:** [GitLab Issues](https://gitlab.com/vauchi/vauchi/-/issues)
 - **Code of Conduct:** [Community Standards](../about/community.md)

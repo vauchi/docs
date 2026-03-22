@@ -10,15 +10,14 @@ Concise reference for all cryptographic operations in Vauchi.
 
 | Purpose | Algorithm | Library | Notes |
 |---------|-----------|---------|-------|
-| **Signing** | Ed25519 | `aws-lc-rs` | Identity, device registry, revocation |
+| **Signing** | Ed25519 | `ed25519-dalek` | Identity, device registry, revocation |
 | **Key Exchange** | X25519 | `x25519-dalek` | X3DH with identity binding for in-person exchange |
-| **Symmetric Encryption** | XChaCha20-Poly1305 | `chacha20poly1305` | Primary cipher |
-| **Legacy Symmetric** | AES-256-GCM | `aws-lc-rs` | Backward-compatible decryption |
-| **Forward Secrecy** | Double Ratchet | HKDF + HMAC (`aws-lc-rs`) | Chain limit 2000 |
-| **Key Derivation** | HKDF-SHA256 | `aws-lc-rs` | RFC 5869, domain-separated |
+| **Symmetric Encryption** | XChaCha20-Poly1305 | `chacha20poly1305` | Primary cipher (192-bit nonce) |
+| **Forward Secrecy** | Double Ratchet | `hkdf` + `hmac` | HKDF-SHA256 + HMAC-SHA256, chain limit 2000 |
+| **Key Derivation** | HKDF-SHA256 | `hkdf` | RFC 5869, domain-separated |
 | **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 (OWASP) |
-| **Legacy Password** | PBKDF2-HMAC-SHA256 | `aws-lc-rs` | 600k iterations (v18+) / 100k (pre-v18), backups only |
-| **CSPRNG** | SystemRandom | `aws-lc-rs` | All random generation |
+| **CSPRNG** | OsRng | `rand` | OS-provided entropy via `rand::rngs::OsRng` |
+| **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs` backend) | Relay connections only |
 
 ## Key Types
 

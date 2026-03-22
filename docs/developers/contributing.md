@@ -237,7 +237,7 @@ just git sync          # Fetch all + pull where on main
 ## Getting Help
 
 - Review existing issues
-- Ask in [Discussions](https://github.com/vauchi/vauchi/discussions)
+- Ask in [GitLab Issues](https://gitlab.com/vauchi/vauchi/-/issues)
 
 ## License
 

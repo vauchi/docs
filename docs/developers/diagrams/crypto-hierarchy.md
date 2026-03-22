@@ -62,17 +62,17 @@ flowchart TB
 
 ### HKDF Convention
 
-All HKDF derivations use the same pattern (documented as "DP-5"):
+All HKDF derivations use standard RFC 5869 (documented as "DP-5"):
 
 ```
 HKDF-SHA256:
-  - salt: master_seed (32 bytes)
-  - ikm: empty
-  - info: domain string (e.g., "Vauchi_Shred_Key")
+  - salt: None (zeros per RFC 5869 §2.2)
+  - ikm: master_seed (32 bytes, high-entropy input)
+  - info: domain string (e.g., "Vauchi_Exchange_Seed_v2")
   - output: 32 bytes
 ```
 
-This is unconventional (salt/ikm swapped) but consistently applied.
+This follows standard HKDF convention: high-entropy seed as IKM, no salt needed.
 
 ### Key Sizes
 
