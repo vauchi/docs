@@ -60,6 +60,8 @@ Master Seed (256-bit)
 | `Vauchi_Message_Key` | Symmetric ratchet message key |
 | `Vauchi_Chain_Key` | Symmetric ratchet chain key advance |
 | `Vauchi_AnonymousSender_v2` | Anonymous sender ID derivation |
+| `Vauchi_Mailbox_v1` | Contact mailbox token (daily rotation, SP-33) |
+| `Vauchi_DeviceSync_v1` | Device sync self-token (daily rotation, SP-33) |
 
 ### Ratchet Keys
 
@@ -223,7 +225,7 @@ v2 (Noise-encrypted) connections are identified by a 3-byte magic prefix:
 0x00 'V' '2' || 48-byte NK handshake message
 ```
 
-The `0x00` first byte distinguishes v2 from v1 (plaintext JSON, which always starts with `{`). After the handshake completes, all subsequent WebSocket frames are Noise-encrypted.
+All connections use the 3-byte `0x00 V 2` prefix followed by the NK handshake. After the handshake completes, all subsequent WebSocket frames are Noise-encrypted.
 
 ### Why NK?
 
@@ -238,7 +240,7 @@ The `0x00` first byte distinguishes v2 from v1 (plaintext JSON, which always sta
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `RELAY_REQUIRE_NOISE` | `false` | Reject v1 (plaintext) connections |
+| ~~`RELAY_REQUIRE_NOISE`~~ | ~~`false`~~ | Removed in v0.1 — Noise NK is always mandatory |
 
 The relay's Noise keypair is auto-generated on first start and persisted to `{data_dir}/relay_noise_key.bin`.
 
