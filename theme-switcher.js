@@ -235,7 +235,7 @@
           var path = document.createElementNS("http://www.w3.org/2000/svg", "path");
           path.setAttribute("d", "m23.6 9.593-.033-.086L20.3 1.01a.851.851 0 0 0-.336-.405.877.877 0 0 0-.994.03.882.882 0 0 0-.29.44l-2.204 6.748H7.538L5.334 1.075a.857.857 0 0 0-.29-.441.877.877 0 0 0-.994-.03.86.86 0 0 0-.336.405L.433 9.502l-.032.086a6.066 6.066 0 0 0 2.012 7.01l.012.009.03.022 4.982 3.73 2.464 1.865 1.5 1.134a1.01 1.01 0 0 0 1.22 0l1.5-1.134 2.465-1.865 5.012-3.752.013-.01a6.072 6.072 0 0 0 2.009-7.004");
           svg.appendChild(path); gl.appendChild(svg);
-          gitLink.parentElement.insertBefore(gl, gitLink.nextSibling);
+          try { gitLink.parentElement.insertBefore(gl, gitLink.nextSibling); } catch (e) { gitLink.parentElement.appendChild(gl); }
         }
       }
     }
