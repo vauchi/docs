@@ -18,25 +18,12 @@ Vauchi is a contact card that updates automatically. When you change your phone 
 
 ## Quick Links
 
-<div class="grid cards" markdown>
-
-- :material-account-plus: **[Getting Started](users/getting-started.md)**
-
-    Set up Vauchi and exchange your first contact
-
-- :material-frequently-asked-questions: **[FAQ](users/faq.md)**
-
-    Answers to common questions
-
-- :material-shield-lock: **[Security](about/security.md)**
-
-    How we protect your data
-
-- :material-heart: **[Our Principles](about/principles.md)**
-
-    Why we built Vauchi the way we did
-
-</div>
+| | |
+|---|---|
+| 👤 **[Getting Started](users/getting-started.md)** | Set up Vauchi and exchange your first contact |
+| ❓ **[FAQ](users/faq.md)** | Answers to common questions |
+| 🔒 **[Security](about/security.md)** | How we protect your data |
+| 💜 **[Our Principles](about/principles.md)** | Why we built Vauchi the way we did |
 
 ## For Developers
 
