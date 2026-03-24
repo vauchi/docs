@@ -69,13 +69,15 @@ package:docker:
   image: docker:27
   services:
     - docker:27-dind
+  variables:
+    IMAGE: registry.gitlab.com/vauchi/docs
   needs:
     - build:docs
   script:
-    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -t $CI_REGISTRY_IMAGE:latest .
+    - docker build -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
     - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $IMAGE:$CI_COMMIT_SHA
+    - docker push $IMAGE:latest
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
@@ -90,6 +92,6 @@ deploy:docs:
     strategy: depend
   variables:
     DEPLOY_SERVICE: docs
-    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    DEPLOY_IMAGE: registry.gitlab.com/vauchi/docs:$CI_COMMIT_SHA
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
