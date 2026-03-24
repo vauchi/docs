@@ -1,39 +1,24 @@
-// This Source Code Form is subject to the terms of the Mozilla Public
-// License, v. 2.0. If a copy of the MPL was not distributed with this
-// file, You can obtain one at https://mozilla.org/MPL/2.0/.
+// SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
+//
+// SPDX-License-Identifier: GPL-3.0-or-later
 
+// Lazy-load mermaid only when diagrams are present on the page.
+// Avoids loading 2.6MB JS on pages without diagrams.
 (() => {
+    const hasDiagrams = document.querySelectorAll('.language-mermaid, pre > code.mermaid').length > 0;
+    if (!hasDiagrams) return;
+
     const darkThemes = ['ayu', 'navy', 'coal'];
-    const lightThemes = ['light', 'rust'];
-
-    const classList = document.getElementsByTagName('html')[0].classList;
-
-    let lastThemeWasLight = true;
-    for (const cssClass of classList) {
-        if (darkThemes.includes(cssClass)) {
-            lastThemeWasLight = false;
-            break;
-        }
+    const classList = document.documentElement.classList;
+    let isDark = false;
+    for (const c of classList) {
+        if (darkThemes.includes(c)) { isDark = true; break; }
     }
 
-    const theme = lastThemeWasLight ? 'default' : 'dark';
-    mermaid.initialize({ startOnLoad: true, theme });
-
-    // Simplest way to make mermaid re-render the diagrams in the new theme is via refreshing the page
-
-    for (const darkTheme of darkThemes) {
-        document.getElementById(darkTheme).addEventListener('click', () => {
-            if (lastThemeWasLight) {
-                window.location.reload();
-            }
-        });
-    }
-
-    for (const lightTheme of lightThemes) {
-        document.getElementById(lightTheme).addEventListener('click', () => {
-            if (!lastThemeWasLight) {
-                window.location.reload();
-            }
-        });
-    }
+    const script = document.createElement('script');
+    script.src = 'mermaid.min.js';
+    script.onload = () => {
+        mermaid.initialize({ startOnLoad: true, theme: isDark ? 'dark' : 'default' });
+    };
+    document.head.appendChild(script);
 })();

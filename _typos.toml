@@ -10,3 +10,5 @@ extend-exclude = ["mermaid.min.js", "mermaid-init.js", "mdbook-admonish.css", "b
 # Rust crate names
 ratatui = "ratatui"
 Ratatui = "Ratatui"
+# mdBook's own CSS variable name (their typo)
+existant = "existant"

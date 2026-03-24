@@ -1,350 +1,156 @@
 /* SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> */
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-/* Generated from themes/themes.json — do not edit manually */
+/* Vauchi theme overrides for mdBook
+   Generated from themes/themes.json — default-dark for coal/navy/ayu,
+   default-light for light, catppuccin-mocha as alternative dark. */
 
-/* Vauchi Dark (dark) */
-[data-vauchi-theme="default-dark"] {
-  --bg: #1a1a2e;
-  --fg: #eeeeee;
-  --sidebar-bg: #16213e;
-  --sidebar-fg: #eeeeee;
-  --sidebar-active: #4fc3f7;
-  --links: #4fc3f7;
-  --inline-code-color: #f44336;
-  --theme-popup-bg: #0f3460;
-  --theme-popup-border: #333333;
-  --quote-bg: #0f3460;
-  --quote-border: #333333;
-  --table-border-color: #333333;
-  --table-header-bg: #0f3460;
-  --searchbar-border-color: #333333;
-  --searchbar-bg: #0f3460;
-  --searchbar-fg: #eeeeee;
-  --v-accent: #4fc3f7;
-  --v-success: #4caf50;
-  --v-error: #f44336;
-  --v-warning: #ff9800;
+/* Default dark (Vauchi Dark) → coal, navy, ayu */
+.coal {
+    --bg: #1a1a2e;
+    --fg: #eeeeee;
+    --sidebar-bg: #16213e;
+    --sidebar-fg: #eeeeee;
+    --sidebar-non-existant: #a0a0a0;
+    --sidebar-active: #4fc3f7;
+    --links: #4fc3f7;
+    --inline-code-color: #f44336;
+    --theme-popup-bg: #0f3460;
+    --theme-popup-border: #333333;
+    --quote-bg: #0f3460;
+    --quote-border: #333333;
+    --table-border-color: #333333;
+    --table-header-bg: #0f3460;
+    --table-alternate-bg: #16213e;
+    --searchbar-border-color: #333333;
+    --searchbar-bg: #0f3460;
+    --searchbar-fg: #eeeeee;
+    --searchresults-header-fg: #a0a0a0;
+    --searchresults-border-color: #333333;
+    --icons: #a0a0a0;
+    --icons-hover: #eeeeee;
 }
 
-/* Vauchi Light (light) */
-[data-vauchi-theme="default-light"] {
-  --bg: #ffffff;
-  --fg: #212121;
-  --sidebar-bg: #f5f5f5;
-  --sidebar-fg: #212121;
-  --sidebar-active: #1976d2;
-  --links: #1976d2;
-  --inline-code-color: #d32f2f;
-  --theme-popup-bg: #e0e0e0;
-  --theme-popup-border: #e0e0e0;
-  --quote-bg: #e0e0e0;
-  --quote-border: #e0e0e0;
-  --table-border-color: #e0e0e0;
-  --table-header-bg: #e0e0e0;
-  --searchbar-border-color: #e0e0e0;
-  --searchbar-bg: #e0e0e0;
-  --searchbar-fg: #212121;
-  --v-accent: #1976d2;
-  --v-success: #388e3c;
-  --v-error: #d32f2f;
-  --v-warning: #f57c00;
+.navy {
+    --bg: #1a1a2e;
+    --fg: #eeeeee;
+    --sidebar-bg: #16213e;
+    --sidebar-fg: #eeeeee;
+    --sidebar-non-existant: #a0a0a0;
+    --sidebar-active: #4fc3f7;
+    --links: #4fc3f7;
+    --inline-code-color: #f44336;
+    --theme-popup-bg: #0f3460;
+    --theme-popup-border: #333333;
+    --quote-bg: #0f3460;
+    --quote-border: #333333;
+    --table-border-color: #333333;
+    --table-header-bg: #0f3460;
+    --table-alternate-bg: #16213e;
+    --searchbar-border-color: #333333;
+    --searchbar-bg: #0f3460;
+    --searchbar-fg: #eeeeee;
+    --searchresults-header-fg: #a0a0a0;
+    --searchresults-border-color: #333333;
+    --icons: #a0a0a0;
+    --icons-hover: #eeeeee;
 }
 
-/* Catppuccin Mocha (dark) */
-[data-vauchi-theme="catppuccin-mocha"] {
-  --bg: #1e1e2e;
-  --fg: #cdd6f4;
-  --sidebar-bg: #181825;
-  --sidebar-fg: #cdd6f4;
-  --sidebar-active: #89b4fa;
-  --links: #89b4fa;
-  --inline-code-color: #f38ba8;
-  --theme-popup-bg: #313244;
-  --theme-popup-border: #45475a;
-  --quote-bg: #313244;
-  --quote-border: #45475a;
-  --table-border-color: #45475a;
-  --table-header-bg: #313244;
-  --searchbar-border-color: #45475a;
-  --searchbar-bg: #313244;
-  --searchbar-fg: #cdd6f4;
-  --v-accent: #89b4fa;
-  --v-success: #a6e3a1;
-  --v-error: #f38ba8;
-  --v-warning: #fab387;
+.ayu {
+    --bg: #1e1e2e;
+    --fg: #cdd6f4;
+    --sidebar-bg: #181825;
+    --sidebar-fg: #cdd6f4;
+    --sidebar-non-existant: #a6adc8;
+    --sidebar-active: #89b4fa;
+    --links: #89b4fa;
+    --inline-code-color: #f38ba8;
+    --theme-popup-bg: #313244;
+    --theme-popup-border: #45475a;
+    --quote-bg: #313244;
+    --quote-border: #45475a;
+    --table-border-color: #45475a;
+    --table-header-bg: #313244;
+    --table-alternate-bg: #181825;
+    --searchbar-border-color: #45475a;
+    --searchbar-bg: #313244;
+    --searchbar-fg: #cdd6f4;
+    --searchresults-header-fg: #a6adc8;
+    --searchresults-border-color: #45475a;
+    --icons: #a6adc8;
+    --icons-hover: #cdd6f4;
 }
 
-/* Catppuccin Latte (light) */
-[data-vauchi-theme="catppuccin-latte"] {
-  --bg: #eff1f5;
-  --fg: #4c4f69;
-  --sidebar-bg: #e6e9ef;
-  --sidebar-fg: #4c4f69;
-  --sidebar-active: #1e66f5;
-  --links: #1e66f5;
-  --inline-code-color: #d20f39;
-  --theme-popup-bg: #ccd0da;
-  --theme-popup-border: #9ca0b0;
-  --quote-bg: #ccd0da;
-  --quote-border: #9ca0b0;
-  --table-border-color: #9ca0b0;
-  --table-header-bg: #ccd0da;
-  --searchbar-border-color: #9ca0b0;
-  --searchbar-bg: #ccd0da;
-  --searchbar-fg: #4c4f69;
-  --v-accent: #1e66f5;
-  --v-success: #40a02b;
-  --v-error: #d20f39;
-  --v-warning: #fe640b;
+/* Default light (Vauchi Light) */
+.light {
+    --bg: #ffffff;
+    --fg: #212121;
+    --sidebar-bg: #f5f5f5;
+    --sidebar-fg: #212121;
+    --sidebar-non-existant: #757575;
+    --sidebar-active: #1976d2;
+    --links: #1976d2;
+    --inline-code-color: #d32f2f;
+    --theme-popup-bg: #e0e0e0;
+    --theme-popup-border: #e0e0e0;
+    --quote-bg: #e0e0e0;
+    --quote-border: #e0e0e0;
+    --table-border-color: #e0e0e0;
+    --table-header-bg: #e0e0e0;
+    --table-alternate-bg: #f5f5f5;
+    --searchbar-border-color: #e0e0e0;
+    --searchbar-bg: #e0e0e0;
+    --searchbar-fg: #212121;
+    --searchresults-header-fg: #757575;
+    --searchresults-border-color: #e0e0e0;
+    --icons: #757575;
+    --icons-hover: #212121;
 }
 
-/* Catppuccin Frappé (dark) */
-[data-vauchi-theme="catppuccin-frappe"] {
-  --bg: #303446;
-  --fg: #c6d0f5;
-  --sidebar-bg: #292c3c;
-  --sidebar-fg: #c6d0f5;
-  --sidebar-active: #8caaee;
-  --links: #8caaee;
-  --inline-code-color: #e78284;
-  --theme-popup-bg: #414559;
-  --theme-popup-border: #51576d;
-  --quote-bg: #414559;
-  --quote-border: #51576d;
-  --table-border-color: #51576d;
-  --table-header-bg: #414559;
-  --searchbar-border-color: #51576d;
-  --searchbar-bg: #414559;
-  --searchbar-fg: #c6d0f5;
-  --v-accent: #8caaee;
-  --v-success: #a6d189;
-  --v-error: #e78284;
-  --v-warning: #ef9f76;
+/* Rust theme → Catppuccin Mocha */
+.rust {
+    --bg: #1e1e2e;
+    --fg: #cdd6f4;
+    --sidebar-bg: #181825;
+    --sidebar-fg: #cdd6f4;
+    --sidebar-non-existant: #a6adc8;
+    --sidebar-active: #89b4fa;
+    --links: #89b4fa;
+    --inline-code-color: #f38ba8;
+    --theme-popup-bg: #313244;
+    --theme-popup-border: #45475a;
+    --quote-bg: #313244;
+    --quote-border: #45475a;
+    --table-border-color: #45475a;
+    --table-header-bg: #313244;
+    --table-alternate-bg: #181825;
+    --searchbar-border-color: #45475a;
+    --searchbar-bg: #313244;
+    --searchbar-fg: #cdd6f4;
+    --searchresults-header-fg: #a6adc8;
+    --searchresults-border-color: #45475a;
+    --icons: #a6adc8;
+    --icons-hover: #cdd6f4;
 }
-
-/* Catppuccin Macchiato (dark) */
-[data-vauchi-theme="catppuccin-macchiato"] {
-  --bg: #24273a;
-  --fg: #cad3f5;
-  --sidebar-bg: #1e2030;
-  --sidebar-fg: #cad3f5;
-  --sidebar-active: #8aadf4;
-  --links: #8aadf4;
-  --inline-code-color: #ed8796;
-  --theme-popup-bg: #363a4f;
-  --theme-popup-border: #494d64;
-  --quote-bg: #363a4f;
-  --quote-border: #494d64;
-  --table-border-color: #494d64;
-  --table-header-bg: #363a4f;
-  --searchbar-border-color: #494d64;
-  --searchbar-bg: #363a4f;
-  --searchbar-fg: #cad3f5;
-  --v-accent: #8aadf4;
-  --v-success: #a6da95;
-  --v-error: #ed8796;
-  --v-warning: #f5a97f;
-}
-
-/* Dracula (dark) */
-[data-vauchi-theme="dracula"] {
-  --bg: #282a36;
-  --fg: #f8f8f2;
-  --sidebar-bg: #21222c;
-  --sidebar-fg: #f8f8f2;
-  --sidebar-active: #bd93f9;
-  --links: #bd93f9;
-  --inline-code-color: #ff5555;
-  --theme-popup-bg: #44475a;
-  --theme-popup-border: #44475a;
-  --quote-bg: #44475a;
-  --quote-border: #44475a;
-  --table-border-color: #44475a;
-  --table-header-bg: #44475a;
-  --searchbar-border-color: #44475a;
-  --searchbar-bg: #44475a;
-  --searchbar-fg: #f8f8f2;
-  --v-accent: #bd93f9;
-  --v-success: #50fa7b;
-  --v-error: #ff5555;
-  --v-warning: #ffb86c;
-}
-
-/* Nord (dark) */
-[data-vauchi-theme="nord"] {
-  --bg: #2e3440;
-  --fg: #eceff4;
-  --sidebar-bg: #3b4252;
-  --sidebar-fg: #eceff4;
-  --sidebar-active: #88c0d0;
-  --links: #88c0d0;
-  --inline-code-color: #bf616a;
-  --theme-popup-bg: #434c5e;
-  --theme-popup-border: #4c566a;
-  --quote-bg: #434c5e;
-  --quote-border: #4c566a;
-  --table-border-color: #4c566a;
-  --table-header-bg: #434c5e;
-  --searchbar-border-color: #4c566a;
-  --searchbar-bg: #434c5e;
-  --searchbar-fg: #eceff4;
-  --v-accent: #88c0d0;
-  --v-success: #a3be8c;
-  --v-error: #bf616a;
-  --v-warning: #ebcb8b;
-}
-
-/* Solarized Dark (dark) */
-[data-vauchi-theme="solarized-dark"] {
-  --bg: #002b36;
-  --fg: #839496;
-  --sidebar-bg: #073642;
-  --sidebar-fg: #839496;
-  --sidebar-active: #268bd2;
-  --links: #268bd2;
-  --inline-code-color: #dc322f;
-  --theme-popup-bg: #586e75;
-  --theme-popup-border: #073642;
-  --quote-bg: #586e75;
-  --quote-border: #073642;
-  --table-border-color: #073642;
-  --table-header-bg: #586e75;
-  --searchbar-border-color: #073642;
-  --searchbar-bg: #586e75;
-  --searchbar-fg: #839496;
-  --v-accent: #268bd2;
-  --v-success: #859900;
-  --v-error: #dc322f;
-  --v-warning: #b58900;
-}
-
-/* Solarized Light (light) */
-[data-vauchi-theme="solarized-light"] {
-  --bg: #fdf6e3;
-  --fg: #586e75;
-  --sidebar-bg: #eee8d5;
-  --sidebar-fg: #586e75;
-  --sidebar-active: #268bd2;
-  --links: #268bd2;
-  --inline-code-color: #dc322f;
-  --theme-popup-bg: #93a1a1;
-  --theme-popup-border: #eee8d5;
-  --quote-bg: #93a1a1;
-  --quote-border: #eee8d5;
-  --table-border-color: #eee8d5;
-  --table-header-bg: #93a1a1;
-  --searchbar-border-color: #eee8d5;
-  --searchbar-bg: #93a1a1;
-  --searchbar-fg: #586e75;
-  --v-accent: #268bd2;
-  --v-success: #859900;
-  --v-error: #dc322f;
-  --v-warning: #b58900;
-}
-
-/* Gruvbox Dark (dark) */
-[data-vauchi-theme="gruvbox-dark"] {
-  --bg: #282828;
-  --fg: #ebdbb2;
-  --sidebar-bg: #3c3836;
-  --sidebar-fg: #ebdbb2;
-  --sidebar-active: #83a598;
-  --links: #83a598;
-  --inline-code-color: #fb4934;
-  --theme-popup-bg: #504945;
-  --theme-popup-border: #504945;
-  --quote-bg: #504945;
-  --quote-border: #504945;
-  --table-border-color: #504945;
-  --table-header-bg: #504945;
-  --searchbar-border-color: #504945;
-  --searchbar-bg: #504945;
-  --searchbar-fg: #ebdbb2;
-  --v-accent: #83a598;
-  --v-success: #b8bb26;
-  --v-error: #fb4934;
-  --v-warning: #fabd2f;
-}
-
-/* Gruvbox Light (light) */
-[data-vauchi-theme="gruvbox-light"] {
-  --bg: #fbf1c7;
-  --fg: #3c3836;
-  --sidebar-bg: #ebdbb2;
-  --sidebar-fg: #3c3836;
-  --sidebar-active: #458588;
-  --links: #458588;
-  --inline-code-color: #cc241d;
-  --theme-popup-bg: #d5c4a1;
-  --theme-popup-border: #d5c4a1;
-  --quote-bg: #d5c4a1;
-  --quote-border: #d5c4a1;
-  --table-border-color: #d5c4a1;
-  --table-header-bg: #d5c4a1;
-  --searchbar-border-color: #d5c4a1;
-  --searchbar-bg: #d5c4a1;
-  --searchbar-fg: #3c3836;
-  --v-accent: #458588;
-  --v-success: #98971a;
-  --v-error: #cc241d;
-  --v-warning: #d79921;
-}
-
-/* High Contrast (dark) */
-[data-vauchi-theme="high-contrast"] {
-  --bg: #000000;
-  --fg: #ffffff;
-  --sidebar-bg: #0a0a0a;
-  --sidebar-fg: #ffffff;
-  --sidebar-active: #ffff00;
-  --links: #ffff00;
-  --inline-code-color: #ff0000;
-  --theme-popup-bg: #1a1a1a;
-  --theme-popup-border: #ffffff;
-  --quote-bg: #1a1a1a;
-  --quote-border: #ffffff;
-  --table-border-color: #ffffff;
-  --table-header-bg: #1a1a1a;
-  --searchbar-border-color: #ffffff;
-  --searchbar-bg: #1a1a1a;
-  --searchbar-fg: #ffffff;
-  --v-accent: #ffff00;
-  --v-success: #00ff00;
-  --v-error: #ff0000;
-  --v-warning: #ffff00;
-}
-
-/* High Contrast Light (light) */
-[data-vauchi-theme="high-contrast-light"] {
-  --bg: #ffffff;
-  --fg: #000000;
-  --sidebar-bg: #f0f0f0;
-  --sidebar-fg: #000000;
-  --sidebar-active: #0000cc;
-  --links: #0000cc;
-  --inline-code-color: #cc0000;
-  --theme-popup-bg: #e0e0e0;
-  --theme-popup-border: #000000;
-  --quote-bg: #e0e0e0;
-  --quote-border: #000000;
-  --table-border-color: #000000;
-  --table-header-bg: #e0e0e0;
-  --searchbar-border-color: #000000;
-  --searchbar-bg: #e0e0e0;
-  --searchbar-fg: #000000;
-  --v-accent: #0000cc;
-  --v-success: #006600;
-  --v-error: #cc0000;
-  --v-warning: #996600;
-}
-
-/* Map mdBook built-in themes to Vauchi defaults */
-.coal, .navy, .ayu { /* dark themes */ }
-.coal { --bg: #1a1a2e; --fg: #eeeeee; --sidebar-bg: #16213e; --sidebar-fg: #eeeeee; --sidebar-active: #4fc3f7; --links: #4fc3f7; --inline-code-color: #f44336; --theme-popup-bg: #0f3460; --quote-bg: #0f3460; --table-border-color: #333333; --table-header-bg: #0f3460; --searchbar-bg: #0f3460; --searchbar-fg: #eeeeee; }
-.light { --bg: #ffffff; --fg: #212121; --sidebar-bg: #f5f5f5; --sidebar-fg: #212121; --sidebar-active: #1976d2; --links: #1976d2; --inline-code-color: #d32f2f; --theme-popup-bg: #e0e0e0; --quote-bg: #e0e0e0; --table-border-color: #e0e0e0; --table-header-bg: #e0e0e0; --searchbar-bg: #e0e0e0; --searchbar-fg: #212121; }
 
 /* Typography */
-code { font-family: 'JetBrains Mono', 'Fira Code', monospace; font-size: 0.9em; }
-.content h1, .content h2 { border-bottom: 1px solid var(--table-border-color); padding-bottom: 0.3em; }
-.admonition { border-radius: 8px; }
+code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.9em;
+}
+
+.content h1,
+.content h2 {
+    border-bottom: 1px solid var(--table-border-color);
+    padding-bottom: 0.3em;
+}
+
+/* Admonish tweaks */
+.admonition {
+    border-radius: 8px;
+}
+
+/* Sidebar branding */
+.sidebar .sidebar-scrollbox {
+    padding-top: 1em;
+}
