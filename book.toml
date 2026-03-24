@@ -29,9 +29,8 @@ limit-results = 20
 command = "mdbook-admonish"
 assets_version = "3.1.0"
 
-# Mermaid diagrams via JS (no preprocessor needed — mermaid.min.js handles rendering)
-# [preprocessor.mermaid]
-# command = "mdbook-mermaid"
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
 
 [output.html.playground]
 editable = false
