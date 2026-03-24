@@ -34,21 +34,39 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 │         │                                                    │
 └─────────┼────────────────────────────────────────────────────┘
           │ TLS + E2E encrypted
+          │                         ┌─ Optional: SOCKS5 proxy ─┐
+          │                         │  (Tor, VPN, etc.)         │
+          │                         └───────────────────────────┘
+┌─────────▼────────────────────────────────────────────────────┐
+│              SELF-HOSTED REVERSE PROXY (nginx/caddy)          │
+│  • Strips all client-identifying headers                      │
+│  • Relay never sees client IP addresses                       │
+└─────────┬────────────────────────────────────────────────────┘
+          │ Internal network
+┌─────────▼────────────────────────────────────────────────────┐
+│              OHTTP LAYER (RFC 9458) — optional path           │
+│  • OHTTP relay: sees client IP, cannot read content           │
+│  • Gateway: decrypts content, sees only OHTTP relay IP        │
+│  • No single hop sees both client identity and request        │
+└─────────┬────────────────────────────────────────────────────┘
           │
 ┌─────────▼────────────────────────────────────────────────────┐
 │                      RELAY SERVER                             │
 │                                                               │
 │  • Assumed compromised (zero-knowledge design)               │
-│  • Sees only encrypted blobs                                 │
+│  • Sees only encrypted blobs, never client IPs               │
 │  • No user accounts, no decryption keys                      │
 │  • Store-and-forward with TTL                                │
+│  • Timing obfuscation: sync jitter, payload padding          │
 │                                                               │
 └───────────────────────────────────────────────────────────────┘
 ```
 
 | Boundary | Protection | Trust Level |
 |----------|-----------|-------------|
-| Client ↔ Relay | TLS + authenticated WebSocket | Relay is **untrusted** |
+| Client ↔ Reverse Proxy | TLS | Proxy is **trusted** (self-hosted, strips client headers) |
+| Reverse Proxy ↔ Relay | Internal network | Relay is **untrusted** (never sees client IPs) |
+| Client ↔ OHTTP Relay ↔ Gateway | OHTTP (RFC 9458) | Neither hop sees both client identity and request content |
 | Client ↔ Client | E2E encrypted (X3DH + Double Ratchet) | Verified in person |
 | Device ↔ Device | Same identity, HKDF-derived device keys | Trusted (same master seed) |
 | Contact ↔ Contact | Per-contact CEK, forward secrecy | Verified at exchange time |
@@ -67,8 +85,9 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 
 | Adversary | Capability | Motivation |
 |-----------|------------|------------|
-| Passive network observer | Sees encrypted traffic | Surveillance, profiling |
-| Malicious relay operator | Runs a relay node | Data harvesting, traffic analysis |
+| Passive network observer | Sees encrypted traffic to reverse proxy (HTTPS, no protocol signatures) | Surveillance, profiling |
+| Malicious relay operator | Sees encrypted blobs and timing; **cannot** see client IPs (reverse proxy + OHTTP) | Data harvesting, traffic analysis |
+| OHTTP relay operator | Sees client IP but **cannot** read request content (encrypted to gateway) | Metadata correlation |
 | Compromised device | Full access to one device | Targeted attack, theft |
 | Physical attacker | Steals or seizes device | Law enforcement, theft |
 | Malicious contact | Legitimate contact | Social engineering, stalking |
@@ -122,7 +141,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 - Sensitive key material zeroized on drop (`zeroize` crate)
 - Message padding to fixed buckets (256 B, 1 KB, 4 KB) prevents size-based inference
 
-**Residual risk**: Metadata (connection timing, recipient pseudonyms) visible to relay. Mitigated by routing tokens, `suppress_presence`, and optional Tor support.
+**Residual risk**: Metadata (connection timing, recipient pseudonyms) visible to relay. Mitigated by the four-layer privacy architecture: reverse proxy (strips client IPs), OHTTP (cryptographic content protection), timing obfuscation (sync jitter + padding), and optional SOCKS5 proxy support.
 
 ### Denial of Service
 
@@ -163,7 +182,8 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Zero-knowledge relay** | Relay sees only encrypted blobs, no decryption keys |
 | **Physical verification** | QR + ultrasonic audio / NFC / BLE proximity (full trust); SAS + liveness (video, intermediate trust) |
-| **Traffic analysis resistance** | Fixed-size message padding + routing tokens |
+| **Traffic analysis resistance** | Fixed-size message padding + routing tokens + timing obfuscation |
+| **IP privacy** | Self-hosted reverse proxy strips client headers; OHTTP (RFC 9458) provides cryptographic separation |
 | **Memory safety** | Rust (no unsafe in crypto paths) + `zeroize` on drop |
 | **Replay prevention** | Double Ratchet counters + version numbers |
 
@@ -177,7 +197,8 @@ If an attacker gains full control of a relay:
 - **Cannot** forge messages (AEAD + signatures)
 - **Can** see pseudonymous recipient IDs and message timing
 - **Can** drop or delay messages (detected by delivery acknowledgments)
-- **Can** observe connection patterns (mitigated by Tor support)
+- **Cannot** see client IP addresses (reverse proxy strips headers; OHTTP encrypts requests to gateway)
+- **Can** observe connection timing patterns (mitigated by timing obfuscation: 30s-5min post-exchange jitter, ±15% sync interval jitter)
 
 ### Device Theft
 
@@ -215,7 +236,7 @@ When relays federate (forward blobs to peer relays for redundancy), additional t
 - Message content (E2E encrypted)
 - Sender identity (not included in federation protocol)
 - Real identity behind routing IDs
-- Client IP addresses (federation is relay-to-relay)
+- Client IP addresses (federation is relay-to-relay; clients are behind reverse proxy + OHTTP)
 
 **Guarantees**:
 
@@ -282,13 +303,13 @@ The relay **cannot** determine: who sent a message, who the real recipient is (b
 | Remote contacts with weak trust | Low | Mitigated by tier gating — Tier 1 cannot exceed `Everyone` visibility |
 | Token distribution on untrusted channels | Medium | User responsibility; tokens are self-generated and self-published |
 | Video verification over compromised platform | Low | SAS provides cryptographic binding independent of video platform security |
-| Correlation of mailbox tokens across epoch boundaries | Low | Brief overlap window during rotation; complementary to Tor support |
+| Correlation of mailbox tokens across epoch boundaries | Low | Brief overlap window during rotation; complementary to OHTTP and timing obfuscation |
 
 ## Known Limitations
 
 | Limitation | Impact | Mitigation Path |
 |-----------|--------|-----------------|
-| Relay sees connection metadata | Social graph inference possible | Sealed sender (ephemeral sessions + mailbox tokens), Tor support |
+| Relay sees connection metadata | Social graph inference possible | Sealed sender (ephemeral sessions + mailbox tokens), four-layer privacy architecture (reverse proxy, OHTTP, timing obfuscation, optional SOCKS5) |
 | Device compromise exposes master seed | All-or-nothing with master seed | Per-device subkeys (planned), strong passwords |
 | Linked device receives full seed | Compromised device = full identity | Per-device subkeys (planned) |
 | Single relay is availability SPOF | Users can't sync if relay is down | Federation, multi-relay failover (planned) |
@@ -336,12 +357,13 @@ While the relay sees only encrypted blobs, it observes metadata that can reveal 
 |-------|-----------|---------|
 | Sender pseudonym (session ID) | Per-connection | Ephemeral, no identity key (sealed sender) |
 | Recipient pseudonym (mailbox token) | Hourly rotation | HKDF-derived, opaque to relay |
-| Message timing | Exact | Timestamp of send/receive |
+| Message timing | Obfuscated | Jittered by 30s-5min (post-exchange) and ±15% (sync intervals) |
 | Message size | Approximate | Encrypted blob size (padded to buckets) |
-| Connection frequency | Exact | How often a client connects |
+| Connection frequency | Approximate | Jittered sync intervals prevent exact measurement |
 
 **What the relay CANNOT see**:
 
+- Client IP addresses (stripped by self-hosted reverse proxy; OHTTP provides additional cryptographic separation)
 - Message content (E2E encrypted, AEAD)
 - Contact card fields (encrypted under per-contact CEK)
 - Sender identity beyond pseudonymous routing ID
@@ -355,10 +377,21 @@ The social graph inference risk is **lower than for messaging apps** because:
 2. Updates are small and padded to fixed buckets (256 B, 512 B, 1 KB, 4 KB)
 3. All locale files are downloaded in bulk to prevent language inference
 4. Routing IDs are pseudonymous and session-scoped
+5. Relay never sees client IPs (reverse proxy strips headers; OHTTP provides cryptographic separation)
+6. Timing obfuscation (sync jitter, post-exchange delay) prevents correlation of connection patterns
 
-**Current mitigations**: Routing token rotation, `suppress_presence` flag, optional Tor support, fixed-size message padding.
+**Current mitigations** (four-layer privacy architecture):
 
-**Future considerations**: Mixnet-based relay routing or Private Information Retrieval (PIR) could eliminate recipient pseudonym visibility entirely. These are not currently prioritized given Vauchi's low-frequency traffic pattern, but remain on the architectural roadmap for high-threat deployments.
+1. **Self-hosted reverse proxy** (nginx/caddy) — strips all client-identifying headers before forwarding to relay. The relay provably never touches client IP addresses.
+2. **OHTTP** (RFC 9458) — cryptographic content protection. The OHTTP relay sees the client IP but cannot read request content (encrypted to gateway). The gateway decrypts but only sees the OHTTP relay's internal IP. No single hop sees both client identity and request content.
+3. **Timing obfuscation** — post-exchange sync jitter (30s-5min random delay), sync interval jitter (±15%), payload padding to bucket sizes. Applied to all users by default.
+4. **Generic SOCKS5 proxy support** — optional, user-configured. Route through Tor, VPN, or any SOCKS5 proxy for ISP-level hiding.
+
+Additional mitigations: routing token rotation, `suppress_presence` flag, fixed-size message padding.
+
+**Why OHTTP over Tor**: Tor's 90-120s mobile bootstrap latency is fatal for adoption. Tor traffic is banned or flagged in countries that need privacy most (China, Iran, Russia). OHTTP traffic is indistinguishable from normal HTTPS — no special protocol signatures. The four-layer architecture provides equivalent metadata protection for Vauchi's threat model without the usability and censorship-resistance penalties.
+
+**Future considerations**: Private Information Retrieval (PIR) could eliminate recipient pseudonym visibility entirely. Cover traffic patterns could further reduce timing correlation. These are not currently prioritized given Vauchi's low-frequency traffic pattern, but remain on the architectural roadmap for high-threat deployments.
 
 ## Key Transparency
 
@@ -427,11 +460,12 @@ For the full cryptographic specification, see the [Cryptography Reference](crypt
 | Aspect | Vauchi | Messaging Apps |
 |--------|--------|----------------|
 | Traffic volume | Very low (rare updates) | High (continuous) |
-| Timing analysis value | Low | High |
-| Social graph value | Medium | High |
-| Metadata exposure | Recipient ID only | Sender + recipient |
+| Timing analysis value | Low (jittered) | High |
+| Social graph value | Low (no client IPs, jittered timing) | High |
+| Metadata exposure | Recipient ID only (no client IPs) | Sender + recipient + IPs |
+| IP privacy | Reverse proxy + OHTTP (no protocol signatures) | Varies (often server sees IPs) |
 | Forward secrecy | Yes (Double Ratchet) | Varies |
-| Relay knowledge | Encrypted blobs only | Often plaintext |
+| Relay knowledge | Encrypted blobs only, no client IPs | Often plaintext |
 | Recovery model | Social vouching (K contacts, in person) | Phone number / cloud backup |
 
 Vauchi's infrequent, small updates significantly reduce the value of traffic analysis compared to messaging apps.
