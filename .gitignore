@@ -13,3 +13,4 @@ site/
 *.pem
 credentials.json
 service-account*.json
+book/

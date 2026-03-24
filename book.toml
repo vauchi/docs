@@ -1,0 +1,37 @@
+# SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+[book]
+title = "Vauchi Docs"
+description = "Privacy-focused updatable contact cards — documentation"
+authors = ["Mattia Egloff"]
+language = "en"
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "coal"
+preferred-dark-theme = "coal"
+git-repository-url = "https://gitlab.com/vauchi/docs"
+edit-url-template = "https://gitlab.com/vauchi/docs/-/edit/main/src/{path}"
+site-url = "/"
+no-section-label = false
+additional-css = ["src/theme/vauchi.css", "mdbook-admonish.css"]
+additional-js = ["mermaid.min.js", "mermaid-init.js"]
+
+[output.html.search]
+enable = true
+limit-results = 20
+
+[preprocessor.admonish]
+command = "mdbook-admonish"
+assets_version = "3.1.0"
+
+# Mermaid diagrams via JS (no preprocessor needed — mermaid.min.js handles rendering)
+# [preprocessor.mermaid]
+# command = "mdbook-mermaid"
+
+[output.html.playground]
+editable = false

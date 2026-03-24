@@ -1,0 +1,12 @@
+# SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+# Exclude vendored/minified JavaScript from spell checking
+[files]
+extend-exclude = ["mermaid.min.js", "mermaid-init.js", "mdbook-admonish.css", "book/"]
+
+[default.extend-words]
+# Rust crate names
+ratatui = "ratatui"
+Ratatui = "Ratatui"

@@ -4,7 +4,7 @@
 
 # GitLab CI for vauchi-docs
 #
-# Documentation linting, mkdocs build, and deployment
+# Documentation linting, mdbook build, and deployment
 #
 # Uses shared templates from vauchi/scripts for consistency.
 
@@ -30,7 +30,7 @@ lint:markdown:
     - markdownlint
   needs: []
   script:
-    - markdownlint '**/*.md' --config .markdownlint.json --ignore node_modules --ignore site
+    - markdownlint 'src/**/*.md' --config .markdownlint.json --ignore node_modules --ignore book
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
@@ -41,21 +41,21 @@ secret_detection:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Build mkdocs site — use self-hosted runner (mkdocs-material pre-installed)
+# Build mdbook site — use self-hosted runner (mdbook + preprocessors pre-installed)
 build:docs:
   stage: build
   tags:
     - self-hosted
-    - mkdocs
+    - rust
   script:
-    - mkdocs build --strict
+    - mdbook build
     - |
-      cat > site/build-info.json <<EOF
+      cat > book/build-info.json <<EOF
       {"sha":"$CI_COMMIT_SHA","short_sha":"$CI_COMMIT_SHORT_SHA","ref":"$CI_COMMIT_REF_NAME","built":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","pipeline":"$CI_PIPELINE_URL"}
       EOF
   artifacts:
     paths:
-      - site/
+      - book/
     expire_in: 1 week
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -66,9 +66,9 @@ pages:
   stage: deploy
   tags:
     - self-hosted
-    - mkdocs
+    - rust
   script:
-    - mv site public
+    - mv book public
     - |
       curl --silent --fail \
         "${CI_API_V4_URL}/projects/vauchi%2Fscripts/repository/files/scripts%2Fci%2Fgenerate-badges.sh/raw?ref=main" \

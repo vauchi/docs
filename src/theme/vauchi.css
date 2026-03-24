@@ -1,0 +1,55 @@
+/* SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+/* Vauchi Docs — Catppuccin-inspired mdBook theme */
+
+/* Coal theme overrides (dark mode, matches Catppuccin Mocha) */
+.coal {
+  --bg: #1e1e2e;
+  --fg: #cdd6f4;
+  --sidebar-bg: #181825;
+  --sidebar-fg: #cdd6f4;
+  --sidebar-active: #4fc3f7;
+  --links: #4fc3f7;
+  --inline-code-color: #f38ba8;
+  --theme-popup-bg: #313244;
+  --theme-popup-border: #45475a;
+  --quote-bg: #313244;
+  --quote-border: #45475a;
+  --table-border-color: #45475a;
+  --table-header-bg: #313244;
+  --table-alternate-bg: #1e1e2e;
+  --searchbar-border-color: #45475a;
+  --searchbar-bg: #313244;
+  --searchbar-fg: #cdd6f4;
+  --searchresults-header-fg: #a6adc8;
+  --searchresults-border-color: #45475a;
+}
+
+/* Light theme overrides (matches Catppuccin Latte) */
+.light {
+  --bg: #eff1f5;
+  --fg: #4c4f69;
+  --sidebar-bg: #e6e9ef;
+  --sidebar-fg: #4c4f69;
+  --sidebar-active: #1e66f5;
+  --links: #1e66f5;
+  --inline-code-color: #d20f39;
+}
+
+/* Accent color for headings */
+.content h1, .content h2 {
+  border-bottom: 1px solid var(--table-border-color);
+  padding-bottom: 0.3em;
+}
+
+/* Code block styling */
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.9em;
+}
+
+/* Admonish styling tweaks for Catppuccin */
+.admonition {
+  border-radius: 8px;
+}
