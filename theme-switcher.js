@@ -202,7 +202,7 @@
       if (icon) { icon.className = ""; icon.style.fontStyle = "normal"; icon.textContent = "\uD83C\uDFA8"; }
     }
 
-    // Add moon/sun toggle (if not already added)
+    // Add moon/sun toggle next to theme toggle (in its actual parent)
     if (!document.getElementById("vauchi-mode-toggle")) {
       var modeBtn = document.createElement("button");
       modeBtn.id = "vauchi-mode-toggle";
@@ -212,8 +212,9 @@
       modeBtn.style.cssText = "background:none;border:none;cursor:pointer;font-size:18px;padding:4px 8px;color:var(--icons,#999)";
       modeBtn.textContent = "\uD83C\uDF19";
       modeBtn.addEventListener("click", function (e) { e.stopPropagation(); toggleDarkLight(); });
-      if (themeToggle) buttons.insertBefore(modeBtn, themeToggle);
-      else buttons.appendChild(modeBtn);
+      // Insert in the same parent as theme-toggle (may be left-buttons or right-buttons)
+      var toggleParent = themeToggle ? themeToggle.parentElement : buttons;
+      try { toggleParent.insertBefore(modeBtn, themeToggle); } catch (e) { toggleParent.appendChild(modeBtn); }
     }
 
     // Add GitLab link (if not already added)
