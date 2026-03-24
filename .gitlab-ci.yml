@@ -48,7 +48,8 @@ build:docs:
     - self-hosted
     - rust
   script:
-    - mdbook --version && mdbook-admonish --version && mdbook-mermaid --version || true
+    - export PATH="$HOME/.cargo/bin:$PATH"
+    - mdbook --version && mdbook-admonish --version && mdbook-mermaid --version
     - mdbook build
     - |
       cat > book/build-info.json <<EOF
