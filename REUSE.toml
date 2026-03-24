@@ -59,3 +59,14 @@ SPDX-License-Identifier = "GPL-3.0-or-later"
 path = ["**/*.webp"]
 SPDX-FileCopyrightText = "2026 Mattia Egloff <mattia.egloff@pm.me>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
+
+# Vendored third-party assets (mdBook preprocessors)
+[[annotations]]
+path = ["mermaid.min.js", "mermaid-init.js"]
+SPDX-FileCopyrightText = "2014-2024 Knut Sveidqvist"
+SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = ["mdbook-admonish.css"]
+SPDX-FileCopyrightText = "2022-2024 Tom Martin"
+SPDX-License-Identifier = "MIT"
