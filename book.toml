@@ -19,7 +19,7 @@ edit-url-template = "https://gitlab.com/vauchi/docs/-/edit/main/src/{path}"
 site-url = "/"
 no-section-label = false
 additional-css = ["src/theme/vauchi.css", "mdbook-admonish.css"]
-additional-js = ["mermaid-init.js"]
+additional-js = ["mermaid-init.js", "theme-switcher.js"]
 
 [output.html.search]
 enable = true
