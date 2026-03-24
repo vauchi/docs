@@ -81,15 +81,16 @@ package:docker:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Trigger deploy in _private pipeline
-deploy:docs:
+# Deploy docs to production via _private pipeline
+# Auto-triggers the centralized deploy pipeline in _private.
+# The _private pipeline has manual gate jobs — click "play" there.
+deploy:trigger:
   stage: deploy
   needs:
-    - package:docker
+    - job: package:docker
   trigger:
     project: vauchi/private
     branch: main
-    strategy: depend
   variables:
     DEPLOY_SERVICE: docs
     DEPLOY_IMAGE: registry.gitlab.com/vauchi/docs:$CI_COMMIT_SHA
