@@ -4,7 +4,7 @@
 
 # Exclude vendored/minified JavaScript from spell checking
 [files]
-extend-exclude = ["mermaid.min.js", "mermaid-init.js", "mdbook-admonish.css", "book/"]
+extend-exclude = ["mermaid.min.js", "mermaid-init.js", "mdbook-admonish.css", "book/", "theme/book.js", "theme/index.hbs"]
 
 [default.extend-words]
 # Rust crate names

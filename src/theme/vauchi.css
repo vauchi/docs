@@ -516,6 +516,16 @@ code {
     color: var(--icons-hover);
 }
 
+/* Links must be distinguishable by more than just color (WCAG 1.4.1) */
+.content a {
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--links) 40%, transparent);
+    text-underline-offset: 2px;
+}
+.content a:hover {
+    text-decoration-color: var(--links);
+}
+
 /* Fix font-display for mdBook's bundled Open Sans (eliminates FOIT) */
 @font-face { font-family: 'Open Sans'; font-display: swap; src: local('Open Sans'); }
 @font-face { font-family: 'Source Code Pro'; font-display: swap; src: local('Source Code Pro'); }
