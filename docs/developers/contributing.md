@@ -23,9 +23,17 @@ All repos have protected `main` branches — no direct pushes, merge via MR only
 
 ### Step 1: Create a branch
 
+Use `just git branch` to create branches — it handles multi-repo consistency:
+
 ```bash
-git checkout -b feature/my-feature
+# Create branch in specific repos
+just git branch feature/my-feature core cli docs
+
+# Create branch in all repos (for broad changes)
+just git branch feature/my-feature
 ```
+
+**Never use bare `git checkout -b`** for multi-repo work — branches must share the same name across repos.
 
 Branch naming: `{type}/{short-description}`
 
@@ -36,12 +44,6 @@ Branch naming: `{type}/{short-description}`
 | `refactor/` | Code restructuring |
 | `tidy/` | Structural-only cleanup (Tidy First) |
 | `investigation/` | Research/exploration |
-
-For **multi-repo features**, use the **same branch name** in every affected repo:
-
-```bash
-just git branch feature/remote-content-updates features core docs
-```
 
 ### Step 2: Do the work — commit often
 
@@ -136,19 +138,17 @@ Regenerate bindings when you:
 ### How to Regenerate
 
 ```bash
-cd core
-
 # IMPORTANT: Build without symbol stripping to preserve metadata
-RUSTFLAGS="-Cstrip=none" cargo build -p vauchi-platform --release
+RUSTFLAGS="-Cstrip=none" cargo --manifest-path core/Cargo.toml build -p vauchi-platform --release
 
 # Regenerate for both platforms (macOS required for iOS)
-./scripts/build-bindings.sh
+core/scripts/build-bindings.sh
 
 # Or regenerate Android only (works on Linux)
-./scripts/build-bindings.sh --android
+core/scripts/build-bindings.sh --android
 
 # Validate bindings have all expected types
-./scripts/validate-bindings.sh
+core/scripts/validate-bindings.sh
 ```
 
 ### Common Issues
@@ -170,7 +170,11 @@ This is a multi-repo project under the [`vauchi` GitLab group](https://gitlab.co
 ```
 vauchi/                          ← root repo (justfile, CI config)
 │
-├── core/                        ← Rust workspace: vauchi-core + vauchi-platform (UniFFI)
+├── core/                        ← Rust workspace:
+│   ├── vauchi-core/             ←   crypto, protocols, data models
+│   ├── vauchi-platform/         ←   UniFFI bindings for mobile/macOS
+│   ├── vauchi-protocol/         ←   shared relay/client types (serde-only)
+│   └── vauchi-cabi/             ←   C ABI exports for linux-qt, windows
 ├── relay/                       ← WebSocket relay server (standalone Rust)
 ├── cli/                         ← Command-line interface
 ├── tui/                         ← Terminal user interface
@@ -182,19 +186,47 @@ vauchi/                          ← root repo (justfile, CI config)
 ├── linux-qt/                    ← Qt6 Linux app
 ├── windows/                     ← WinUI 3 Windows app
 ├── web-demo/                    ← SolidJS + WASM demo app
-├── vauchi-platform-kotlin/      ← Generated Kotlin bindings + JNI libs (Gradle distribution)
 ├── vauchi-platform-swift/       ← Generated Swift bindings + XCFramework (SPM distribution)
 │
 ├── e2e/                         ← End-to-end tests
 ├── features/                    ← Gherkin specs (shared across all platforms)
 │
+├── locales/                     ← Translation files (JSON per locale)
+├── themes/                      ← Theme definitions (JSON)
 ├── docs/                        ← Public documentation (this site)
 ├── scripts/                     ← Dev tools, hooks, utilities
+├── drift-detector/              ← Plan-vs-code drift analysis tool
 ├── website/                     ← Landing page source
+├── gitlab-profile/              ← GitLab group profile page
+├── github-profile/              ← GitHub mirror profile page
 └── assets/                      ← Brand assets, logos
 ```
 
-**Platform bindings** (`vauchi-platform-swift/`, `vauchi-platform-kotlin/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
+**Platform bindings** (`vauchi-platform-swift/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to this repo when merging to `main`. Android bindings are published as Maven AARs directly from core CI.
+
+## Cross-Repo Changes
+
+When a change spans multiple repos, follow the dependency ordering:
+
+### Dependency Graph
+
+```
+Tier 0 (no deps):     core, relay, features, docs, scripts, locales
+Tier 1 (needs core):  cli, tui, linux-gtk, linux-qt, windows, e2e
+Tier 2 (automated):   ios, android, macos (CI-triggered after core merge)
+```
+
+### Workflow
+
+1. **Create the same branch** in all affected repos: `just git branch feature/my-thing core cli`
+2. **Implement Tier 0 repos first** (usually `core`), run `just check core`
+3. **Update Tier 1 repos** to use the new core API, run `just check cli` etc.
+4. **During local dev**, use path overrides in `.cargo/config.toml` so Tier 1 repos build against your local core changes (these overrides are `.gitignore`-d)
+5. **Push and create MRs** — Tier 0 as ready MRs, Tier 1 as Draft MRs
+6. **Merge Tier 0 first**, wait for CI to publish, then un-draft Tier 1 MRs
+7. iOS/Android are automatic — core's release pipeline triggers binding distribution
+
+Use `just git push-all` to push all repos at once.
 
 ## Release Workflow
 
