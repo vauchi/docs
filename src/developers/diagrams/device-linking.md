@@ -16,6 +16,8 @@ User links a new device to their existing identity. The new device receives the 
 ## Sequence Diagram
 
 ```mermaid
+    accTitle: Device Linking Sequence
+    accDescr: Shows how a user links a new device to their existing identity with proximity verification
 sequenceDiagram
     autonumber
     participant U as User
@@ -170,6 +172,8 @@ sync_payload_json (variable, contacts + card)
 ## Numeric Code Fallback (No Camera)
 
 ```mermaid
+    accTitle: Device Linking Sequence (2)
+    accDescr: Shows how a user links a new device to their existing identity with proximity verification
 sequenceDiagram
     participant U as User
     participant DA as Device A
@@ -196,6 +200,8 @@ sequenceDiagram
 ## Revoking a Device
 
 ```mermaid
+    accTitle: Device Linking Sequence (3)
+    accDescr: Shows how a user links a new device to their existing identity with proximity verification
 sequenceDiagram
     participant U as User
     participant DA as Device A

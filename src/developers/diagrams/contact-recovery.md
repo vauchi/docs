@@ -53,6 +53,8 @@ When a user loses all devices, they can recover their contact relationships thro
 ## Phase 1: In-Person Vouching
 
 ```mermaid
+    accTitle: Contact Recovery Sequence
+    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
 sequenceDiagram
     autonumber
     participant A as Alice (Lost Device)
@@ -104,6 +106,8 @@ sequenceDiagram
 ## Collecting Multiple Vouchers
 
 ```mermaid
+    accTitle: Contact Recovery Sequence (2)
+    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
 sequenceDiagram
     participant AN as Alice New Device
     participant CB as Charlie's Device
@@ -138,6 +142,8 @@ sequenceDiagram
 ## Phase 2: Remote Distribution
 
 ```mermaid
+    accTitle: Contact Recovery Sequence (3)
+    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
 sequenceDiagram
     autonumber
     participant AN as Alice New Device

@@ -8,6 +8,8 @@ Visual documentation of Vauchi's cryptographic key hierarchy and derivation path
 ## Master Hierarchy
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart TB
     subgraph Identity["Identity Creation"]
         SEED["Master Seed<br/>(256-bit, CSPRNG)"]
@@ -89,6 +91,8 @@ This follows standard HKDF convention: high-entropy seed as IKM, no salt needed.
 ## Double Ratchet Key Hierarchy
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy (2)
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart TB
     subgraph Initial["Initial Key Agreement (X3DH)"]
         X3DH["X3DH Shared Secret<br/>(32 bytes)"]
@@ -153,6 +157,8 @@ flowchart TB
 ## Device Key Derivation
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy (3)
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart TB
     subgraph Master["Master Identity"]
         SEED["Master Seed"]
@@ -195,6 +201,8 @@ flowchart TB
 ## Crypto-Shredding Paths
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy (4)
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart TB
     subgraph Destroy["Destruction Targets"]
         DSEED["Destroy Seed"]
@@ -220,6 +228,8 @@ flowchart TB
 ## Key Storage Locations
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy (5)
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart LR
     subgraph Platform["Platform Keychain"]
         SMK_STORED["SMK<br/>(encrypted)"]
@@ -253,6 +263,8 @@ flowchart LR
 ## Backup Key Derivation
 
 ```mermaid
+    accTitle: Cryptographic Key Hierarchy (6)
+    accDescr: Shows the derivation paths from master seed to all encryption and signing keys
 flowchart TB
     subgraph Input["User Input"]
         PASSWORD["Password"]

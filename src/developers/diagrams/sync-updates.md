@@ -19,6 +19,8 @@ Contact card changes propagate automatically to contacts via the relay network. 
 ## Sequence Diagram
 
 ```mermaid
+    accTitle: Sync Updates Sequence
+    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     autonumber
     participant A as Alice
@@ -97,6 +99,8 @@ sequenceDiagram
 ## Visibility-Aware Sync
 
 ```mermaid
+    accTitle: Sync Updates Sequence (2)
+    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     participant AD as Alice's Device
     participant R as Relay
@@ -125,6 +129,8 @@ sequenceDiagram
 ## Offline Queue Handling
 
 ```mermaid
+    accTitle: Sync Updates Sequence (3)
+    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     participant AD as Alice's Device
     participant R as Relay

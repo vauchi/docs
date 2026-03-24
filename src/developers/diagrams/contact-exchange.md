@@ -18,6 +18,8 @@ Two users exchange contact cards by scanning QR codes while physically present t
 ## Sequence Diagram
 
 ```mermaid
+    accTitle: Contact Exchange Sequence
+    accDescr: Shows how two users exchange contact cards via QR code with proximity verification
 sequenceDiagram
     autonumber
     participant A as Alice
@@ -142,6 +144,8 @@ expiry timestamp (8 bytes)
 ### Proximity Verification Fails
 
 ```mermaid
+    accTitle: Contact Exchange Sequence (2)
+    accDescr: Shows how two users exchange contact cards via QR code with proximity verification
 sequenceDiagram
     participant AD as Alice's Device
     participant BD as Bob's Device
@@ -157,6 +161,8 @@ sequenceDiagram
 ### QR Code Expired
 
 ```mermaid
+    accTitle: Contact Exchange Sequence (3)
+    accDescr: Shows how two users exchange contact cards via QR code with proximity verification
 sequenceDiagram
     participant AD as Alice's Device
     participant BD as Bob's Device

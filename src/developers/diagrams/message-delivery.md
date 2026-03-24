@@ -27,6 +27,8 @@ End-to-end message delivery from card update to acknowledgment.
 ## Complete Delivery Flow
 
 ```mermaid
+    accTitle: Message Delivery Sequence
+    accDescr: Shows end-to-end encrypted message delivery from card update to relay acknowledgment
 sequenceDiagram
     autonumber
     participant A as Alice
@@ -125,6 +127,8 @@ sequenceDiagram
 ## Double Ratchet Message Flow
 
 ```mermaid
+    accTitle: Message Delivery Sequence (2)
+    accDescr: Shows end-to-end encrypted message delivery from card update to relay acknowledgment
 sequenceDiagram
     participant AD as Alice's Ratchet
     participant BD as Bob's Ratchet
@@ -170,6 +174,8 @@ sequenceDiagram
 ## Out-of-Order Message Handling
 
 ```mermaid
+    accTitle: Message Delivery Sequence (3)
+    accDescr: Shows end-to-end encrypted message delivery from card update to relay acknowledgment
 sequenceDiagram
     participant AD as Alice's Device
     participant R as Relay
@@ -211,6 +217,8 @@ sequenceDiagram
 ## Relay Acknowledgment States
 
 ```mermaid
+    accTitle: Message Delivery Sequence (4)
+    accDescr: Shows end-to-end encrypted message delivery from card update to relay acknowledgment
 stateDiagram-v2
     direction LR
 
