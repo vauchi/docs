@@ -60,6 +60,12 @@ path = ["**/*.webp"]
 SPDX-FileCopyrightText = "2026 Mattia Egloff <mattia.egloff@pm.me>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
+# Config/infra files without comment syntax
+[[annotations]]
+path = ["Dockerfile", "nginx.conf", "src/robots.txt", "src/sitemap.xml"]
+SPDX-FileCopyrightText = "2026 Mattia Egloff <mattia.egloff@pm.me>"
+SPDX-License-Identifier = "GPL-3.0-or-later"
+
 # Vendored third-party assets (mdBook preprocessors)
 [[annotations]]
 path = ["mermaid.min.js", "mermaid-init.js"]

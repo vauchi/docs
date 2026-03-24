@@ -4,9 +4,7 @@
 
 # GitLab CI for vauchi-docs
 #
-# Documentation linting, mdbook build, and deployment
-#
-# Uses shared templates from vauchi/scripts for consistency.
+# Lint → Build mdBook → Docker image → Deploy via _private pipeline
 
 include:
   - project: 'vauchi/scripts'
@@ -18,11 +16,11 @@ include:
 
 stages:
   - lint
-  - test
   - build
+  - package
   - deploy
 
-# Markdown linting — use self-hosted runner (markdownlint pre-installed)
+# Markdown linting
 lint:markdown:
   stage: lint
   tags:
@@ -36,12 +34,13 @@ lint:markdown:
 
 # Secret detection
 secret_detection:
+  stage: lint
   tags: [docker]
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Build mdbook site — use self-hosted runner (mdbook + preprocessors pre-installed)
+# Build mdBook
 build:docs:
   stage: build
   tags:
@@ -49,8 +48,6 @@ build:docs:
     - rust
   before_script:
     - export PATH="$HOME/.cargo/bin:$PATH"
-    # Pin compatible versions: mdbook 0.4.45 + admonish 1.18 + mermaid 0.14
-    - command -v mdbook >/dev/null || cargo binstall mdbook@0.4.45 mdbook-admonish@1.18.0 mdbook-mermaid@0.14.0 --no-confirm
   script:
     - mdbook build
     - |
@@ -65,24 +62,34 @@ build:docs:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Deploy to GitLab Pages
-pages:
-  stage: deploy
-  tags:
-    - self-hosted
-    - rust
-  script:
-    - mv book public
-    - |
-      curl --silent --fail \
-        "${CI_API_V4_URL}/projects/vauchi%2Fscripts/repository/files/scripts%2Fci%2Fgenerate-badges.sh/raw?ref=main" \
-        -o generate-badges.sh
-      chmod +x generate-badges.sh
-    - ./generate-badges.sh public/badges
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+# Build Docker image (main branch only)
+package:docker:
+  stage: package
+  tags: [docker]
+  image: docker:27
+  services:
+    - docker:27-dind
   needs:
     - build:docs
+  script:
+    - docker build -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA -t $CI_REGISTRY_IMAGE:latest .
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# Trigger deploy in _private pipeline
+deploy:docs:
+  stage: deploy
+  needs:
+    - package:docker
+  trigger:
+    project: vauchi/private
+    branch: main
+    strategy: depend
+  variables:
+    DEPLOY_SERVICE: docs
+    DEPLOY_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
