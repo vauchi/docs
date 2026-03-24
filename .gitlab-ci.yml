@@ -48,6 +48,7 @@ build:docs:
     - self-hosted
     - rust
   script:
+    - mdbook --version && mdbook-admonish --version && mdbook-mermaid --version || true
     - mdbook build
     - |
       cat > book/build-info.json <<EOF
