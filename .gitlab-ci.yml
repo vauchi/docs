@@ -47,11 +47,12 @@ build:docs:
   tags:
     - self-hosted
     - rust
-  script:
+  before_script:
     - export PATH="$HOME/.cargo/bin:$PATH"
-    - echo "mdbook=$(mdbook --version 2>&1)" "admonish=$(mdbook-admonish --version 2>&1)" "mermaid=$(mdbook-mermaid --version 2>&1)"
-    - cat book.toml
-    - mdbook build 2>&1
+    # Pin compatible versions: mdbook 0.4.45 + admonish 1.18 + mermaid 0.14
+    - command -v mdbook >/dev/null || cargo binstall mdbook@0.4.45 mdbook-admonish@1.18.0 mdbook-mermaid@0.14.0 --no-confirm
+  script:
+    - mdbook build
     - |
       cat > book/build-info.json <<EOF
       {"sha":"$CI_COMMIT_SHA","short_sha":"$CI_COMMIT_SHORT_SHA","ref":"$CI_COMMIT_REF_NAME","built":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","pipeline":"$CI_PIPELINE_URL"}
