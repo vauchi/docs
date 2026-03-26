@@ -51,7 +51,7 @@ build:docs:
     - export PATH="$HOME/.cargo/bin:$PATH"
   script:
     - mdbook build
-    - mkdir -p book/.well-known && cp docs/.well-known/cosign.pub docs/.well-known/cosign.pub.md5 docs/.well-known/security.txt book/.well-known/
+    - mkdir -p book/.well-known && cp docs/.well-known/cosign.pub docs/.well-known/security.txt book/.well-known/
     - |
       cat > book/build-info.json <<EOF
       {"sha":"$CI_COMMIT_SHA","short_sha":"$CI_COMMIT_SHORT_SHA","ref":"$CI_COMMIT_REF_NAME","built":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","pipeline":"$CI_PIPELINE_URL"}
