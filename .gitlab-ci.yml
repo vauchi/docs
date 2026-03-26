@@ -12,6 +12,7 @@ include:
     file:
       - '/ci-templates/mr-rules.yml'
       - '/ci-templates/reuse.yml'
+      - '/ci-templates/github-mirror.yml'
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 stages:
@@ -97,3 +98,6 @@ deploy:trigger:
     DEPLOY_IMAGE: registry.gitlab.com/vauchi/docs:$CI_COMMIT_SHA
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+github-mirror:
+  extends: .github-mirror
