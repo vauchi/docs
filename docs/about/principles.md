@@ -16,7 +16,8 @@ Vauchi is built on five interlocking commitments:
 
 ### 1. Privacy is a right, not an option
 
-All design starts with: *"How would we build this if users were our only concern?"*
+All design starts with:
+*"How would we build this if users were our only concern?"*
 
 - E2E encryption for all communications
 - Zero-knowledge relay (sees only encrypted blobs)
@@ -27,23 +28,34 @@ All design starts with: *"How would we build this if users were our only concern
 
 Human recognition is the security anchor, not passwords or platforms.
 
-- QR exchange with physical proximity verification for full trust; opt-in remote discovery at reduced trust
+- QR exchange with physical proximity verification for
+  full trust; opt-in remote discovery at reduced trust
 - No accounts or registration (device IS the identity)
 - Social vouching for recovery (people you've actually met)
 - No trust-on-first-use, no platform-mediated relationships
 
-### 3. Quality comes from rigorous methodology
+### 3. Quality grows from failure
 
-Confidence through discipline, not hope.
+Confidence through discipline. Strength from what hits it.
 
-- Test-Driven Development (TDD) is mandatory
-- Problem-first workflow with full traceability
-- Threat modeling drives security decisions
-- No hacks, no tech debt, no ignored tests
+- Every failure leaves evidence that makes the next iteration
+  smarter — errors become rules, rules become understanding
+- Tests don't prove the system works; they reveal how it fails
+  and preserve the evidence for the next cycle
+- Property tests find edge cases you didn't imagine; E2E tests
+  break when reality shifts; snapshot tests show exactly what
+  changed — each failure is an input, not a defect
+- Rejected approaches are preserved with reasoning — the immune
+  memory of ideas that didn't work
+- A decision that was overturned by better understanding is
+  stronger than one that was never challenged
+- TDD is the discipline; antifragility is the purpose —
+  tidy first, test first, heal always
 
 ### 4. Simplicity serves the user
 
-Vauchi respects your time and attention — it does one thing well and stays out of your way.
+Vauchi respects your time and attention — it does one thing
+well and stays out of your way.
 
 - No engagement tricks, no notifications designed to pull you back
 - Clear, minimal interface — useful without a learning curve
@@ -88,6 +100,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 | Principle | Statement |
 |-----------|-----------|
 | **TDD Mandatory** | Tidy→Red→Green→Refactor. Tidy first, test first. No exceptions |
+| **Antifragile Tests** | Tests reveal failure modes, not just correctness; the suite gets stronger from what it catches |
 | **90%+ Coverage** | For vauchi-core; real crypto in tests (no mocking) |
 | **Rust Core** | Memory safety, no GC, cross-platform compilation |
 | **Clean Dependencies** | vauchi-core standalone; downstream repos use git deps |
@@ -109,7 +122,8 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 |-----------|-----------|
 | **Problem-First** | Every task starts as a problem; ideas restated as problems |
 | **Artifacts Accumulate** | Investigation, rejected solutions, retrospectives attached to problems |
-| **No Wasted Rejections** | Archive rejected solutions with reasoning |
+| **No Wasted Rejections** | Archive rejected solutions with reasoning — immune memory |
+| **Failures Become Structure** | Errors become rules, rules become understanding |
 | **Small Atomic Commits** | After each green, after each refactor |
 | **Retrospective Required** | Learn from every completed problem |
 
@@ -121,12 +135,17 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 
 When evaluating a proposed solution, check:
 
-1. **Does it align with Core Principles?** (Privacy, Trust, Quality, Simplicity, Beauty)
-2. **Does it fit the Culture?** (Process Principles)
-3. **Is it compatible with Current Implementation?** (Technical Principles)
-4. **Does it support existing Features?** (UX Principles)
+1. **Does it align with Core Principles?**
+   (Privacy, Trust, Quality, Simplicity, Beauty)
+2. **Does it fit the Culture?**
+   (Process Principles)
+3. **Is it compatible with Current Implementation?**
+   (Technical Principles)
+4. **Does it support existing Features?**
+   (UX Principles)
 
-If a solution conflicts with any principle, it must be rejected with documented reasoning.
+If a solution conflicts with any principle, it must be
+rejected with documented reasoning.
 
 ### For Decision Making
 
@@ -139,7 +158,9 @@ When facing a design decision:
 
 ### For New Contributors
 
-Read these principles before contributing. They are non-negotiable. If you disagree with a principle, open a problem record to discuss changing it—don't ignore it.
+Read these principles before contributing. They are
+non-negotiable. If you disagree with a principle, open a
+problem record to discuss changing it — don't ignore it.
 
 ---
 
