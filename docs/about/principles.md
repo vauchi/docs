@@ -120,12 +120,12 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 
 | Principle | Statement |
 |-----------|-----------|
-| **Problem-First** | Every task starts as a problem; ideas restated as problems |
+| **Problem-First** | Features and investigations start as problems; tidy work and bug fixes flow naturally |
 | **Artifacts Accumulate** | Investigation, rejected solutions, retrospectives attached to problems |
 | **No Wasted Rejections** | Archive rejected solutions with reasoning — immune memory |
 | **Failures Become Structure** | Errors become rules, rules become understanding |
 | **Small Atomic Commits** | After each green, after each refactor |
-| **Retrospective Required** | Learn from every completed problem |
+| **Retrospectives Earn Insight** | Reflect on non-trivial completed work; skip for mechanical fixes |
 
 ---
 
