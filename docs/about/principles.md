@@ -49,6 +49,8 @@ Confidence through discipline. Strength from what hits it.
   memory of ideas that didn't work
 - A decision that was overturned by better understanding is
   stronger than one that was never challenged
+- No suppressed failures — `#[ignore]` must become a
+  tracked problem, not a permanent state
 - TDD is the discipline; antifragility is the purpose —
   tidy first, test first, heal always
 
@@ -121,7 +123,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 | Principle | Statement |
 |-----------|-----------|
 | **Problem-First** | Features and investigations start as problems; tidy work and bug fixes flow naturally |
-| **Artifacts Accumulate** | Investigation, rejected solutions, retrospectives attached to problems |
+| **Artifacts Accumulate** | Investigation and rejected solutions attach to problems; retrospectives for non-trivial work |
 | **No Wasted Rejections** | Archive rejected solutions with reasoning — immune memory |
 | **Failures Become Structure** | Errors become rules, rules become understanding |
 | **Small Atomic Commits** | After each green, after each refactor |
