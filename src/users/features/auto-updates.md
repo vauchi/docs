@@ -9,7 +9,9 @@ Your contacts always have your latest information.
 
 ## How It Works
 
-When you update your contact card, everyone who has your card automatically sees the change. No need to send them the new info — it just appears.
+When you update your contact card, everyone who has
+your card automatically sees the change. No need to
+send them the new info — it just appears.
 
 ```mermaid
 sequenceDiagram
@@ -41,10 +43,10 @@ When you change your contact card:
 
 | Action | What Happens |
 |--------|--------------|
-| Add a field | Contacts who can see it get notified |
+| Add a field | Visible contacts get notified |
 | Edit a field | Contacts see the new value |
 | Remove a field | Contacts see it disappear |
-| Change visibility | Field appears/disappears for that contact |
+| Change visibility | Appears/disappears per contact |
 
 ## Update Timing
 
@@ -58,7 +60,7 @@ When you change your contact card:
 
 - Updates queue on the relay server
 - Delivered when the contact comes online
-- Messages kept for up to 30 days
+- Messages kept for up to 120 days
 
 ### Manual Refresh
 
@@ -72,8 +74,10 @@ Contacts can always:
 Updates are end-to-end encrypted:
 
 - The relay server cannot read update content
-- Each contact receives updates encrypted with their unique key
-- Different contacts may see different fields (per visibility settings)
+- Each contact receives updates encrypted with
+  their unique key
+- Different contacts may see different fields
+  (per visibility settings)
 
 ### What the Relay Sees
 
@@ -88,8 +92,10 @@ Updates are end-to-end encrypted:
 
 Updates respect your visibility settings:
 
-- If you hide a field from someone, they don't receive updates for it
-- If you show a field to someone, they start receiving updates
+- If you hide a field from someone, they don't
+  receive updates for it
+- If you show a field to someone, they start
+  receiving updates
 - Changes are per-contact, not global
 
 ### Example
@@ -107,22 +113,28 @@ You change your phone number:
 Each update uses a unique encryption key:
 
 - Keys are derived via Double Ratchet
-- Even if one key is compromised, other updates stay secure
+- Even if one key is compromised, other updates
+  stay secure
 - Past messages can't be decrypted with current keys
 
 ## Troubleshooting
 
 ### Contact Doesn't See My Update
 
-1. **Check visibility** — Is the field visible to them?
+1. **Check visibility** — Is the field visible to
+  them?
 2. **Check your connection** — Are you online?
-3. **Wait a moment** — Updates may take a few seconds
-4. **Ask them to refresh** — Pull to refresh or manual sync
+3. **Wait a moment** — Updates may take a few
+  seconds
+4. **Ask them to refresh** — Pull to refresh or
+  manual sync
 
 ### Updates Seem Slow
 
-1. **Check both connections** — You and the contact need internet
-2. **Check relay status** — Rare server issues may delay delivery
+1. **Check both connections** — You and the contact
+  need internet
+2. **Check relay status** — Rare server issues may
+  delay delivery
 3. **Try manual sync** — Settings > Sync Now
 
 ### Update Stuck
@@ -135,6 +147,9 @@ If an update seems stuck:
 
 ## Related
 
-- [Privacy Controls](privacy-controls.md) — Control who sees what
-- [Multi-Device Sync](multi-device.md) — Updates across your devices
-- [Encryption](encryption.md) — How updates are protected
+- [Privacy Controls](privacy-controls.md)
+  — Control who sees what
+- [Multi-Device Sync](multi-device.md)
+  — Updates across your devices
+- [Encryption](encryption.md)
+  — How updates are protected

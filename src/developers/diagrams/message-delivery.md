@@ -5,7 +5,8 @@
 
 **Interaction Type:** 🌐 **REMOTE (Via Relay)**
 
-End-to-end message delivery from card update to acknowledgment.
+End-to-end message delivery from card update to
+acknowledgment.
 
 ## Participants
 
@@ -19,10 +20,10 @@ End-to-end message delivery from card update to acknowledgment.
 
 | Message Type | Payload | Padded Size | Frequency |
 |--------------|---------|-------------|-----------|
-| Card delta | 50-200 B | 256 B | 1-5/month per user |
-| Full card | 500 B - 2 KB | 1-4 KB | Initial exchange only |
-| Acknowledgment | 32-64 B | 256 B | Per received message |
-| Device sync | 100-500 B | 256 B - 1 KB | Real-time when active |
+| Card delta | 50-200 B | 256 B | 1-5/month |
+| Full card | 500 B-2 KB | 1-4 KB | Initial only |
+| Ack | 32-64 B | 256 B | Per message |
+| Device sync | 100-500 B | 256 B-1 KB | Real-time |
 
 ## Complete Delivery Flow
 
@@ -70,7 +71,7 @@ sequenceDiagram
     R->>R: Check quota (blobs < 1000, storage < 50MB)
     R->>R: Store blob indexed by recipient_id
     R-->>AD: Acknowledgment(status=Stored)
-    Note right of R: Blob stored with 30-day TTL
+    Note right of R: Blob stored with 120-day TTL
     deactivate R
 
     %% Delivery
@@ -258,9 +259,15 @@ stateDiagram-v2
 ```json
 {
   "type": "EncryptedUpdate",
-  "sender_id": "anonymous_id (rotating hourly)",
-  "recipient_id": "Bob's public key hash",
-  "blob": "base64(encrypted_delta)"
+  "sender_id": "anonymous_id (hourly rotation)",
+  "recipient_id": "mailbox token (daily rotation)",
+  "ratchet_header": {
+    "dh_public": "[32 bytes] sender DH public key",
+    "dh_generation": 5,
+    "message_index": 10,
+    "previous_chain_length": 3
+  },
+  "ciphertext": "base64(encrypted_delta)"
 }
 ```
 
@@ -270,7 +277,7 @@ stateDiagram-v2
 {
   "type": "Acknowledgment",
   "message_id": "original message uuid",
-  "status": "Stored|Delivered|ReceivedByRecipient|Failed",
+  "status": "Stored|Delivered|Received|Failed",
   "error": null
 }
 ```
@@ -279,16 +286,19 @@ stateDiagram-v2
 
 | Phase | Duration | Notes |
 |-------|----------|-------|
-| Encryption + padding | 1-5 ms | XChaCha20-Poly1305 is fast |
-| Network latency | 50-200 ms | Depends on relay location |
+| Encryption + padding | 1-5 ms | XChaCha20 is fast |
+| Network latency | 50-200 ms | Relay location |
 | Relay storage | 1-10 ms | SQLite insert |
 | Forward to recipient | 50-200 ms | If online |
 | Decryption + verify | 1-5 ms | |
 | **Total (online)** | **100-400 ms** | End-to-end |
-| **Total (offline)** | **< 30 days** | Until recipient connects |
+| **Total (offline)** | **< 120 days** | Until connect |
 
 ## Related Features
 
-- [Contact Exchange](contact-exchange.md) - How keys are established
-- [Sync Updates](sync-updates.md) - Multi-device sync
-- [Crypto Hierarchy](crypto-hierarchy.md) - Key derivation
+- [Contact Exchange](contact-exchange.md)
+  - How keys are established
+- [Sync Updates](sync-updates.md)
+  - Multi-device sync
+- [Crypto Hierarchy](crypto-hierarchy.md)
+  - Key derivation

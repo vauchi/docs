@@ -3,14 +3,16 @@
 
 # How to Set Up Multi-Device
 
-Step-by-step guide for using Vauchi on multiple devices.
+Step-by-step guide for using Vauchi on multiple
+devices.
 
 ---
 
 ## Prerequisites
 
 - Your existing device with Vauchi set up
-- A new device with Vauchi installed (but not set up)
+- A new device with Vauchi installed
+  (but not set up)
 - Both devices have internet connectivity
 
 ---
@@ -34,14 +36,16 @@ On your **existing device**:
 1. Open Vauchi Desktop
 2. Go to **Devices** (from the sidebar)
 3. Click **Link New Device**
-4. A QR code and data string appear (valid for 5 minutes)
+4. A QR code and data string appear
+  (valid for 5 minutes)
 
 **TUI:**
 
 1. Open Vauchi TUI
 2. Press **d** to go to Devices
 3. Press **l** to generate a link
-4. A QR code and data string appear in an overlay
+4. A QR code and data string appear in an
+  overlay
 
 **CLI:**
 
@@ -49,7 +53,8 @@ On your **existing device**:
 vauchi device link
 ```
 
-A QR code and data string are displayed in the terminal.
+A QR code and data string are displayed in the
+terminal.
 
 ### Step 2: Join on New Device
 
@@ -58,17 +63,21 @@ On your **new device**:
 **Mobile (iOS/Android):**
 
 1. Open Vauchi
-2. On the welcome screen, tap **Join Existing Identity**
+2. On the welcome screen, tap
+  **Join Existing Identity**
 3. Point your camera at the QR code from Step 1
-4. Verify the confirmation code matches on both devices
+4. Verify the confirmation code matches on both
+  devices
 5. Wait for the linking to complete
 
 **Desktop:**
 
 1. Open Vauchi Desktop
-2. On the setup screen, click **Join Existing Identity**
+2. On the setup screen, click
+  **Join Existing Identity**
 3. Paste the data string from the existing device
-4. Verify the confirmation code matches on both devices
+4. Verify the confirmation code matches on both
+  devices
 5. Click **Confirm** to complete linking
 
 **CLI:**
@@ -77,20 +86,24 @@ On your **new device**:
 vauchi device join <data-string>
 ```
 
-Then verify the confirmation code and run:
+Then on the **existing device**, pass the encrypted
+request data from the new device:
 
 ```bash
-vauchi device complete <confirmation-code>
+vauchi device complete <request-data>
 ```
 
 ### Step 3: Confirm
 
 Both devices should show:
 
-- Your existing device: "Device linked successfully"
-- Your new device: "Welcome back, [Your Name]"
+- Your existing device:
+  "Device linked successfully"
+- Your new device:
+  "Welcome back, [Your Name]"
 
-Your new device is now synced with your identity.
+Your new device is now synced with your
+identity.
 
 ---
 
@@ -102,13 +115,15 @@ After linking:
 
 1. Go to **Contacts** — your contacts should appear
 2. Go to **Home** — your contact card should appear
-3. Go to **Settings > Devices** — both devices should be listed
+3. Go to **Settings > Devices** — both devices
+  should be listed
 
 ### On Existing Device
 
 1. Go to **Settings > Devices**
 2. You should see both devices listed
-3. Your new device shows its platform and last sync time
+3. Your new device shows its platform and last
+  sync time
 
 ---
 
@@ -117,8 +132,10 @@ After linking:
 Data syncs automatically:
 
 - **Immediately:** When both devices are online
+
 - **On app open:** When you open the app
-- **Manual:** Pull to refresh or Settings > Sync Now
+- **Manual:** Pull to refresh or
+  Settings > Sync Now
 
 ### What Syncs
 
@@ -135,9 +152,13 @@ Data syncs automatically:
 
 ### Viewing All Devices
 
-**Mobile/Desktop:** Go to **Settings > Devices** to see all linked devices. Your current device is marked.
+**Mobile/Desktop:** Go to **Settings > Devices**
+to see all linked devices. Your current device is
+marked.
 
-**TUI:** Press **d** to open the Devices screen. Navigate with **j/k** or arrow keys. Current device is marked `[this device]`.
+**TUI:** Press **d** to open the Devices screen.
+Navigate with **j/k** or arrow keys. Current
+device is marked `[this device]`.
 
 **CLI:**
 
@@ -147,11 +168,13 @@ vauchi device list
 
 ### Revoking a Device
 
-If a device is lost, stolen, or no longer needed:
+If a device is lost, stolen, or no longer
+needed:
 
 **Mobile/Desktop:**
 
-1. Go to **Settings > Devices** on **another** device
+1. Go to **Settings > Devices** on **another**
+  device
 2. Find the device to revoke
 3. Tap **Revoke**
 4. Confirm by tapping **Revoke Device**
@@ -166,15 +189,17 @@ If a device is lost, stolen, or no longer needed:
 **CLI:**
 
 ```bash
-vauchi device revoke <device-index>
+vauchi device revoke <device-id>
 ```
 
 ```admonish warning
-You cannot revoke your current device. Use another linked device.
+You cannot revoke your current device.
+Use another linked device.
 ```
 
 ```admonish danger
-Revocation is immediate and permanent. The revoked device loses all access.
+Revocation is immediate and permanent.
+The revoked device loses all access.
 ```
 
 ---
@@ -185,7 +210,8 @@ Revocation is immediate and permanent. The revoked device loses all access.
 
 QR codes are valid for 5 minutes. If expired:
 
-1. On your existing device, generate a new link code
+1. On your existing device, generate a new link
+  code
 2. Scan or paste the new code quickly
 
 ### New Device Not Syncing
@@ -197,7 +223,8 @@ QR codes are valid for 5 minutes. If expired:
 
 ### "Too Many Devices" Error
 
-You can have up to 10 devices. To add another:
+You can have up to 10 devices. To add
+another:
 
 1. Go to **Settings > Devices**
 2. Revoke a device you no longer use
@@ -210,7 +237,8 @@ You can have up to 10 devices. To add another:
 ### Option 1: Device Linking (Recommended)
 
 1. Keep your old phone accessible
-2. Follow the steps above to link your new phone
+2. Follow the steps above to link your new
+  phone
 3. Wait for sync to complete
 4. Optionally, revoke your old phone
 
@@ -228,9 +256,12 @@ If you can't access your old phone:
 ## Security Notes
 
 - Each device has its own derived keys
-- Revoking a device invalidates its keys immediately
+- Revoking a device invalidates its keys
+  immediately
 - The relay never sees plaintext data
 - Link codes expire after 5 minutes
-- A 6-digit confirmation code ensures you're linking the right devices
+- A 6-digit confirmation code ensures you're
+  linking the right devices
 
-For more on security, see [Multi-Device Feature](../features/multi-device.md).
+For more on security, see
+[Multi-Device Feature](../features/multi-device.md).

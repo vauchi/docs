@@ -1,6 +1,7 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- SSOT: Public cryptography reference. Internal spec: _private/docs/specs/2026-01-22-cryptography.md -->
+<!-- SSOT: Public cryptography reference.
+     Internal: _private/docs/specs/2026-01-22-cryptography.md -->
 
 # Cryptography Reference
 
@@ -10,14 +11,14 @@ Concise reference for all cryptographic operations in Vauchi.
 
 | Purpose | Algorithm | Library | Notes |
 |---------|-----------|---------|-------|
-| **Signing** | Ed25519 | `ed25519-dalek` | Identity, device registry, revocation |
-| **Key Exchange** | X25519 | `x25519-dalek` | X3DH with identity binding for in-person exchange |
-| **Symmetric Encryption** | XChaCha20-Poly1305 | `chacha20poly1305` | Primary cipher (192-bit nonce) |
-| **Forward Secrecy** | Double Ratchet | `hkdf` + `hmac` | HKDF-SHA256 + HMAC-SHA256, chain limit 2000 |
-| **Key Derivation** | HKDF-SHA256 | `hkdf` | RFC 5869, domain-separated |
-| **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 (OWASP) |
-| **CSPRNG** | OsRng | `rand` | OS-provided entropy via `rand::rngs::OsRng` |
-| **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs` backend) | Relay connections only |
+| **Signing** | Ed25519 | `ed25519-dalek` | Identity, registry |
+| **Key Exchange** | X25519 | `x25519-dalek` | X3DH + identity binding |
+| **Sym. Encrypt** | XChaCha20-Poly1305 | `chacha20poly1305` | 192-bit nonce |
+| **Forward Secrecy** | Double Ratchet | `hkdf` + `hmac` | Chain limit 2000 |
+| **Key Derivation** | HKDF-SHA256 | `hkdf` | RFC 5869 |
+| **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 |
+| **CSPRNG** | OsRng | `rand` | OS entropy |
+| **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs`) | Relay only |
 
 ## Key Types
 
@@ -44,7 +45,9 @@ Master Seed (256-bit)
         └── encrypts individual contact's card data
 ```
 
-**HKDF Convention**: Master seed as IKM, no salt, domain string as info. All derivations use `HKDF::derive_key(None, &seed, info)`.
+**HKDF Convention**: Master seed as IKM, no salt,
+domain string as info. All derivations use
+`HKDF::derive_key(None, &seed, info)`.
 
 **HKDF Context Strings**:
 
@@ -61,6 +64,7 @@ Master Seed (256-bit)
 | `Vauchi_Chain_Key` | Symmetric ratchet chain key advance |
 | `Vauchi_AnonymousSender_v2` | Anonymous sender ID derivation |
 | `Vauchi_Mailbox_v1` | Contact mailbox token (daily rotation, SP-33) |
+| `Vauchi_DeviceSync` | Device-to-device encryption key derivation |
 | `Vauchi_DeviceSync_v1` | Device sync self-token (daily rotation, SP-33) |
 
 ### Ratchet Keys
@@ -83,7 +87,8 @@ algorithm_tag (1 byte) || nonce || ciphertext || tag
 | `0x02` | XChaCha20-Poly1305 | 24 bytes | Default since v0.1.2 |
 | `0x03` | XChaCha20-Poly1305 + AD | 24 bytes | Double Ratchet (header-bound) |
 
-Tag `0x03` binds message header as AEAD associated data to prevent relay manipulation.
+Tag `0x03` binds message header as AEAD associated
+data to prevent relay manipulation.
 
 ## Message Padding
 
@@ -92,6 +97,7 @@ All messages padded to fixed buckets before encryption:
 | Bucket | Size | Typical Content |
 |--------|------|-----------------|
 | Small | 256 B | ACK, presence, revocation |
+| Medium-Small | 512 B | Short card deltas, single-field updates |
 | Medium | 1 KB | Card deltas, small updates |
 | Large | 4 KB | Media references, large payloads |
 
@@ -118,7 +124,8 @@ Both sides:
 
 ### NFC/BLE Exchange
 
-Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared secret.
+Same as Mutual QR — fresh ephemeral keys on both
+sides, HKDF-derived shared secret.
 
 ## Double Ratchet
 
@@ -183,7 +190,8 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 
 - Key derivation: Argon2id (m=64MB, t=3, p=4)
 - Cipher: XChaCha20-Poly1305
-- Plaintext: `display_name_len(4) || display_name || master_seed(32) || device_index(4) || device_name_len(4) || device_name`
+- Plaintext:
+  `display_name_len(4) || display_name || master_seed(32) || device_index(4) || device_name_len(4) || device_name`
 
 ### v1 (Removed)
 
@@ -197,7 +205,8 @@ salt(16) || nonce(12) || ciphertext || tag(16)
 
 ## Transport Encryption (Noise NK)
 
-Client-to-relay communication uses a Noise NK inner transport layer as defense-in-depth inside TLS.
+Client-to-relay communication uses a Noise NK inner
+transport layer as defense-in-depth inside TLS.
 
 ### Pattern
 
@@ -205,7 +214,11 @@ Client-to-relay communication uses a Noise NK inner transport layer as defense-i
 Noise_NK_25519_ChaChaPoly_BLAKE2s
 ```
 
-**NK** means the relay's static public key is known to the client before the handshake (distributed via the `/info` HTTP endpoint as base64url). The client does **not** authenticate to the relay (anonymous initiator).
+**NK** means the relay's static public key is known
+to the client before the handshake (distributed via
+the `/info` HTTP endpoint as base64url). The client
+does **not** authenticate to the relay (anonymous
+initiator).
 
 ### Handshake
 
@@ -225,24 +238,29 @@ v2 (Noise-encrypted) connections are identified by a 3-byte magic prefix:
 0x00 'V' '2' || 48-byte NK handshake message
 ```
 
-All connections use the 3-byte `0x00 V 2` prefix followed by the NK handshake. After the handshake completes, all subsequent WebSocket frames are Noise-encrypted.
+All connections use the 3-byte `0x00 V 2` prefix
+followed by the NK handshake. After the handshake
+completes, all subsequent WebSocket frames are
+Noise-encrypted.
 
 ### Why NK?
 
 | Property | Benefit |
 |----------|---------|
-| **No client authentication** | Preserves anonymity — relay cannot link connections to identities |
-| **Forward secrecy** | Ephemeral DH keys ensure past sessions can't be decrypted |
-| **Relay authentication** | Client verifies the relay's identity via its static key |
-| **Defense-in-depth** | If TLS is compromised, routing metadata (recipient IDs, message types) stays encrypted |
+| **No client auth** | Relay cannot link connections to identities |
+| **Forward secrecy** | Past sessions cannot be decrypted |
+| **Relay auth** | Client verifies relay via static key |
+| **Defense-in-depth** | Routing metadata encrypted if TLS fails |
 
 ### Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| ~~`RELAY_REQUIRE_NOISE`~~ | ~~`false`~~ | Removed in v0.1 — Noise NK is always mandatory |
+| ~~`RELAY_REQUIRE_NOISE`~~ | ~~`false`~~ | Removed — NK always on |
 
-The relay's Noise keypair is auto-generated on first start and persisted to `{data_dir}/relay_noise_key.bin`.
+The relay's Noise keypair is auto-generated on first
+start and persisted to
+`{data_dir}/relay_noise_key.bin`.
 
 ## Security Properties
 
@@ -255,7 +273,7 @@ The relay's Noise keypair is auto-generated on first start and persisted to `{da
 | **Break-in Recovery** | DH ratchet with ephemeral keys |
 | **No Nonce Reuse** | Random 24-byte nonces |
 | **Memory Safety** | `zeroize` on drop for all keys |
-| **Traffic Analysis Prevention** | Fixed-size message padding |
+| **Traffic Analysis Prevention** | Standardized bucket-size message padding |
 | **Replay Prevention** | Double Ratchet counters |
 | **Transport Encryption** | Noise NK inside TLS (defense-in-depth) |
 
@@ -278,5 +296,6 @@ The relay's Noise keypair is auto-generated on first start and persisted to `{da
 ## Related Documentation
 
 - [Architecture Overview](architecture.md) — System design
-- [Encryption Feature](../users/features/encryption.md) — User-friendly explanation
+- [Encryption Feature](../users/features/encryption.md)
+  — User-friendly explanation
 - [Security](../about/security.md) — Security model overview

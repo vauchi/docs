@@ -8,7 +8,7 @@
 | Component | Technology | Notes |
 |-----------|------------|-------|
 | Language | Rust | Memory safety, cross-platform |
-| Crypto | `ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2` | RustCrypto audited crates |
+| Crypto | `ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2` | Audited (`ed25519/x25519`: Trail of Bits) + IETF-standardized (`chacha20/argon2`) |
 | Storage | SQLite | Encrypted with XChaCha20-Poly1305 |
 | Serialization | serde + JSON | Protocol messages |
 | FFI | UniFFI | Swift/Kotlin bindings |
@@ -39,7 +39,7 @@
 |----------|-----------|----------|----------|
 | macOS | SwiftUI | Swift | UniFFI (SPM) |
 | Linux (GTK) | GTK4 + libadwaita | Rust | Direct (same process) |
-| Linux (Qt) | Qt 6 | C++ | C ABI (vauchi-cabi) |
+| Linux (Qt) | Qt 6 (Widgets) | C++ | C ABI (vauchi-cabi) |
 | Windows | WinUI 3 | C# (.NET 8) | C ABI (vauchi-cabi) |
 
 ## Web Demo
@@ -91,7 +91,7 @@
 |-------|-------|
 | Max contact card size | 64KB (encrypted) |
 | Max contacts per user | 10,000 |
-| Max fields per card | 100 |
+| Max fields per card | 200 |
 | Max linked devices | 10 |
 
 ## Repository Dependencies
@@ -103,7 +103,7 @@ cli/, tui/, e2e/, macos/, windows/, linux-gtk/, linux-qt/, web-demo/
 
 vauchi-platform (UniFFI bindings, in core/ workspace)
     ↑ (via generated binding repos)
-android/ ← vauchi-platform-kotlin (Gradle)
+android/ ← Maven AAR from core CI
 ios/     ← vauchi-platform-swift (SPM)
 
 vauchi-cabi (C ABI exports, in core/ workspace)

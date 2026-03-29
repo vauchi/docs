@@ -19,7 +19,8 @@ just check
 
 ## Development Workflow
 
-All repos have protected `main` branches — no direct pushes, merge via MR only, force push disabled.
+All repos have protected `main` branches — no direct
+pushes, merge via MR only, force push disabled.
 
 ### Step 1: Create a branch
 
@@ -37,7 +38,8 @@ Branch naming: `{type}/{short-description}`
 | `tidy/` | Structural-only cleanup (Tidy First) |
 | `investigation/` | Research/exploration |
 
-For **multi-repo features**, use the **same branch name** in every affected repo:
+For **multi-repo features**, use the **same branch
+name** in every affected repo:
 
 ```bash
 just git branch feature/remote-content-updates features core docs
@@ -45,8 +47,10 @@ just git branch feature/remote-content-updates features core docs
 
 ### Step 2: Do the work — commit often
 
-- **If changing code: strict TDD.** Tidy → Red → Green → Refactor. No exceptions.
-  1. Tidy first — small structural improvement if the code is hard to change (own `tidy:` commit)
+- **If changing code: strict TDD.** Tidy -> Red ->
+  Green -> Refactor. No exceptions.
+  1. Tidy first — small structural improvement if
+     the code is hard to change (own `tidy:` commit)
   2. Write failing test first (Red)
   3. Write minimal code to pass (Green)
   4. Refactor
@@ -65,7 +69,8 @@ Commit message format:
 
 Types: `feat`, `fix`, `refactor`, `tidy`, `docs`, `test`, `chore`
 
-Use imperative mood: "Add feature" not "Added feature". Keep first line under 72 characters.
+Use imperative mood: "Add feature" not "Added
+feature". Keep first line under 72 characters.
 
 Use `just commit` for interactive commits across all repos with changes.
 
@@ -81,7 +86,8 @@ just gitlab mr-create core
 
 CI must pass (security scans + tests) before merge.
 
-If the work spans multiple repos, each MR **must list the related MRs** it depends on:
+If the work spans multiple repos, each MR **must
+list the related MRs** it depends on:
 
 ```markdown
 ## Summary
@@ -99,7 +105,9 @@ If the work spans multiple repos, each MR **must list the related MRs** it depen
 - [ ] Follows TDD
 - [ ] Documentation updated
 - [ ] Feature file updated (if applicable)
-- [ ] Follows [GUI Guidelines](gui-guidelines.md) and [UX Guidelines](ux-guidelines.md) (if UI changes)
+- [ ] Follows [GUI Guidelines](gui-guidelines.md)
+  and [UX Guidelines](ux-guidelines.md)
+  (if UI changes)
 ```
 
 Use GitLab MR reference format: `{group}/{project}!{mr_number}`
@@ -108,7 +116,11 @@ Use GitLab MR reference format: `{group}/{project}!{mr_number}`
 
 ### Rust
 
-- Use RustCrypto audited crates (`ed25519-dalek`, `x25519-dalek`, `sha2`, `hmac`, `hkdf`, `chacha20poly1305`, `argon2`); `aws-lc-rs` for TLS only (via rustls)
+- Use RustCrypto crates: audited (`ed25519-dalek`,
+  `x25519-dalek` — Trail of Bits),
+  IETF-standardized (`chacha20poly1305`, `argon2`),
+  well-established (`sha2`, `hmac`, `hkdf`);
+  `aws-lc-rs` for TLS only (via rustls)
 - Never mock crypto in tests
 - 90%+ test coverage for vauchi-core
 - Use `Result`/`Option`, fail fast
@@ -123,7 +135,8 @@ crate/
 
 ## Mobile Bindings Workflow
 
-UniFFI generates Swift/Kotlin bindings from Rust. When modifying `vauchi-platform` or `vauchi-core`:
+UniFFI generates Swift/Kotlin bindings from Rust.
+When modifying `vauchi-platform` or `vauchi-core`:
 
 ### When to Regenerate Bindings
 
@@ -165,7 +178,12 @@ RUSTFLAGS="-Cstrip=none" cargo build -p vauchi-platform --release
 
 ## Repository Organisation
 
-This is a multi-repo project under the [`vauchi` GitLab group](https://gitlab.com/vauchi). The root repo (`vauchi/vauchi`) is the workspace orchestrator — `just setup` clones all sub-repos as sibling directories. Each subdirectory is its own Git repo at `gitlab.com/vauchi/<name>`.
+This is a multi-repo project under the
+[`vauchi` GitLab group](https://gitlab.com/vauchi).
+The root repo (`vauchi/vauchi`) is the workspace
+orchestrator — `just setup` clones all sub-repos as
+sibling directories. Each subdirectory is its own
+Git repo at `gitlab.com/vauchi/<name>`.
 
 ```
 vauchi/                          ← root repo (justfile, CI config)
@@ -182,11 +200,13 @@ vauchi/                          ← root repo (justfile, CI config)
 ├── linux-qt/                    ← Qt6 Linux app
 ├── windows/                     ← WinUI 3 Windows app
 ├── web-demo/                    ← SolidJS + WASM demo app
-├── vauchi-platform-kotlin/      ← Generated Kotlin bindings + JNI libs (Gradle distribution)
 ├── vauchi-platform-swift/       ← Generated Swift bindings + XCFramework (SPM distribution)
 │
 ├── e2e/                         ← End-to-end tests
 ├── features/                    ← Gherkin specs (shared across all platforms)
+├── locales/                     ← i18n locale files
+├── themes/                      ← Design tokens
+├── ohttp-relay/                 ← OHTTP relay proxy
 │
 ├── docs/                        ← Public documentation (this site)
 ├── scripts/                     ← Dev tools, hooks, utilities
@@ -194,17 +214,22 @@ vauchi/                          ← root repo (justfile, CI config)
 └── assets/                      ← Brand assets, logos
 ```
 
-**Platform bindings** (`vauchi-platform-swift/`, `vauchi-platform-kotlin/`) are **not manually edited** — `core/` CI generates UniFFI bindings and pushes artifacts to these repos when merging to `main`.
+**Platform bindings** (`vauchi-platform-swift/`) are
+**not manually edited** — `core/` CI generates
+UniFFI bindings and pushes artifacts to this repo
+when merging to `main`. Android bindings are
+distributed as a Maven AAR published by core CI.
 
 ## Release Workflow
 
-Vauchi uses a 3-tier versioning system. Each tier triggers a different CI pipeline scope:
+Vauchi uses a 3-tier versioning system. Each tier
+triggers a different CI pipeline scope:
 
 | Tier | Tag Format | What Runs | Publishes? |
 |------|-----------|-----------|------------|
 | **Dev** | `v0.2.3-dev.N` | Lint + test only | No |
 | **RC** | `v0.2.3-rc.N` | Lint + test + coverage + mutation + security | No |
-| **PROD** | `v0.2.3` | Full release: build, package, publish, deploy, trigger mobile bindings | Yes |
+| **PROD** | `v0.2.3` | Full release: build, package, publish, deploy | Yes |
 
 ### Creating releases
 
@@ -220,9 +245,12 @@ just release-history [repo]  # Show promotion chain. E.g., just release-history 
 1. Merge feature MRs to `main`
 2. `just release-dev` — verify basic CI passes (~2 min)
 3. `just release-rc` — full quality gate with coverage + mutation (~15 min)
-4. `just release-prod` — publish to package registry, trigger mobile binding distribution
+4. `just release-prod` — publish to package registry,
+   trigger mobile binding distribution
 
-Dev and RC tags never publish artifacts, trigger mobile repos, or create GitLab releases. Only PROD tags do.
+Dev and RC tags never publish artifacts, trigger
+mobile repos, or create GitLab releases. Only PROD
+tags do.
 
 ## Useful Commands
 
@@ -241,4 +269,5 @@ just git sync          # Fetch all + pull where on main
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under GPL-3.0-or-later.
+By contributing, you agree that your contributions
+will be licensed under GPL-3.0-or-later.

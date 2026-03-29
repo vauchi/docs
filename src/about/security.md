@@ -9,13 +9,15 @@ How Vauchi protects your data.
 
 ## Security Model
 
-Vauchi is designed with the assumption that everything outside your device is hostile:
+Vauchi is designed with the assumption that
+everything outside your device is hostile:
 
 - **Relay server:** Assumed compromised
 - **Network:** Assumed monitored
 - **Other devices:** Verified through in-person exchange
 
-Despite these assumptions, your data stays private because of end-to-end encryption.
+Despite these assumptions, your data stays private
+because of end-to-end encryption.
 
 ## How We Protect You
 
@@ -43,7 +45,10 @@ Contact exchange requires physical presence:
 
 - **QR codes** contain cryptographic identity
 - **Proximity verification** via ultrasonic audio
-- **No trust-on-first-use** — you verify who you're connecting with
+- **No trust-on-first-use for contact
+  verification** — you verify contacts in person.
+  Relay server identity is pinned during contact
+  exchange.
 
 This prevents spam, impersonation, and man-in-the-middle attacks.
 
@@ -62,8 +67,7 @@ Vauchi uses battle-tested cryptographic libraries:
 All libraries are:
 
 - Written in Rust (memory-safe)
-- Well-audited
-- Widely used in production
+- Well-known, widely used in production
 
 ### Forward Secrecy
 
@@ -77,25 +81,39 @@ Each message uses a unique key derived via Double Ratchet:
 
 | Threat | Mitigation |
 |--------|------------|
-| **Server compromise** | E2E encryption — server can't read data |
-| **Network surveillance** | TLS + Noise NK + E2E encryption — traffic is encrypted three layers deep |
-| **Man-in-the-middle** | In-person verification — you verify identity yourself |
-| **Spam/harvesting** | Proximity required — can't be added remotely |
-| **Device theft** | Hardware-backed key storage, optional biometrics |
+| **Server compromise** | E2E encryption; server can't read data |
+| **Network surveillance** | TLS + Noise NK + E2E; three layers |
+| **Man-in-the-middle** | In-person verification of identity |
+| **Spam/harvesting** | Proximity required; no remote adding |
+| **Device theft** | OS-level key storage, optional biometrics |
 | **Lost device** | Social recovery + encrypted backups |
-| **Traffic analysis** | Message padding to fixed sizes |
-| **Replay attacks** | One-time tokens, message counters |
+| **Traffic analysis** | Padding to standardized bucket sizes |
+| **Replay attacks** | One-time tokens, per-message nonces |
+
+### Metadata Visibility
+
+The relay operator can observe communication
+patterns: which identities communicate, when
+messages are sent and received, and message
+frequency. The relay cannot read message content.
+Delivery jitter reduces timing correlation between
+senders and recipients. Running your own relay
+server eliminates third-party metadata exposure.
 
 ## Best Practices
 
 ### For Users
 
 1. **Create a backup** — Protect against device loss
-2. **Use a strong backup password** — A passphrase (4+ words) is recommended. Store it somewhere safe, separate from your devices
+2. **Use a strong backup password** — A passphrase
+   (4+ words) is recommended. Store it somewhere
+   safe, separate from your devices
 3. **Verify important contacts** — Compare fingerprints in person
 4. **Revoke lost devices immediately** — Prevent unauthorized access
 5. **Keep your device secure** — Enable lock screen, update OS
-6. **Only link devices you physically control** — Each linked device has full access to your identity
+6. **Only link devices you physically control** —
+   Each linked device has full access to your
+   identity
 
 ### For Privacy
 
@@ -107,17 +125,27 @@ Each message uses a unique key derived via Double Ratchet:
 
 Set up social recovery to protect against total device loss:
 
-1. **Choose diverse guardians** — Spread across different social circles (e.g., one family member, one friend, one colleague)
-2. **Don't rely on one group** — If all guardians are family, a single household event could make recovery impossible
+1. **Choose diverse guardians** — Spread across
+   different social circles (e.g., one family
+   member, one friend, one colleague)
+2. **Don't rely on one group** — If all guardians
+   are family, a single household event could make
+   recovery impossible
 3. **Set threshold to at least 3** — Higher thresholds are more secure
-4. **Update guardians when relationships change** — Remove guardians you've lost touch with and add new ones
+4. **Update guardians when relationships change** —
+   Remove guardians you've lost touch with and
+   add new ones
 5. **Review periodically** — Check your guardian list once a year
 
 ### For Backups
 
 1. **Use a strong passphrase** — At least 4 random words or equivalent strength
-2. **Store backups securely** — On a USB drive, external storage, or a secure location separate from your devices
-3. **Don't store on cloud services** — Backup files are encrypted, but keeping them local is more private
+2. **Store backups securely** — On a USB drive,
+   external storage, or a secure location separate
+   from your devices
+3. **Don't store on cloud services** — Backup files
+   are encrypted, but keeping them local is more
+   private
 4. **Create fresh backups** — After adding new contacts or linking devices
 
 ## Security Reporting
@@ -146,5 +174,6 @@ We welcome security reviews and contributions.
 
 For cryptographic implementation details, see:
 
-- [Encryption Feature](../users/features/encryption.md) — User-friendly explanation
+- [Encryption Feature](../users/features/encryption.md)
+  — User-friendly explanation
 - [Cryptography Reference](../developers/crypto.md) — Technical specification

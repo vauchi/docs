@@ -3,7 +3,8 @@
 
 # Backup & Recovery
 
-Protect your identity and recover access if something goes wrong.
+Protect your identity and recover access if
+something goes wrong.
 
 ---
 
@@ -13,8 +14,8 @@ Vauchi offers two ways to recover your identity:
 
 | Method | When to Use | Requires |
 |--------|-------------|----------|
-| **Encrypted Backup** | Planned recovery, new device | Backup code + password |
-| **Social Recovery** | Lost all devices and backup | 3+ contacts to vouch for you |
+| **Encrypted Backup** | Planned recovery | Backup code + password |
+| **Social Recovery** | Lost all devices | 3+ contacts to vouch |
 
 ## Encrypted Backup
 
@@ -22,14 +23,18 @@ Vauchi offers two ways to recover your identity:
 
 1. Go to **Settings > Backup**
 2. Tap **Export Backup**
-3. Enter a strong password (must pass strength check)
+3. Enter a strong password
+  (must pass strength check)
 4. Confirm the password
 5. Copy or save the backup code
 
 ```admonish important
-- Store your backup code securely (password manager, printed copy)
-- Remember your backup password — it cannot be recovered
-- The backup code + password = your entire identity
+- Store your backup code securely
+  (password manager, printed copy)
+- Remember your backup password —
+  it cannot be recovered
+- The backup code + password =
+  your entire identity
 ```
 
 ### What's Included
@@ -41,7 +46,8 @@ Vauchi offers two ways to recover your identity:
 | Device information | Yes |
 | Contacts | No* |
 
-*Contact relationships are re-established through the relay when you restore.
+*Contact relationships are re-established through
+the relay when you restore.
 
 ### Restoring from Backup
 
@@ -60,14 +66,18 @@ After restoration:
 ### Backup Security
 
 - **Encryption:** XChaCha20-Poly1305
-- **Key derivation:** Argon2id (resistant to brute force)
+- **Key derivation:** Argon2id
+  (resistant to brute force)
 - **Without the password:** Backup is useless
 
-We recommend passphrases (4+ random words) for memorable yet secure passwords.
+We recommend passphrases (4+ random words) for
+memorable yet secure passwords.
 
 ## Social Recovery
 
-If you lose access to all devices AND don't have a backup, social recovery lets trusted contacts help restore your identity.
+If you lose access to all devices AND don't have
+a backup, social recovery lets trusted contacts
+help migrate your contacts to a new identity.
 
 ### How It Works
 
@@ -93,7 +103,7 @@ sequenceDiagram
     Y->>R: Submit recovery proof (3 vouchers)
     R->>R: Verify vouchers
 
-    Note over Y: Identity restored!
+    Note over Y: Contacts migrated to new identity!
 ```
 
 ### Starting Recovery
@@ -111,15 +121,18 @@ For each voucher:
 
 1. Meet the contact in person
 2. Share your recovery claim with them
-3. They verify it's really you (visual recognition)
+3. They verify it's really you
+  (visual recognition)
 4. They create a voucher in their app
 5. They share the voucher with you
 
 ### Requirements
 
 - You need vouchers from **3 or more** contacts
-- Each contact must have previously exchanged with your old identity
-- This proves your social network recognizes the recovery request
+- Each contact must have previously exchanged with
+  your old identity
+- This proves your social network recognizes the
+  recovery request
 
 ### Completing Recovery
 
@@ -128,21 +141,25 @@ Once you have enough vouchers:
 1. Import all vouchers into your app
 2. Vauchi submits the recovery proof
 3. Other contacts verify via mutual connections
-4. Your identity transitions to the new device
+4. Your identity transitions to the new
+  device
 
 ## Helping Others Recover
 
-If a contact asks you to vouch for their recovery:
+If a contact asks you to vouch for their
+recovery:
 
 1. Go to **Settings > Recovery**
 2. Tap **Help Someone Recover**
 3. Paste their recovery claim
-4. **Verify their identity** (call them, meet in person)
+4. **Verify their identity**
+  (call them, meet in person)
 5. Create a voucher
 6. Share the voucher with them
 
 ```admonish warning
-Only vouch if you're **certain** of their identity. This prevents identity theft.
+Only vouch if you're **certain** of their identity.
+This prevents identity theft.
 ```
 
 ## Recovery Best Practices
@@ -150,14 +167,17 @@ Only vouch if you're **certain** of their identity. This prevents identity theft
 ### Before You Need It
 
 1. **Create a backup** as soon as you set up
-2. **Store backup securely** (password manager, safe)
+2. **Store backup securely**
+  (password manager, safe)
 3. **Use a memorable passphrase** for the password
-4. **Have 5+ contacts** in case some are unavailable
+4. **Have 5+ contacts** in case some are
+  unavailable
 
 ### When You Need It
 
 1. Try backup restore first (faster, simpler)
-2. Use social recovery only if backup unavailable
+2. Use social recovery only if backup
+  unavailable
 3. Meet contacts in person for vouching
 4. Don't rush — verify everything carefully
 
@@ -165,11 +185,15 @@ Only vouch if you're **certain** of their identity. This prevents identity theft
 
 ### Forgot Backup Password
 
-Unfortunately, backup passwords cannot be recovered. The encryption is designed so only you can decrypt your backup. Options:
+Unfortunately, backup passwords cannot be
+recovered. The encryption is designed so only you
+can decrypt your backup. Options:
 
 1. Use social recovery if available
-2. Create a new identity and re-exchange with contacts
-3. Check if you have another linked device still accessible
+2. Create a new identity and re-exchange with
+  contacts
+3. Check if you have another linked device still
+  accessible
 
 ### Not Enough Vouchers
 
@@ -177,7 +201,8 @@ If you can't reach 3 contacts:
 
 1. Check if old contacts are still available
 2. Wait if contacts are temporarily unavailable
-3. Consider creating a new identity as last resort
+3. Consider creating a new identity as last
+  resort
 
 ### Voucher Rejected
 
@@ -191,6 +216,9 @@ Ask the contact to create a new voucher.
 
 ## Related
 
-- [How to Recover Your Account](../guides/recovery.md) — Step-by-step guide
-- [Multi-Device Sync](multi-device.md) — Another way to access your identity
-- [Encryption](encryption.md) — How backup encryption works
+- [How to Recover Your Account](../guides/recovery.md)
+  — Step-by-step guide
+- [Multi-Device Sync](multi-device.md)
+  — Another way to access your identity
+- [Encryption](encryption.md)
+  — How backup encryption works

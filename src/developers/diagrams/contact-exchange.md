@@ -5,15 +5,20 @@
 
 **Interaction Type:** 🤝 **IN-PERSON (Proximity Required)**
 
-Two users exchange contact cards by scanning QR codes while physically present together. Proximity is verified via ultrasonic audio handshake to prevent remote/screenshot attacks.
+Two users exchange contact cards by scanning QR
+codes while physically present together. Proximity
+is verified via ultrasonic audio handshake to
+prevent remote/screenshot attacks.
 
 ## Participants
 
 - **Alice** - User initiating exchange (displays QR)
-- **Alice's Device** - Mobile/Desktop running Vauchi
+- **Alice's Device** - Mobile/Desktop running
+  Vauchi
 - **Bob** - User completing exchange (scans QR)
 - **Bob's Device** - Mobile/Desktop running Vauchi
-- **Relay** - WebSocket relay server (fallback only)
+- **Relay** - WebSocket relay server
+  (fallback only)
 
 ## Sequence Diagram
 
@@ -105,16 +110,27 @@ sequenceDiagram
 
 ### QR Code Contents
 
-Binary format with `WBEX` magic bytes:
+Binary format (v3) with `WBEX` magic
+bytes:
 
 ```
 WBEX (4 bytes magic)
-version (1 byte)
-Alice's X25519 public key (32 bytes)
+version (1 byte) = 0x03
+Ed25519 public key (32 bytes)
+X25519 exchange key (32 bytes)
 exchange token (32 bytes)
-audio_challenge seed (32 bytes)
-expiry timestamp (8 bytes)
+audio_challenge seed (16 bytes)
+creation timestamp (8 bytes)
+name_len (2 bytes, big-endian)
+name (N bytes, UTF-8)
+flags (1 byte, bitfield)
+  [if bit 0] relay_url_len (2 bytes) + relay_url (M bytes)
+  [if bit 1] relay_noise_pubkey (32 bytes)
+signature (64 bytes, Ed25519 over all preceding fields)
 ```
+
+Minimum size (empty name, no relay fields):
+192 bytes.
 
 ### Contact Card (Encrypted)
 
@@ -133,11 +149,11 @@ expiry timestamp (8 bytes)
 
 | Property | Mechanism |
 |----------|-----------|
-| **Proximity Required** | Ultrasonic audio handshake (18-20 kHz) |
-| **No Man-in-the-Middle** | X3DH key agreement with identity keys |
-| **Forward Secrecy** | Ephemeral keys discarded after exchange |
-| **Replay Prevention** | One-time token, 5-minute expiry |
-| **Card Authenticity** | Ed25519 signature on contact card |
+| **Proximity** | Ultrasonic audio (18-20 kHz) |
+| **No MITM** | X3DH with identity keys |
+| **Forward Secrecy** | Ephemeral keys discarded |
+| **Replay Prevention** | One-time token, 5-min expiry |
+| **Card Authenticity** | Ed25519 signature |
 
 ## Failure Scenarios
 
@@ -151,6 +167,7 @@ sequenceDiagram
     participant BD as Bob's Device
 
     Note over AD,BD: Bob scanning from screenshot (remote)
+
     AD->>AD: Emit ultrasonic challenge
     BD--xBD: No ultrasonic detected (too far)
     BD->>BD: Proximity verification FAILED
@@ -178,13 +195,15 @@ sequenceDiagram
 
 | Platform | Proximity Method | Fallback |
 |----------|------------------|----------|
-| iOS ↔ iOS | Ultrasonic audio | Manual confirmation |
-| Android ↔ Android | Ultrasonic audio | Manual confirmation |
-| iOS ↔ Android | Ultrasonic audio | Manual confirmation |
-| Desktop ↔ Mobile | N/A (no mic) | Manual confirmation required |
-| Desktop ↔ Desktop | N/A | Manual confirmation required |
+| iOS ↔ iOS | Ultrasonic | Manual confirm |
+| Android ↔ Android | Ultrasonic | Manual confirm |
+| iOS ↔ Android | Ultrasonic | Manual confirm |
+| Desktop ↔ Mobile | N/A (no mic) | Manual confirm |
+| Desktop ↔ Desktop | N/A | Manual confirm |
 
 ## Related Features
 
-- [Device Linking](device-linking.md) - Similar QR flow for linking devices
-- [Sync Updates](sync-updates.md) - How card updates propagate after exchange
+- [Device Linking](device-linking.md) - Similar QR
+  flow for linking devices
+- [Sync Updates](sync-updates.md) - How card
+  updates propagate after exchange

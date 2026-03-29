@@ -3,7 +3,8 @@
 
 # Crypto Key Hierarchy
 
-Visual documentation of Vauchi's cryptographic key hierarchy and derivation paths.
+Visual documentation of Vauchi's cryptographic key
+hierarchy and derivation paths.
 
 ## Master Hierarchy
 
@@ -40,12 +41,12 @@ flowchart TB
     SEED -->|"raw seed<br/>(Ed25519 requirement)"| SIGN_SK
     SIGN_SK --> SIGN_PK
 
-    SEED -->|"HKDF<br/>info='Vauchi_Exchange_Seed'"| EXCH_SK
+    SEED -->|"HKDF<br/>info='Vauchi_Exchange_Seed_v2'"| EXCH_SK
     EXCH_SK --> EXCH_PK
 
-    SEED -->|"HKDF<br/>info='Vauchi_Shred_Key'"| SMK
-    SMK -->|"HKDF<br/>info='Vauchi_Storage_Key'"| SEK
-    SMK -->|"HKDF<br/>info='Vauchi_FileKey_Key'"| FKEK
+    SEED -->|"HKDF<br/>info='Vauchi_Shred_Key_v2'"| SMK
+    SMK -->|"HKDF<br/>info='Vauchi_Storage_Key_v2'"| SEK
+    SMK -->|"HKDF<br/>info='Vauchi_FileKey_Key_v2'"| FKEK
 
     SEK -.->|"encrypts"| CEK1
     SEK -.->|"encrypts"| CEK2
@@ -64,7 +65,8 @@ flowchart TB
 
 ### HKDF Convention
 
-All HKDF derivations use standard RFC 5869 (documented as "DP-5"):
+All HKDF derivations use standard RFC 5869
+(documented as "DP-5"):
 
 ```
 HKDF-SHA256:
@@ -74,14 +76,15 @@ HKDF-SHA256:
   - output: 32 bytes
 ```
 
-This follows standard HKDF convention: high-entropy seed as IKM, no salt needed.
+This follows standard HKDF convention: high-entropy
+seed as IKM, no salt needed.
 
 ### Key Sizes
 
 | Key | Size | Algorithm |
 |-----|------|-----------|
 | Master Seed | 256 bits | CSPRNG |
-| Identity Signing | 32 + 64 bytes | Ed25519 (seed + keypair) |
+| Identity Signing | 32+64 bytes | Ed25519 (seed+keypair) |
 | Exchange | 32 bytes | X25519 |
 | SMK | 256 bits | HKDF-SHA256 |
 | SEK | 256 bits | HKDF-SHA256 |
@@ -304,20 +307,23 @@ flowchart TB
 
 ## Security Properties by Key
 
-| Key | Forward Secrecy | Break-in Recovery | Zeroized on Drop |
-|-----|-----------------|-------------------|------------------|
+| Key | Fwd Secrecy | Break-in Rec. | Zeroized |
+|-----|-------------|---------------|----------|
 | Master Seed | N/A | No | Yes |
 | Identity Signing | No | No | Yes |
 | Exchange Key | No | No | Yes |
 | SMK | No | No | Yes |
-| SEK | No | No | Yes (memory only) |
+| SEK | No | No | Yes (mem) |
 | CEK | Per-contact | N/A | Yes |
 | Root Key | Via DH ratchet | Yes | Yes |
-| Chain Key | Via symmetric ratchet | N/A | Yes |
-| Message Key | Single-use, deleted | N/A | Yes |
+| Chain Key | Via sym ratchet | N/A | Yes |
+| Message Key | Single-use | N/A | Yes |
 
 ## Related Documentation
 
-- [Crypto Reference](../crypto.md) — Algorithm details
-- [Architecture Overview](../architecture.md) — System design
-- [Message Delivery Flow](message-delivery.md) — Ratchet in action
+- [Crypto Reference](../crypto.md)
+  — Algorithm details
+- [Architecture Overview](../architecture.md)
+  — System design
+- [Message Delivery Flow](message-delivery.md)
+  — Ratchet in action

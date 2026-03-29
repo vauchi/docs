@@ -9,18 +9,26 @@ Privacy-focused updatable contact cards via in-person exchange.
 
 ## What We're Building
 
-Vauchi is a contact card that updates automatically. When you change your phone number, everyone who has your card sees the change — no need to notify them manually.
+Vauchi is a contact card that updates automatically.
+When you change your phone number, everyone who has
+your card sees the change — no need to notify them
+manually.
 
 Unlike traditional contact apps:
 
-- **No accounts** — Your device is your identity
+- **No sign-up required** — Your device is your identity
 - **No phone number required** — Exchange cards in person
 - **End-to-end encrypted** — Only you and your contacts can read your data
 - **Open source** — Verify every claim yourself
 
 ## Why We Built It
 
-Contact information goes stale. You change jobs, move cities, get a new number — and suddenly half your contacts have outdated info. The usual solution is to use a platform (social network, messaging app) as the source of truth, but that means trusting a company with your data.
+Contact information goes stale. You change jobs, move
+cities, get a new number — and suddenly half your
+contacts have outdated info. The usual solution is to
+use a platform (social network, messaging app) as the
+source of truth, but that means trusting a company
+with your data.
 
 We believe there's a better way: updatable contact cards that stay private.
 

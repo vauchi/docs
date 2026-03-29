@@ -1,10 +1,16 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- SSOT: Public architecture overview. Internal protocol specs: _private/docs/specs/ -->
+<!-- SSOT: Public architecture overview.
+     Internal protocol specs: _private/docs/specs/ -->
 
 # Architecture Overview
 
-Vauchi is a privacy-focused contact card system. Users exchange contact cards in person via QR code (with NFC and Bluetooth as additional transport options). After exchange, cards update automatically — when you change your phone number, everyone who has your card sees the change.
+Vauchi is a privacy-focused contact card system.
+Users exchange contact cards in person via QR code
+(with NFC and Bluetooth as additional transport
+options). After exchange, cards update automatically
+— when you change your phone number, everyone who
+has your card sees the change.
 
 ## System Architecture
 
@@ -57,14 +63,14 @@ The Rust core library provides all cryptographic and protocol functionality:
 
 | Module | Purpose | Key Files |
 |--------|---------|-----------|
-| `crypto/` | Encryption, signing, key derivation | `encryption.rs`, `signing.rs`, `ratchet.rs` |
+| `crypto/` | Encryption, signing, KDF | `encryption.rs`, `signing.rs` |
 | `exchange/` | Contact exchange protocol | `session.rs`, `qr.rs`, `x3dh.rs` |
 | `sync/` | Update propagation | `device_sync.rs`, `delta.rs` |
 | `recovery/` | Social recovery | `mod.rs` |
-| `storage/` | Local encrypted database | `contacts.rs`, `identity.rs`, `secure.rs` |
+| `storage/` | Local encrypted database | `contacts.rs`, `identity.rs` |
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
-| `ui/` | Core-driven UI types and workflow engines | `screen.rs`, `component.rs`, `action.rs`, `engine.rs` |
-| `i18n` | Internationalization | `i18n.rs` (runtime loading) |
+| `ui/` | Core-driven UI (`vauchi-app`) | `screen.rs`, `component.rs` |
+| `i18n` | Internationalization (`vauchi-app`) | `i18n.rs` |
 
 ### vauchi-protocol
 
@@ -89,9 +95,9 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 | Platform | Stack | Binding |
 |----------|-------|---------|
 | iOS | SwiftUI | `vauchi-platform-swift` (SPM) |
-| Android | Kotlin/Compose | `vauchi-platform-kotlin` (Gradle) |
+| Android | Kotlin/Compose | Maven AAR from core CI |
 | Linux (GTK) | GTK4 (`gtk4-rs`) | Direct Rust linkage |
-| Linux (Qt) | Qt6/QML | cbindgen C FFI |
+| Linux (Qt) | Qt6 (Widgets) | cbindgen C FFI |
 | macOS | SwiftUI | UniFFI (shared with iOS) |
 | Windows | WinUI3 (C# .NET 8) | C ABI (`vauchi-cabi`) |
 | CLI | Rust | Direct library use |
@@ -99,7 +105,10 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
 ## Core-Driven UI
 
-Core defines what to show; frontends only decide how to render natively. New workflows are pure Rust — zero frontend code unless a new component type is needed.
+Core defines what to show; frontends only decide how
+to render natively. New workflows are pure Rust —
+zero frontend code unless a new component type is
+needed.
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -109,14 +118,16 @@ Core defines what to show; frontends only decide how to render natively. New wor
 │    ├─ current_screen() → ScreenModel                    │
 │    └─ handle_action(UserAction) → ActionResult           │
 │                                                         │
-│  ScreenModel  { title, subtitle, components, actions,   │
-│                 progress }                               │
+│  ScreenModel  { screen_id, title, subtitle,             │
+│                 components, actions, progress }          │
 │  Component    { TextInput, ToggleList, FieldList,       │
-│                 CardPreview, InfoPanel, Text, Divider }  │
+│                 CardPreview, InfoPanel, Text,            │
+│                 Divider, ... }                           │
 │  UserAction   { TextChanged, ItemToggled,               │
 │                 ActionPressed, ... }                     │
 │  ActionResult { UpdateScreen, NavigateTo,               │
-│                 ValidationError, Complete }              │
+│                 ValidationError, Complete,               │
+│                 ShowToast, ... }                         │
 └────────────────────────┬────────────────────────────────┘
                          │  ScreenModel (JSON or direct)
                          │  UserAction (JSON or direct)
@@ -134,9 +145,13 @@ Core defines what to show; frontends only decide how to render natively. New wor
 └─────────────────────────────────────────────────────────┘
 ```
 
-Each frontend implements a **component library** (one native component per `Component` variant) and a **ScreenRenderer** that maps `ScreenModel` to native UI. The component library is built once and reused across all workflows.
+Each frontend implements a **component library**
+(one native component per `Component` variant) and
+a **ScreenRenderer** that maps `ScreenModel` to
+native UI. The component library is built once and
+reused across all workflows.
 
-| Component | Linux GTK4 | Linux Qt/QML | macOS/iOS (SwiftUI) | Android (Compose) | Windows (WinUI3) | TUI (Ratatui) | CLI |
+| Component | Linux GTK4 | Linux Qt (Widgets) | macOS/iOS (SwiftUI) | Android (Compose) | Windows (WinUI3) | TUI (Ratatui) | CLI |
 |-----------|------------|-------------|---------------------|-------------------|-----------------|---------------|-----|
 | TextInput | `gtk::Entry` | `TextField` | `TextField` | `OutlinedTextField` | `TextBox` | Input widget | stdin prompt |
 | ToggleList | `gtk::CheckButton` | `CheckBox` | List + Toggle | LazyColumn + Checkbox | `ToggleSwitch` | [x]/[ ] list | numbered choice |
@@ -144,11 +159,19 @@ Each frontend implements a **component library** (one native component per `Comp
 | CardPreview | `gtk::Frame` | `Frame` | Card view | Card composable | `Border` | Box render | text output |
 | InfoPanel | `gtk::Box` | `ColumnLayout` | VStack | Column | `StackPanel` | Block | println sections |
 
-**Transport**: Rust clients (CLI, TUI, Desktop) call `WorkflowEngine` directly. Mobile clients (iOS, Android) use JSON over UniFFI.
+**Transport**: Rust clients (CLI, TUI, Desktop)
+call `WorkflowEngine` directly. Mobile clients
+(iOS, Android) use JSON over UniFFI.
 
-**Adding workflows**: Implement a new `WorkflowEngine` in core. All frontends render it automatically via the existing component library — no frontend changes needed.
+**Adding workflows**: Implement a new
+`WorkflowEngine` in core. All frontends render it
+automatically via the existing component library —
+no frontend changes needed.
 
-**Adding component types**: Define a new `Component` variant in core, then implement the corresponding native widget in each frontend's component library. This is rare — the vocabulary stabilizes quickly.
+**Adding component types**: Define a new `Component`
+variant in core, then implement the corresponding
+native widget in each frontend's component library.
+This is rare — the vocabulary stabilizes quickly.
 
 ## Data Flow
 
@@ -203,7 +226,8 @@ Alice updates phone number
 
 ### 3. Multi-Device Sync
 
-All devices under one identity share the same master seed. Device-specific keys are derived via HKDF:
+All devices under one identity share the same master
+seed. Device-specific keys are derived via HKDF:
 
 ```
 Master Seed
@@ -250,7 +274,8 @@ Master Seed (256-bit, generated at identity creation)
 
 Contact exchange requires in-person presence:
 
-- QR + ultrasonic audio verification (18-20 kHz) — implemented on iOS, planned for Android
+- QR + ultrasonic audio verification (18-20 kHz)
+  — implemented on iOS, planned for Android
 - NFC Active tap (planned — centimeters range)
 - BLE with RSSI proximity check (planned — GATT transport)
 
@@ -261,7 +286,7 @@ vauchi/                    ← Orchestrator repo
 ├── core/                  ← vauchi-core + vauchi-platform + vauchi-protocol
 ├── relay/                 ← WebSocket relay server (uses vauchi-protocol)
 ├── linux-gtk/             ← GTK4 Linux desktop app
-├── linux-qt/              ← Qt6/QML Linux desktop app
+├── linux-qt/              ← Qt6 (Widgets) Linux desktop app
 ├── macos/                 ← macOS native app (SwiftUI)
 ├── windows/               ← Windows native app (WinUI3)
 ├── ios/                   ← SwiftUI app
@@ -270,14 +295,20 @@ vauchi/                    ← Orchestrator repo
 ├── tui/                   ← Terminal UI
 ├── features/              ← Gherkin specs
 ├── locales/               ← i18n JSON files
+├── ohttp-relay/           ← OHTTP relay proxy
+├── themes/                ← Design tokens
 ├── e2e/                   ← End-to-end tests
 └── docs/                  ← Documentation
 ```
 
 ## Related Documentation
 
-- [GUI Guidelines](gui-guidelines.md) — Component-level design rules (toasts, inline editing, confirmations)
-- [UX Interaction Guidelines](ux-guidelines.md) — Interaction philosophy (physical-first, offline-first, flow design)
+- [GUI Guidelines](gui-guidelines.md) — Component
+  design rules (toasts, inline editing,
+  confirmations)
+- [UX Interaction Guidelines](ux-guidelines.md) —
+  Interaction philosophy (physical-first,
+  local-first, flow design)
 - [Crypto Reference](crypto.md) — Cryptographic operations
 - [Tech Stack](tech-stack.md) — Technology choices
 - [Diagrams](diagrams/index.md) — Sequence diagrams
