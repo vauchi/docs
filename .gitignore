@@ -14,3 +14,4 @@ site/
 credentials.json
 service-account*.json
 book/
+node_modules/

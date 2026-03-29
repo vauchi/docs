@@ -47,9 +47,19 @@ build:docs:
   tags:
     - self-hosted
     - rust
+  variables:
+    MDBOOK_VERSION: "0.4.44"
   before_script:
     - export PATH="$HOME/.cargo/bin:$PATH"
+    - npm --prefix "$CI_PROJECT_DIR" ci --ignore-scripts 2>/dev/null || npm --prefix "$CI_PROJECT_DIR" install 2>/dev/null || true
   script:
+    # Pin mdbook to 0.4.x — 0.5.x has breaking changes
+    - |
+      CURRENT=$(mdbook --version 2>/dev/null | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' || echo "none")
+      if [ "$CURRENT" != "$MDBOOK_VERSION" ]; then
+        echo "mdbook $CURRENT != pinned $MDBOOK_VERSION — installing..."
+        cargo install mdbook --version "$MDBOOK_VERSION" --locked 2>/dev/null || true
+      fi
     - mdbook build
     - mkdir -p book/.well-known && cp docs/.well-known/cosign.pub docs/.well-known/security.txt book/.well-known/
     - |

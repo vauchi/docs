@@ -1,6 +1,10 @@
 # SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me>
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# mdbook 0.5.x has breaking changes (renamed sections→items,
+# removed "previous" template helper). Pin to 0.4.x until
+# mdbook-admonish and our preprocessors support 0.5.
+
 [book]
 title = "Vauchi Docs"
 description = "Privacy-focused updatable contact cards — documentation"
@@ -19,7 +23,7 @@ edit-url-template = "https://gitlab.com/vauchi/docs/-/edit/main/src/{path}"
 site-url = "/"
 no-section-label = false
 additional-css = ["src/theme/vauchi.css", "mdbook-admonish.css"]
-additional-js = ["mermaid.min.js", "mermaid-init.js", "theme-switcher.js"]
+additional-js = ["theme-switcher.js"]
 
 [output.html.search]
 enable = true
@@ -29,8 +33,8 @@ limit-results = 20
 command = "mdbook-admonish"
 assets_version = "3.1.0"
 
-[preprocessor.mermaid]
-command = "mdbook-mermaid"
+[preprocessor.beautiful-mermaid]
+command = "node mdbook-beautiful-mermaid.mjs"
 
 [output.html.playground]
 editable = false

@@ -1,0 +1,27 @@
+{
+  "name": "docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mermaid-init.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/vauchi/docs.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://gitlab.com/vauchi/docs/issues"
+  },
+  "homepage": "https://gitlab.com/vauchi/docs#readme",
+  "dependencies": {
+    "beautiful-mermaid": "^1.1.3"
+  }
+}
