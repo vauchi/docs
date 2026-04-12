@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Last Updated:** February 2026
+**Last Updated:** April 2026
 
 ## Overview
 
@@ -116,9 +116,9 @@ or any decrypted data because we do not have access to it.
 
 ### Certificate Pinning
 
-Mobile apps use certificate pinning to prevent
-man-in-the-middle attacks against the relay server
-connection.
+All client apps use SPKI certificate pinning to prevent
+man-in-the-middle attacks against relay server
+connections.
 
 ## Your Rights
 
