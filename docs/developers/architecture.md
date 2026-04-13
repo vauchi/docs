@@ -1,6 +1,7 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <!-- SSOT: Public architecture overview. Internal protocol specs: _private/docs/specs/ -->
+<!-- markdownlint-disable line-length-backtick-exempt -->
 
 # Architecture Overview
 
@@ -8,7 +9,7 @@ Vauchi is a privacy-focused contact card system. Users exchange contact cards in
 
 ## System Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │                              VAUCHI SYSTEM                                  │
 ├─────────────────────────────────────────────────────────────────────────────┤
@@ -30,7 +31,7 @@ Vauchi is a privacy-focused contact card system. Users exchange contact cards in
 │  │                           │                                          │   │
 │  └───────────────────────────┼──────────────────────────────────────────┘   │
 │                              │                                              │
-│                              │ WebSocket (TLS)                              │
+│                              │ HTTP v2 + OHTTP (TLS)                        │
 │                              │                                              │
 │  ┌───────────────────────────▼──────────────────────────────────────────┐   │
 │  │                         RELAY SERVER                                 │   │
@@ -47,7 +48,7 @@ Vauchi is a privacy-focused contact card system. Users exchange contact cards in
 │  └──────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
-```
+```text
 
 ## Core Components
 
@@ -79,7 +80,7 @@ Shared protocol message types used by both `vauchi-core` and the relay:
 
 Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
-- WebSocket-based store-and-forward
+- HTTP v2 REST API with OHTTP privacy layer
 - TLS required in production
 - No user accounts — just encrypted blobs
 - Background cleanup tasks (hourly)
@@ -101,7 +102,7 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
 Core defines what to show; frontends only decide how to render natively. New workflows are pure Rust — zero frontend code unless a new component type is needed.
 
-```
+```text
 ┌─────────────────────────────────────────────────────────┐
 │                      Core (Rust)                         │
 │                                                         │
@@ -132,7 +133,7 @@ Core defines what to show; frontends only decide how to render natively. New wor
 │    Maps ScreenModel → native UI                         │
 │    Sends UserAction back to core                        │
 └─────────────────────────────────────────────────────────┘
-```
+```text
 
 Each frontend implements a **component library** (one native component per `Component` variant) and a **ScreenRenderer** that maps `ScreenModel` to native UI. The component library is built once and reused across all workflows.
 
@@ -154,7 +155,7 @@ Each frontend implements a **component library** (one native component per `Comp
 
 ### 1. Contact Exchange (In-Person)
 
-```
+```text
 Alice                                 Bob
   │                                    │
   │─── Display QR (identity + key) ────│
@@ -166,11 +167,11 @@ Alice                                 Bob
   │◄─── Exchange encrypted cards ──────│
   │                                    │
   │ Both now have each other's cards   │
-```
+```text
 
 ### 2. Card Updates (Remote via Relay)
 
-```
+```text
 Alice updates phone number
          │
          ▼
@@ -181,7 +182,7 @@ Alice updates phone number
          │
          ▼
 ┌─────────────────┐
-│ Send to relay   │  WebSocket
+│ Send to relay   │  HTTP v2
 └────────┬────────┘
          │
          ▼
@@ -199,18 +200,18 @@ Alice updates phone number
 ┌─────────────────┐
 │ Decrypt delta   │  Update Alice's card locally
 └─────────────────┘
-```
+```text
 
 ### 3. Multi-Device Sync
 
 All devices under one identity share the same master seed. Device-specific keys are derived via HKDF:
 
-```
+```text
 Master Seed
     ├── Device 1 keys (HKDF + device_index)
     ├── Device 2 keys (HKDF + device_index)
     └── Device 3 keys (HKDF + device_index)
-```
+```text
 
 Device linking uses QR code scan with time-limited token.
 
@@ -236,7 +237,7 @@ When all devices are lost:
 
 ### Key Hierarchy
 
-```
+```text
 Master Seed (256-bit, generated at identity creation)
 ├── Identity Signing Key (Ed25519, raw seed)
 ├── Exchange Key (X25519, HKDF derived)
@@ -244,7 +245,7 @@ Master Seed (256-bit, generated at identity creation)
     ├── SEK (Storage Encryption Key)
     ├── FKEK (File Key Encryption Key)
     └── Per-Contact CEK (random 256-bit)
-```
+```text
 
 ### Physical Verification
 
@@ -256,10 +257,10 @@ Contact exchange requires in-person presence:
 
 ## Repository Structure
 
-```
+```text
 vauchi/                    ← Orchestrator repo
 ├── core/                  ← vauchi-core + vauchi-platform + vauchi-protocol
-├── relay/                 ← WebSocket relay server (uses vauchi-protocol)
+├── relay/                 ← HTTP v2 relay server (uses vauchi-protocol)
 ├── linux-gtk/             ← GTK4 Linux desktop app
 ├── linux-qt/              ← Qt6/QML Linux desktop app
 ├── macos/                 ← macOS native app (SwiftUI)
@@ -272,7 +273,7 @@ vauchi/                    ← Orchestrator repo
 ├── locales/               ← i18n JSON files
 ├── e2e/                   ← End-to-end tests
 └── docs/                  ← Documentation
-```
+```text
 
 ## Related Documentation
 
