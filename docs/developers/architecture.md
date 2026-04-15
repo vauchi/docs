@@ -42,7 +42,7 @@ Vauchi is a privacy-focused contact card system. Users exchange contact cards in
 │  │   └────────────────┘   └────────────────┘   └────────────────┘       │   │
 │  │                                                                      │   │
 │  │   • Store-and-forward encrypted messages                             │   │
-│  │   • No access to plaintext (zero-knowledge)                          │   │
+│  │   • No access to plaintext (oblivious)                               │   │
 │  │   • Rate limiting, quotas, GDPR purge                                │   │
 │  │                                                                      │   │
 │  └──────────────────────────────────────────────────────────────────────┘   │

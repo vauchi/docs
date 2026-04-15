@@ -20,7 +20,7 @@ All design starts with:
 *"How would we build this if users were our only concern?"*
 
 - E2E encryption for all communications
-- Zero-knowledge relay (sees only encrypted blobs)
+- Oblivious privacy-preserving relay (sees only encrypted blobs)
 - No tracking, analytics, or telemetry
 - User owns and controls their data
 
@@ -82,7 +82,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 | Principle | Statement |
 |-----------|-----------|
 | **User Ownership** | All data stored locally on device, encrypted, under user control |
-| **Zero Knowledge** | Relay cannot decrypt content; sees only encrypted blobs and metadata |
+| **Oblivious Relay** | Relay cannot decrypt content; sees only encrypted blobs and metadata |
 | **No Harvesting** | No analytics, telemetry, location tracking, or advertising IDs |
 | **No Sharing** | User data never shared with third parties |
 | **Selective Visibility** | Users control per-field, per-contact visibility |

@@ -53,7 +53,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 ┌─────────▼────────────────────────────────────────────────────┐
 │                      RELAY SERVER                             │
 │                                                               │
-│  • Assumed compromised (zero-knowledge design)               │
+│  • Assumed compromised (oblivious design)                     │
 │  • Sees only encrypted blobs, never client IPs               │
 │  • No user accounts, no decryption keys                      │
 │  • Store-and-forward with TTL                                │
@@ -136,7 +136,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 - All data E2E encrypted with XChaCha20-Poly1305 before leaving the device
 - Per-contact encryption keys (CEK) derived via X3DH + Double Ratchet
 - Forward secrecy: each message uses a unique key, deleted after use
-- Relay stores only encrypted blobs (zero-knowledge)
+- Relay stores only encrypted blobs (oblivious privacy-preserving design)
 - Local storage encrypted with device-derived keys (SEK from HKDF key hierarchy)
 - Sensitive key material zeroized on drop (`zeroize` crate)
 - Message padding to fixed buckets (256 B, 1 KB, 4 KB) prevents size-based inference
@@ -180,7 +180,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 | **Integrity** | AEAD authentication tag + Ed25519 signatures |
 | **Forward secrecy** | Double Ratchet with ephemeral DH keys |
 | **Break-in recovery** | DH ratchet step generates new key material |
-| **Zero-knowledge relay** | Relay sees only encrypted blobs, no decryption keys |
+| **Oblivious relay** | Relay sees only encrypted blobs, no decryption keys |
 | **Physical verification** | QR + ultrasonic audio / NFC / BLE proximity (full trust); SAS + liveness (video, intermediate trust) |
 | **Traffic analysis resistance** | Fixed-size message padding + routing tokens + timing obfuscation |
 | **IP privacy** | Self-hosted reverse proxy strips client headers; OHTTP (RFC 9458) provides cryptographic separation |
@@ -430,7 +430,7 @@ This is not currently implemented but is documented as a future enhancement for 
 
 Push notifications (APNs for iOS, FCM for Android) are **not currently implemented**. If they are added in the future, the following constraint is mandatory:
 
-**Threat**: Naive push notifications would expose message receipt timing to Apple/Google. Even though the relay sees only encrypted blobs, a push notification would link a specific device token (tied to a real Apple/Google account) to the exact moment a Vauchi message arrives. This undermines the zero-knowledge relay design.
+**Threat**: Naive push notifications would expose message receipt timing to Apple/Google. Even though the relay sees only encrypted blobs, a push notification would link a specific device token (tied to a real Apple/Google account) to the exact moment a Vauchi message arrives. This undermines the oblivious privacy-preserving relay design.
 
 **Required pattern**: **Empty push + app-side fetch**.
 

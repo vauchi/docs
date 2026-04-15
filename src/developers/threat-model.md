@@ -58,7 +58,7 @@ traffic analysis compared to messaging apps.
 ┌─────────▼────────────────────────────────────────────────────┐
 │                      RELAY SERVER                             │
 │                                                               │
-│  • Assumed compromised (zero-knowledge design)               │
+│  • Assumed compromised (oblivious design)                     │
 │  • Sees only encrypted blobs, never client IPs               │
 │  • No user accounts, no decryption keys                      │
 │  • Store-and-forward with TTL                                │
@@ -151,7 +151,7 @@ information without permanent proof of past states.
 - All data E2E encrypted with XChaCha20-Poly1305 before leaving the device
 - Per-contact encryption keys (CEK) derived via X3DH + Double Ratchet
 - Forward secrecy: each message uses a unique key, deleted after use
-- Relay stores only encrypted blobs (zero-knowledge)
+- Relay stores only encrypted blobs (oblivious privacy-preserving design)
 - Local storage encrypted with device-derived keys (SEK from HKDF key hierarchy)
 - Sensitive key material zeroized on drop (`zeroize` crate)
 - Message padding to fixed buckets
@@ -206,7 +206,7 @@ revocation broadcast.
 | **Integrity** | AEAD authentication tag + Ed25519 signatures |
 | **Forward secrecy** | Double Ratchet with ephemeral DH keys |
 | **Break-in recovery** | DH ratchet step generates new key material |
-| **Zero-knowledge relay** | Encrypted blobs only, no keys |
+| **Oblivious relay** | Encrypted blobs only, no keys |
 | **Physical verification** | QR + audio / NFC / BLE (full); SAS (video) |
 | **Traffic analysis resist.** | Bucket padding + routing tokens + jitter |
 | **IP privacy** | Reverse proxy + OHTTP (RFC 9458) |
@@ -567,7 +567,7 @@ the relay sees only encrypted blobs, a push
 notification would link a specific device token
 (tied to a real Apple/Google account) to the exact
 moment a Vauchi message arrives. This undermines
-the zero-knowledge relay design.
+the oblivious privacy-preserving relay design.
 
 **Required pattern**: **Empty push + app-side fetch**.
 

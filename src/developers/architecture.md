@@ -47,7 +47,7 @@ has your card sees the change.
 │  │   └────────────────┘   └────────────────┘   └────────────────┘       │   │
 │  │                                                                      │   │
 │  │   • Store-and-forward encrypted messages                             │   │
-│  │   • No access to plaintext (zero-knowledge)                          │   │
+│  │   • No access to plaintext (oblivious)                               │   │
 │  │   • Rate limiting, quotas, GDPR purge                                │   │
 │  │                                                                      │   │
 │  └──────────────────────────────────────────────────────────────────────┘   │
