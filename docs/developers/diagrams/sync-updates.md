@@ -179,7 +179,7 @@ sequenceDiagram
 | Property | Mechanism |
 |----------|-----------|
 | **End-to-End Encryption** | Updates encrypted with per-contact shared keys |
-| **Relay Blindness** | Relay sees only encrypted blobs, no metadata |
+| **Relay Blindness** | Relay sees only encrypted blobs; sees routing tokens and timing but not content or sender identity |
 | **Update Authenticity** | Ed25519 signature on all updates |
 | **Replay Prevention** | Monotonic version numbers + timestamps |
 | **Visibility Enforcement** | Only visible fields sent to each contact |

@@ -277,7 +277,7 @@ stateDiagram-v2
 | Forward to recipient | 50-200 ms | If online |
 | Decryption + verify | 1-5 ms | |
 | **Total (online)** | **100-400 ms** | End-to-end |
-| **Total (offline)** | **< 30 days** | Until recipient connects |
+| **Total (offline)** | **Variable** | Until recipient connects |
 
 ## Related Features
 

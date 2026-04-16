@@ -58,7 +58,7 @@ When you change your contact card:
 
 - Updates queue on the relay server
 - Delivered when the contact comes online
-- Messages kept for up to 30 days
+- Messages kept until the contact comes online
 
 ### Manual Refresh
 

@@ -38,12 +38,12 @@ flowchart TB
     SEED -->|"raw seed<br/>(Ed25519 requirement)"| SIGN_SK
     SIGN_SK --> SIGN_PK
 
-    SEED -->|"HKDF<br/>info='Vauchi_Exchange_Seed'"| EXCH_SK
+    SEED -->|"HKDF<br/>info='Vauchi_Exchange_Seed_v2'"| EXCH_SK
     EXCH_SK --> EXCH_PK
 
-    SEED -->|"HKDF<br/>info='Vauchi_Shred_Key'"| SMK
-    SMK -->|"HKDF<br/>info='Vauchi_Storage_Key'"| SEK
-    SMK -->|"HKDF<br/>info='Vauchi_FileKey_Key'"| FKEK
+    SEED -->|"HKDF<br/>info='Vauchi_Shred_Key_v2'"| SMK
+    SMK -->|"HKDF<br/>info='Vauchi_Storage_Key_v2'"| SEK
+    SMK -->|"HKDF<br/>info='Vauchi_FileKey_Key_v2'"| FKEK
 
     SEK -.->|"encrypts"| CEK1
     SEK -.->|"encrypts"| CEK2

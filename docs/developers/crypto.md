@@ -61,6 +61,7 @@ Master Seed (256-bit)
 | `Vauchi_Chain_Key` | Symmetric ratchet chain key advance |
 | `Vauchi_AnonymousSender_v2` | Anonymous sender ID derivation |
 | `Vauchi_Mailbox_v1` | Contact mailbox token (daily rotation, SP-33) |
+| `Vauchi_DeviceSync` | Device-to-device encryption key derivation |
 | `Vauchi_DeviceSync_v1` | Device sync self-token (daily rotation, SP-33) |
 
 ### Ratchet Keys
@@ -92,6 +93,7 @@ All messages padded to fixed buckets before encryption:
 | Bucket | Size | Typical Content |
 |--------|------|-----------------|
 | Small | 256 B | ACK, presence, revocation |
+| Medium-Small | 512 B | Visibility changes, device sync ACKs |
 | Medium | 1 KB | Card deltas, small updates |
 | Large | 4 KB | Media references, large payloads |
 
@@ -274,6 +276,8 @@ The relay's Noise keypair is auto-generated on first start and persisted to `{da
 | X3DH | `core/vauchi-core/src/exchange/x3dh.rs` |
 | X3DH Session (Symmetric) | `core/vauchi-core/src/exchange/session.rs` |
 | Padding | `core/vauchi-core/src/crypto/padding.rs` |
+| Noise NK Transport | `relay/src/noise_transport.rs` |
+| Noise Key Management | `relay/src/noise_key.rs` |
 
 ## Related Documentation
 

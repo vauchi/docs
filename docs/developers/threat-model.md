@@ -139,7 +139,7 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 - Relay stores only encrypted blobs (oblivious privacy-preserving design)
 - Local storage encrypted with device-derived keys (SEK from HKDF key hierarchy)
 - Sensitive key material zeroized on drop (`zeroize` crate)
-- Message padding to fixed buckets (256 B, 1 KB, 4 KB) prevents size-based inference
+- Message padding to fixed buckets (256 B, 512 B, 1 KB, 4 KB) prevents size-based inference
 
 **Residual risk**: Metadata (connection timing, recipient pseudonyms) visible to relay. Mitigated by the four-layer privacy architecture: reverse proxy (strips client IPs), OHTTP (cryptographic content protection), timing obfuscation (sync jitter + padding), and optional SOCKS5 proxy support.
 
@@ -332,7 +332,7 @@ The `vauchi-core` library is consumed by multiple UI layers (macOS/SwiftUI, Linu
 
 **What core does NOT trust from UI**:
 
-- **Input lengths**: Core enforces maximum lengths at its API boundary (display name: 100 chars, field value: 1000 chars, field label: 64 chars, card size: 64 KB, avatar: 256 KB)
+- **Input lengths**: Core enforces maximum lengths at its API boundary (display name: 100 chars, field value: 1000 chars, field label: 64 chars, card size: 64 KB, avatar: 32 KB)
 - **Field values**: Core validates phone/email format, URL safety, and rejects malformed data
 - **Contact IDs**: Core verifies contact existence before processing updates
 - **Ratchet messages**: Core validates signatures, AEAD tags, and replay nonces before accepting peer data

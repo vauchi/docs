@@ -64,8 +64,8 @@ The Rust core library provides all cryptographic and protocol functionality:
 | `recovery/` | Social recovery | `mod.rs` |
 | `storage/` | Local encrypted database | `contacts.rs`, `identity.rs`, `secure.rs` |
 | `network/` | Relay communication | `connection.rs`, `protocol.rs` |
-| `ui/` | Core-driven UI types and workflow engines | `screen.rs`, `component.rs`, `action.rs`, `engine.rs` |
-| `i18n` | Internationalization | `i18n.rs` (runtime loading) |
+| `ui/` (in `vauchi-app`) | Core-driven UI types and workflow engines | `screen.rs`, `component.rs`, `action.rs`, `engine.rs` |
+| `i18n` (in `vauchi-app`) | Internationalization | `i18n.rs` (runtime loading) |
 
 ### vauchi-protocol
 
@@ -112,8 +112,12 @@ Core defines what to show; frontends only decide how to render natively. New wor
 │                                                         │
 │  ScreenModel  { title, subtitle, components, actions,   │
 │                 progress }                               │
-│  Component    { TextInput, ToggleList, FieldList,       │
-│                 CardPreview, InfoPanel, Text, Divider }  │
+│  Component    { Text, TextInput, ToggleList, FieldList,  │
+│                 CardPreview, InfoPanel, ContactList,     │
+│                 SettingsGroup, ActionList,               │
+│                 StatusIndicator, PinInput, QrCode,       │
+│                 InlineConfirm, EditableText, Divider,    │
+│                 Banner, Dropdown, AvatarPreview, Slider } │
 │  UserAction   { TextChanged, ItemToggled,               │
 │                 ActionPressed, ... }                     │
 │  ActionResult { UpdateScreen, NavigateTo,               │
@@ -139,11 +143,25 @@ Each frontend implements a **component library** (one native component per `Comp
 
 | Component | Linux GTK4 | Linux Qt/QML | macOS/iOS (SwiftUI) | Android (Compose) | Windows (WinUI3) | TUI (Ratatui) | CLI |
 |-----------|------------|-------------|---------------------|-------------------|-----------------|---------------|-----|
+| Text | `gtk::Label` | `Label` | `Text` | `Text` | `TextBlock` | Paragraph | println |
 | TextInput | `gtk::Entry` | `TextField` | `TextField` | `OutlinedTextField` | `TextBox` | Input widget | stdin prompt |
 | ToggleList | `gtk::CheckButton` | `CheckBox` | List + Toggle | LazyColumn + Checkbox | `ToggleSwitch` | [x]/[ ] list | numbered choice |
 | FieldList | `gtk::ListBox` | `ListView` | List + chips | LazyColumn + chips | `ListView` | Table rows | formatted output |
 | CardPreview | `gtk::Frame` | `Frame` | Card view | Card composable | `Border` | Box render | text output |
 | InfoPanel | `gtk::Box` | `ColumnLayout` | VStack | Column | `StackPanel` | Block | println sections |
+| ContactList | `gtk::ListBox` | `ListView` | List | LazyColumn | `ListView` | Table | numbered list |
+| SettingsGroup | `adw::PreferencesGroup` | `GroupBox` | Form | PreferenceGroup | `StackPanel` | Section | labeled list |
+| ActionList | `gtk::ListBox` | `ListView` | List + buttons | LazyColumn | `ListView` | Line items | numbered choice |
+| StatusIndicator | `gtk::Box` | `RowLayout` | HStack + Image | Row + Icon | `StackPanel` | Status line | text line |
+| PinInput | `gtk::Entry` (masked) | `TextField` | SecureField | PinInput | `PasswordBox` | Masked input | stdin masked |
+| QrCode | `gtk::Picture` | `Image` | Image | Image | `Image` | ASCII QR | text output |
+| InlineConfirm | `gtk::Box` | `RowLayout` | HStack + buttons | Row + buttons | `StackPanel` | Confirm prompt | y/n prompt |
+| EditableText | `gtk::Entry` | `TextField` | TextField/Text | TextField/Text | `TextBox` | Editable field | stdin prompt |
+| Divider | `gtk::Separator` | `MenuSeparator` | `Divider` | `HorizontalDivider` | `MenuFlyoutSeparator` | Horizontal rule | --- |
+| Banner | `adw::Banner` | `InfoBar` | Notification bar | Snackbar | `InfoBar` | Status line | println |
+| Dropdown | `gtk::DropDown` | `ComboBox` | `Picker` | `DropdownMenu` | `ComboBox` | Selection list | numbered choice |
+| AvatarPreview | `gtk::Picture` | `Image` | Circle Image | Circle Image | `PersonPicture` | Initials block | text |
+| Slider | `gtk::Scale` | `Slider` | `Slider` | `Slider` | `Slider` | Progress bar | numeric input |
 
 **Transport**: Rust clients (CLI, TUI, Desktop) call `WorkflowEngine` directly. Mobile clients (iOS, Android) use JSON over UniFFI.
 
