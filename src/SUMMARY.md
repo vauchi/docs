@@ -12,6 +12,7 @@
 - [Overview](./users/index.md)
 - [Getting Started](./users/getting-started.md)
 - [FAQ](./users/faq.md)
+- [Known Issues](./users/known-issues.md)
 
 ## Features
 
