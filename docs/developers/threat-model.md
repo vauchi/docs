@@ -40,7 +40,8 @@ This context shapes the threat model: low traffic volume and infrequent updates 
 ┌─────────▼────────────────────────────────────────────────────┐
 │              SELF-HOSTED REVERSE PROXY (nginx/caddy)          │
 │  • Strips all client-identifying headers                      │
-│  • Relay never sees client IP addresses                       │
+│  • Relay never sees client IP addresses in steady state       │
+│    (see §Bootstrap Exceptions)                                │
 └─────────┬────────────────────────────────────────────────────┘
           │ Internal network
 ┌─────────▼────────────────────────────────────────────────────┐
@@ -197,7 +198,7 @@ If an attacker gains full control of a relay:
 - **Cannot** forge messages (AEAD + signatures)
 - **Can** see pseudonymous recipient IDs and message timing
 - **Can** drop or delay messages (detected by delivery acknowledgments)
-- **Cannot** see client IP addresses (reverse proxy strips headers; OHTTP encrypts requests to gateway)
+- **Cannot** see client IP addresses in steady-state operation (reverse proxy strips headers; OHTTP encrypts requests to gateway). Two narrow bootstrap exceptions are documented in [Bootstrap Exceptions](#bootstrap-exceptions).
 - **Can** observe connection timing patterns (mitigated by timing obfuscation: 30s-5min post-exchange jitter, ±15% sync interval jitter)
 
 ### Device Theft
@@ -392,6 +393,42 @@ Additional mitigations: routing token rotation, `suppress_presence` flag, fixed-
 **Why OHTTP over Tor**: Tor's 90-120s mobile bootstrap latency is fatal for adoption. Tor traffic is banned or flagged in countries that need privacy most (China, Iran, Russia). OHTTP traffic is indistinguishable from normal HTTPS — no special protocol signatures. The four-layer architecture provides equivalent metadata protection for Vauchi's threat model without the usability and censorship-resistance penalties.
 
 **Future considerations**: Private Information Retrieval (PIR) could eliminate recipient pseudonym visibility entirely. Cover traffic patterns could further reduce timing correlation. These are not currently prioritized given Vauchi's low-frequency traffic pattern, but remain on the architectural roadmap for high-threat deployments.
+
+## Bootstrap Exceptions
+
+The IP privacy guarantee is **steady-state**: during normal operation (every sync after the first successful connection), OHTTP ensures the relay never sees the client's IP address. A small number of narrow exceptions exist where a client may need to make a direct HTTPS request to the relay.
+
+### 1. OHTTP key bootstrap (first run on a fresh install)
+
+The client needs the gateway's HPKE public-key configuration before it can use OHTTP. This key is distributed through three mechanisms, tried in order:
+
+1. **Bundled key** (default, production): a recent gateway key is compiled into the binary. No network request is made; no IP is exposed.
+2. **Cached key** (steady state): a previously fetched key stored in the encrypted on-device database, valid until its TTL expires.
+3. **Direct fetch** (development / testing only): the client fetches `GET /v2/ohttp-key` over direct HTTPS. This **does** expose the client's IP to the relay. It is gated behind an explicit `allow_direct: true` configuration and is never enabled by default in production builds.
+
+In production, mechanisms 1 and 2 cover the entire lifecycle of a client. Mechanism 3 is a development affordance and is blocked by a CI lint guard that fails on `allow_direct: true` introductions outside a small, reviewed allow-list.
+
+### 2. Pin-config rotation
+
+Certificate-pinning updates are distributed via the relay at `GET /pin-config`. Because this endpoint authenticates the pin-config payload with a long-lived rotation key bundled in the app, it operates on the same trust assumption as TLS certificate validation itself — but the transport IS a direct HTTPS request, so the relay sees the client IP during pin rotation.
+
+**Mitigation**: pin-config refresh is infrequent (weeks to months), piggy-backs on a window when the user is already actively using the app (reducing correlation value), and the pin-config fetch carries no user-identifying headers or authentication tokens. The relay sees "*some* client requested a pin config" — not *which* client.
+
+### 3. Setup-wizard reachability probe (TUI only)
+
+The TUI's first-run setup wizard includes a manual "Test connection" button that sends an HTTP `GET /health` to the user-entered relay URL to validate typing. This uses direct HTTP by necessity (an OHTTP-gated probe would only prove that the OHTTP gateway is up, not the relay). The wizard surfaces a visible warning to the user before the probe runs:
+
+> "Testing reachability will reveal your IP address to the relay once. Normal use sends all requests through OHTTP."
+
+The probe is not reachable during steady-state sync.
+
+### Non-regression guarantee
+
+The codebase enforces these exceptions by:
+
+- The `HttpTransportConfig::allow_direct` field defaults to `false` and refuses requests when both OHTTP and `allow_direct` are absent.
+- A CI lint guard blocks new `allow_direct: true` introductions outside a small, reviewed allow-list.
+- A structured log event is emitted on every direct fallback, plus an exposed counter for operator telemetry.
 
 ## Key Transparency
 
