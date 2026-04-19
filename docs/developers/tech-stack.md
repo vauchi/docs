@@ -102,8 +102,8 @@ vauchi-core (standalone, no workspace deps)
 cli/, tui/, e2e/, macos/, windows/, linux-gtk/, linux-qt/, web-demo/
 
 vauchi-platform (UniFFI bindings, in core/ workspace)
-    ↑ (via generated binding repos)
-android/ ← vauchi-platform-kotlin (Gradle)
+    ↑ (via published packages)
+android/ ← app.vauchi:vauchi-platform (Maven AAR)
 ios/     ← vauchi-platform-swift (SPM)
 
 vauchi-cabi (C ABI exports, in core/ workspace)

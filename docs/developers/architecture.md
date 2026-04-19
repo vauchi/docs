@@ -90,7 +90,7 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 | Platform | Stack | Binding |
 |----------|-------|---------|
 | iOS | SwiftUI | `vauchi-platform-swift` (SPM) |
-| Android | Kotlin/Compose | `vauchi-platform-kotlin` (Gradle) |
+| Android | Kotlin/Compose | `app.vauchi:vauchi-platform` (Maven AAR) |
 | Linux (GTK) | GTK4 (`gtk4-rs`) | Direct Rust linkage |
 | Linux (Qt) | Qt6/QML | cbindgen C FFI |
 | macOS | SwiftUI | UniFFI (shared with iOS) |
