@@ -31,17 +31,21 @@ Concise reference for all cryptographic operations in Vauchi.
 
 ### Storage Keys (Shredding Hierarchy)
 
-```
-Master Seed (256-bit)
-├── Identity Signing Key       — raw seed (Ed25519 requirement)
-├── Exchange Key               — HKDF(seed, "Vauchi_Exchange_Seed_v2")
-└── SMK (Shredding Master Key) — HKDF(seed, "Vauchi_Shred_Key_v2")
-    ├── SEK (Storage Encryption Key) — HKDF(SMK, "Vauchi_Storage_Key_v2")
-    │   └── encrypts all local SQLite data
-    ├── FKEK (File Key Encryption Key) — HKDF(SMK, "Vauchi_FileKey_Key_v2")
-    │   └── encrypts file key storage
-    └── Per-Contact CEK — random 256-bit per contact
-        └── encrypts individual contact's card data
+```mermaid
+flowchart TB
+    MS["Master Seed (256-bit)"]
+    ISK["Identity Signing Key<br/>raw seed (Ed25519 requirement)"]
+    XK["Exchange Key<br/>HKDF(seed, &quot;Vauchi_Exchange_Seed_v2&quot;)"]
+    SMK["SMK (Shredding Master Key)<br/>HKDF(seed, &quot;Vauchi_Shred_Key_v2&quot;)"]
+    SEK["SEK (Storage Encryption Key)<br/>HKDF(SMK, &quot;Vauchi_Storage_Key_v2&quot;)<br/>encrypts all local SQLite data"]
+    FKEK["FKEK (File Key Encryption Key)<br/>HKDF(SMK, &quot;Vauchi_FileKey_Key_v2&quot;)<br/>encrypts file key storage"]
+    CEK["Per-Contact CEK<br/>random 256-bit per contact<br/>encrypts individual contact's card data"]
+    MS --> ISK
+    MS --> XK
+    MS --> SMK
+    SMK --> SEK
+    SMK --> FKEK
+    SMK --> CEK
 ```
 
 **HKDF Convention**: Master seed as IKM, no salt, domain string as info. All derivations use `HKDF::derive_key(None, &seed, info)`.
@@ -124,42 +128,31 @@ Same as Mutual QR — fresh ephemeral keys on both sides, HKDF-derived shared se
 
 ## Double Ratchet
 
+```mermaid
+flowchart TB
+    subgraph DR["DOUBLE RATCHET"]
+        subgraph DH["DH RATCHET"]
+            DH1["our_dh_secret × their_dh_public"]
+            DH2["HKDF(root_key, shared_secret,<br/>&quot;Vauchi_Root_Ratchet&quot;)"]
+            DH3["[new_root_key, new_chain_key]"]
+            DH1 --> DH2 --> DH3
+        end
+        subgraph SR["SYMMETRIC RATCHET"]
+            SR1["chain_key"]
+            SR2["HKDF(chain_key, &quot;Vauchi_Message_Key&quot;)<br/>→ message_key (single use)"]
+            SR3["HKDF(chain_key, &quot;Vauchi_Chain_Key&quot;)<br/>→ next_chain_key"]
+            SR1 --> SR2
+            SR1 --> SR3
+        end
+        DH --> SR
+    end
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         DOUBLE RATCHET                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │                        DH RATCHET                         │  │
-│  │                                                           │  │
-│  │    our_dh_secret × their_dh_public                        │  │
-│  │              ↓                                            │  │
-│  │    HKDF(root_key, shared_secret, "Vauchi_Root_Ratchet")   │  │
-│  │              ↓                                            │  │
-│  │    [new_root_key, new_chain_key]                          │  │
-│  │                                                           │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                              ↓                                  │
-│  ┌───────────────────────────────────────────────────────────┐  │
-│  │                   SYMMETRIC RATCHET                       │  │
-│  │                                                           │  │
-│  │    chain_key                                              │  │
-│  │        ↓                                                  │  │
-│  │    HKDF(chain_key, "Vauchi_Message_Key")                  │  │
-│  │        → message_key (single use)                         │  │
-│  │        ↓                                                  │  │
-│  │    HKDF(chain_key, "Vauchi_Chain_Key")                    │  │
-│  │        → next_chain_key                                   │  │
-│  │                                                           │  │
-│  └───────────────────────────────────────────────────────────┘  │
-│                                                                 │
-│  Limits:                                                        │
-│    • Max chain generations: 2000                                │
-│    • Max skipped keys stored: 1000                              │
-│    • Message key deleted immediately after use                  │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
-```
+
+Limits:
+
+- Max chain generations: 2000
+- Max skipped keys stored: 1000
+- Message key deleted immediately after use
 
 ### Ratchet Message (Authenticated, Not Encrypted Header)
 

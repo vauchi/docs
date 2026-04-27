@@ -17,38 +17,38 @@ When a user loses all devices, they can recover their contact relationships thro
 
 ## Overview
 
+```mermaid
+flowchart TB
+    subgraph P1["PHASE 1: Vouching (In-Person)"]
+        Bob["Bob<br/>Vouch"]
+        Charlie["Charlie<br/>Vouch"]
+        Betty["Betty<br/>Vouch"]
+        Alice["Alice (new)<br/>Threshold: 3 vouchers"]
+        Bob --> Alice
+        Charlie --> Alice
+        Betty --> Alice
+    end
+
+    subgraph P2["PHASE 2: Distribution (Remote)"]
+        Gateway["OHTTP Gateway<br/>(strips client IP)"]
+        Relay["Relay<br/>Stores proof under hash(pk_old)"]
+        John["John<br/>Accept"]
+        David["David<br/>Verify"]
+        Others["Others<br/>Discover via relay query"]
+        Gateway <--> Relay
+        Gateway --> John
+        Gateway --> David
+        Gateway --> Others
+    end
+
+    Alice --> Gateway
 ```
-┌────────────────────────────────────────────────────────────────────────────┐
-│                         RECOVERY PROCESS                                   │
-├────────────────────────────────────────────────────────────────────────────┤
-│                                                                            │
-│  PHASE 1: Vouching (In-Person)                                             │
-│  ┌─────────┐    ┌─────────┐    ┌─────────┐                                 │
-│  │   Bob   │    │ Charlie │    │  Betty  │                                 │
-│  │  Vouch  │    │  Vouch  │    │  Vouch  │                                 │
-│  └────┬────┘    └────┬────┘    └────┬────┘                                 │
-│       │              │              │                                      │
-│       └──────────────┼──────────────┘                                      │
-│                      ▼                                                     │
-│              ┌──────────────┐                                              │
-│              │ Alice (new)  │  Threshold: 3 vouchers                       │
-│              └──────┬───────┘                                              │
-│                     │                                                      │
-│  PHASE 2: Distribution (Remote)                                            │
-│                     ▼                                                      │
-│              ┌──────────────┐                                              │
-│              │    Relay     │  Stores proof under hash(pk_old)             │
-│              └──────┬───────┘                                              │
-│                     │                                                      │
-│       ┌─────────────┼─────────────┐                                        │
-│       ▼             ▼             ▼                                        │
-│  ┌─────────┐   ┌─────────┐   ┌─────────┐                                   │
-│  │  John   │   │  David  │   │  Others │  Discover via relay query         │
-│  │ Accept  │   │ Verify  │   │         │                                   │
-│  └─────────┘   └─────────┘   └─────────┘                                   │
-│                                                                            │
-└────────────────────────────────────────────────────────────────────────────┘
-```
+
+> **Note:** All client↔relay traffic in Phase 2 is routed through an
+> OHTTP gateway per ADR-037. The detailed sequence diagrams below omit
+> the gateway hop for clarity — they describe the protocol layer, not
+> the transport. Operationally, the relay never sees client IP
+> addresses; the gateway never sees request content.
 
 ## Phase 1: In-Person Vouching
 

@@ -42,13 +42,15 @@ When you exchange with someone:
 3. A shared secret is established that only you two know
 4. All future communication is encrypted with this secret
 
-```
-Your Keys          Shared Secret          Their Keys
-    ↘                   ↓                    ↙
-     └───── X3DH Key Agreement ─────┘
-                    ↓
-          Unique encryption key
-          (known only to you two)
+```mermaid
+flowchart TB
+    YK["Your Keys"]
+    TK["Their Keys"]
+    X3DH["X3DH Key Agreement"]
+    UK["Unique encryption key<br/>(known only to you two)"]
+    YK --> X3DH
+    TK --> X3DH
+    X3DH --> UK
 ```
 
 ### Updates Between Contacts

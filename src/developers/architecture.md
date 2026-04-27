@@ -14,46 +14,38 @@ has your card sees the change.
 
 ## System Architecture
 
+```mermaid
+flowchart TB
+    subgraph Clients["CLIENTS"]
+        iOS["iOS<br/>SwiftUI"]
+        Android["Android<br/>Compose"]
+        Desktop["Desktop<br/>Native"]
+        CLI["CLI<br/>Rust"]
+        TUI["TUI<br/>Rust"]
+        Core["vauchi-core<br/>(UniFFI)<br/>Crypto, storage, protocol"]
+        iOS --> Core
+        Android --> Core
+        Desktop --> Core
+        CLI --> Core
+        TUI --> Core
+    end
+
+    subgraph Relay["RELAY SERVER<br/>• Store-and-forward encrypted messages<br/>• No access to plaintext (oblivious)<br/>• Rate limiting, quotas, GDPR purge"]
+        Blob["Blob Storage<br/>(encrypted)"]
+        Sync["Device Sync<br/>(per-device)"]
+        Recovery["Recovery Store<br/>(90-day TTL)"]
+    end
+
+    Gateway["OHTTP Gateway<br/>(strips client IP)"]
+
+    Core -- "OHTTP encrypted" --> Gateway
+    Gateway -- "WebSocket (TLS)" --> Relay
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                              VAUCHI SYSTEM                                  │
-├─────────────────────────────────────────────────────────────────────────────┤
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                           CLIENTS                                    │   │
-│  │                                                                      │   │
-│  │   ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐  ┌─────────┐    │   │
-│  │   │   iOS   │  │ Android │  │ Desktop │  │   CLI   │  │   TUI   │    │   │
-│  │   │ SwiftUI │  │ Compose │  │ Native  │  │  Rust   │  │  Rust   │    │   │
-│  │   └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘  └────┬────┘    │   │
-│  │        │            │            │            │            │         │   │
-│  │        └────────────┴─────┬──────┴────────────┴────────────┘         │   │
-│  │                           │                                          │   │
-│  │                    ┌──────▼──────┐                                   │   │
-│  │                    │ vauchi-core │   Rust core library               │   │
-│  │                    │  (UniFFI)   │   Crypto, storage, protocol       │   │
-│  │                    └──────┬──────┘                                   │   │
-│  │                           │                                          │   │
-│  └───────────────────────────┼──────────────────────────────────────────┘   │
-│                              │                                              │
-│                              │ WebSocket (TLS)                              │
-│                              │                                              │
-│  ┌───────────────────────────▼──────────────────────────────────────────┐   │
-│  │                         RELAY SERVER                                 │   │
-│  │                                                                      │   │
-│  │   ┌────────────────┐   ┌────────────────┐   ┌────────────────┐       │   │
-│  │   │ Blob Storage   │   │ Device Sync    │   │ Recovery Store │       │   │
-│  │   │ (encrypted)    │   │ (per-device)   │   │ (90-day TTL)   │       │   │
-│  │   └────────────────┘   └────────────────┘   └────────────────┘       │   │
-│  │                                                                      │   │
-│  │   • Store-and-forward encrypted messages                             │   │
-│  │   • No access to plaintext (oblivious)                               │   │
-│  │   • Rate limiting, quotas, GDPR purge                                │   │
-│  │                                                                      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+
+> **Note:** All remote client↔relay traffic flows through an OHTTP
+> gateway per ADR-037 — the relay never sees client IP addresses, and
+> the gateway never sees request content. Sequence diagrams below omit
+> the gateway hop for protocol clarity.
 
 ## Core Components
 
@@ -110,39 +102,22 @@ to render natively. New workflows are pure Rust —
 zero frontend code unless a new component type is
 needed.
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                      Core (Rust)                         │
-│                                                         │
-│  WorkflowEngine trait                                   │
-│    ├─ current_screen() → ScreenModel                    │
-│    └─ handle_action(UserAction) → ActionResult           │
-│                                                         │
-│  ScreenModel  { screen_id, title, subtitle,             │
-│                 components, actions, progress }          │
-│  Component    { TextInput, ToggleList, FieldList,       │
-│                 CardPreview, InfoPanel, Text,            │
-│                 Divider, ... }                           │
-│  UserAction   { TextChanged, ItemToggled,               │
-│                 ActionPressed, ... }                     │
-│  ActionResult { UpdateScreen, NavigateTo,               │
-│                 ValidationError, Complete,               │
-│                 ShowToast, ... }                         │
-└────────────────────────┬────────────────────────────────┘
-                         │  ScreenModel (JSON or direct)
-                         │  UserAction (JSON or direct)
-┌────────────────────────▼────────────────────────────────┐
-│                Frontend (per platform)                    │
-│                                                         │
-│  Component Library (one native widget per Component)    │
-│    TextInput → TextField / OutlinedTextField / <input>  │
-│    ToggleList → Toggle list / Checkboxes / [x]/[ ]      │
-│    ...                                                  │
-│                                                         │
-│  ScreenRenderer                                         │
-│    Maps ScreenModel → native UI                         │
-│    Sends UserAction back to core                        │
-└─────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Core["Core (Rust)"]
+        We["WorkflowEngine trait<br/>• current_screen() → ScreenModel<br/>• handle_action(UserAction) → ActionResult"]
+        SM["ScreenModel { screen_id, title, subtitle,<br/>components, actions, progress }"]
+        C["Component { TextInput, ToggleList, FieldList,<br/>CardPreview, InfoPanel, Text, Divider, ... }"]
+        UA["UserAction { TextChanged, ItemToggled,<br/>ActionPressed, ... }"]
+        AR["ActionResult { UpdateScreen, NavigateTo,<br/>ValidationError, Complete, ShowToast, ... }"]
+    end
+
+    subgraph Frontend["Frontend (per platform)"]
+        CL["Component Library (one native widget per Component)<br/>TextInput → TextField / OutlinedTextField / &lt;input&gt;<br/>ToggleList → Toggle list / Checkboxes / [x]/[ ]<br/>..."]
+        SR["ScreenRenderer<br/>Maps ScreenModel → native UI<br/>Sends UserAction back to core"]
+    end
+
+    Core -- "ScreenModel (JSON or direct)<br/>UserAction (JSON or direct)" --> Frontend
 ```
 
 Each frontend implements a **component library**
@@ -177,51 +152,28 @@ This is rare — the vocabulary stabilizes quickly.
 
 ### 1. Contact Exchange (In-Person)
 
-```
-Alice                                 Bob
-  │                                    │
-  │─── Display QR (identity + key) ────│
-  │                                    │
-  │◄─── Scan QR, verify proximity ─────│
-  │                                    │
-  │─── X3DH key agreement ─────────────│
-  │                                    │
-  │◄─── Exchange encrypted cards ──────│
-  │                                    │
-  │ Both now have each other's cards   │
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice->>Bob: Display QR (identity + key)
+    Bob->>Alice: Scan QR, verify proximity
+    Alice->>Bob: X3DH key agreement
+    Bob->>Alice: Exchange encrypted cards
+    Note over Alice,Bob: Both now have each other's cards
 ```
 
 ### 2. Card Updates (Remote via Relay)
 
-```
-Alice updates phone number
-         │
-         ▼
-┌─────────────────┐
-│ Encrypt delta   │  Per-contact shared key
-│ with CEK        │  (Double Ratchet)
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Send to relay   │  WebSocket
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Relay stores    │  Indexed by recipient_id
-│ encrypted blob  │
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Bob connects    │  Receives pending messages
-└────────┬────────┘
-         │
-         ▼
-┌─────────────────┐
-│ Decrypt delta   │  Update Alice's card locally
-└─────────────────┘
+```mermaid
+flowchart TB
+    Update["Alice updates phone number"]
+    Encrypt["Encrypt delta with CEK<br/>(per-contact shared key, Double Ratchet)"]
+    Send["Send to relay<br/>(WebSocket)"]
+    Store["Relay stores encrypted blob<br/>(indexed by recipient_id)"]
+    Bob["Bob connects<br/>(receives pending messages)"]
+    Decrypt["Decrypt delta<br/>(update Alice's card locally)"]
+    Update --> Encrypt --> Send --> Store --> Bob --> Decrypt
 ```
 
 ### 3. Multi-Device Sync
@@ -229,11 +181,15 @@ Alice updates phone number
 All devices under one identity share the same master
 seed. Device-specific keys are derived via HKDF:
 
-```
-Master Seed
-    ├── Device 1 keys (HKDF + device_index)
-    ├── Device 2 keys (HKDF + device_index)
-    └── Device 3 keys (HKDF + device_index)
+```mermaid
+flowchart LR
+    MS["Master Seed"]
+    D1["Device 1 keys<br/>(HKDF + device_index)"]
+    D2["Device 2 keys<br/>(HKDF + device_index)"]
+    D3["Device 3 keys<br/>(HKDF + device_index)"]
+    MS --> D1
+    MS --> D2
+    MS --> D3
 ```
 
 Device linking uses QR code scan with time-limited token.
@@ -260,14 +216,21 @@ When all devices are lost:
 
 ### Key Hierarchy
 
-```
-Master Seed (256-bit, generated at identity creation)
-├── Identity Signing Key (Ed25519, raw seed)
-├── Exchange Key (X25519, HKDF derived)
-└── SMK (Shredding Master Key, HKDF derived)
-    ├── SEK (Storage Encryption Key)
-    ├── FKEK (File Key Encryption Key)
-    └── Per-Contact CEK (random 256-bit)
+```mermaid
+flowchart TB
+    MS["Master Seed<br/>(256-bit, generated at identity creation)"]
+    ISK["Identity Signing Key<br/>(Ed25519, raw seed)"]
+    XK["Exchange Key<br/>(X25519, HKDF derived)"]
+    SMK["SMK (Shredding Master Key)<br/>(HKDF derived)"]
+    SEK["SEK<br/>(Storage Encryption Key)"]
+    FKEK["FKEK<br/>(File Key Encryption Key)"]
+    CEK["Per-Contact CEK<br/>(random 256-bit)"]
+    MS --> ISK
+    MS --> XK
+    MS --> SMK
+    SMK --> SEK
+    SMK --> FKEK
+    SMK --> CEK
 ```
 
 ### Physical Verification

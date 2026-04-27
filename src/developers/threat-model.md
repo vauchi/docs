@@ -27,44 +27,27 @@ traffic analysis compared to messaging apps.
 
 ## Trust Boundaries
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                        CLIENT DEVICE                         │
-│                                                              │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐   │
-│  │ vauchi-core  │    │  Local DB    │    │  Platform    │   │
-│  │ (crypto,     │    │ (encrypted   │    │  Keychain    │   │
-│  │  protocol)   │    │  at rest)    │    │              │   │
-│  └──────┬───────┘    └──────────────┘    └──────────────┘   │
-│         │                                                    │
-└─────────┼────────────────────────────────────────────────────┘
-          │ TLS + E2E encrypted
-          │                         ┌─ Optional: SOCKS5 proxy ─┐
-          │                         │  (Tor, VPN, etc.)         │
-          │                         └───────────────────────────┘
-┌─────────▼────────────────────────────────────────────────────┐
-│              SELF-HOSTED REVERSE PROXY (nginx/caddy)          │
-│  • Strips all client-identifying headers                      │
-│  • Relay never sees client IP addresses                       │
-└─────────┬────────────────────────────────────────────────────┘
-          │ Internal network
-┌─────────▼────────────────────────────────────────────────────┐
-│              OHTTP LAYER (RFC 9458) — optional path           │
-│  • OHTTP relay: sees client IP, cannot read content           │
-│  • Gateway: decrypts content, sees only OHTTP relay IP        │
-│  • No single hop sees both client identity and request        │
-└─────────┬────────────────────────────────────────────────────┘
-          │
-┌─────────▼────────────────────────────────────────────────────┐
-│                      RELAY SERVER                             │
-│                                                               │
-│  • Assumed compromised (oblivious design)                     │
-│  • Sees only encrypted blobs, never client IPs               │
-│  • No user accounts, no decryption keys                      │
-│  • Store-and-forward with TTL                                │
-│  • Timing obfuscation: sync jitter, payload padding          │
-│                                                               │
-└───────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Client["CLIENT DEVICE"]
+        Core["vauchi-core<br/>(crypto, protocol)"]
+        DB["Local DB<br/>(encrypted at rest)"]
+        KC["Platform Keychain"]
+    end
+
+    Socks["Optional: SOCKS5 proxy<br/>(Tor, VPN, etc.)"]
+
+    Proxy["SELF-HOSTED REVERSE PROXY (nginx/caddy)<br/>• Strips all client-identifying headers<br/>• Relay never sees client IP addresses"]
+
+    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot read content<br/>• Gateway: decrypts content, sees only OHTTP relay IP<br/>• No single hop sees both client identity and request"]
+
+    Relay["RELAY SERVER<br/>• Assumed compromised (oblivious design)<br/>• Sees only encrypted blobs, never client IPs<br/>• No user accounts, no decryption keys<br/>• Store-and-forward with TTL<br/>• Timing obfuscation: sync jitter, payload padding"]
+
+    Core -- "TLS + E2E encrypted" --> Proxy
+    Core -. "optional" .-> Socks
+    Socks -. "via" .-> Proxy
+    Proxy -- "Internal network" --> OHTTP
+    OHTTP --> Relay
 ```
 
 | Boundary | Protection | Trust Level |
