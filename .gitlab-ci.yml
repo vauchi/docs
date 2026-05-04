@@ -102,6 +102,11 @@ package:docker:
   needs:
     - build:docs
   script:
+    # Authenticate the in-build docker daemon (dind) against the
+    # dependency proxy. Without this, in-build `FROM` pulls return
+    # 403 Forbidden (caught on relay!270 pipeline 2497760220 even
+    # after the FROM-prefix fix).
+    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin "$CI_DEPENDENCY_PROXY_SERVER"
     # --build-arg HUB= routes the Dockerfile's `FROM nginx:alpine`
     # through GitLab's dependency proxy. Default in the Dockerfile
     # is `docker.io/library` so local `docker build .` still works
