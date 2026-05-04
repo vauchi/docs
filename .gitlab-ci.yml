@@ -102,7 +102,11 @@ package:docker:
   needs:
     - build:docs
   script:
-    - docker build -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
+    # --build-arg HUB= routes the Dockerfile's `FROM nginx:alpine`
+    # through GitLab's dependency proxy. Default in the Dockerfile
+    # is `docker.io/library` so local `docker build .` still works
+    # without args.
+    - docker build --build-arg HUB="${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}" -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
     - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
     - docker push $IMAGE:$CI_COMMIT_SHA
     - docker push $IMAGE:latest
