@@ -1,7 +1,5 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- SSOT: Public cryptography reference.
-     Internal: _private/docs/specs/2026-01-22-cryptography.md -->
 
 # Cryptography Reference
 

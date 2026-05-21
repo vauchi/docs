@@ -1,7 +1,5 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- SSOT: Public threat model.
-     Internal: _private/docs/reference/threat-analysis.md -->
 
 # Threat Model
 
