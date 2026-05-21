@@ -3,7 +3,7 @@
 
 # Sync Updates Sequence
 
-**Interaction Type:** ☁️ **REMOTE (Via Relay)**
+**Interaction Type:** :cloud: **REMOTE (Via Relay)**
 
 Contact card changes propagate automatically to contacts via the relay network. All data is end-to-end encrypted - relays only see encrypted blobs.
 
@@ -19,8 +19,6 @@ Contact card changes propagate automatically to contacts via the relay network. 
 ## Sequence Diagram
 
 ```mermaid
-    accTitle: Sync Updates Sequence
-    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     autonumber
     participant A as Alice
@@ -99,8 +97,6 @@ sequenceDiagram
 ## Visibility-Aware Sync
 
 ```mermaid
-    accTitle: Sync Updates Sequence (2)
-    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     participant AD as Alice's Device
     participant R as Relay
@@ -129,8 +125,6 @@ sequenceDiagram
 ## Offline Queue Handling
 
 ```mermaid
-    accTitle: Sync Updates Sequence (3)
-    accDescr: Shows how contact card changes propagate via the relay network
 sequenceDiagram
     participant AD as Alice's Device
     participant R as Relay
@@ -185,7 +179,7 @@ sequenceDiagram
 | Property | Mechanism |
 |----------|-----------|
 | **End-to-End Encryption** | Updates encrypted with per-contact shared keys |
-| **Relay Blindness** | Relay sees only encrypted blobs, no metadata |
+| **Relay Blindness** | Relay sees only encrypted blobs; sees routing tokens and timing but not content or sender identity |
 | **Update Authenticity** | Ed25519 signature on all updates |
 | **Replay Prevention** | Monotonic version numbers + timestamps |
 | **Visibility Enforcement** | Only visible fields sent to each contact |
