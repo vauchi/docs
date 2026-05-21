@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Last Updated:** April 2026
+**Last Updated:** May 2026
 
 ## 1. Acceptance of Terms
 
@@ -47,10 +47,12 @@ Vauchi operates a relay server that delivers encrypted
 contact card updates between devices. The relay:
 
 - Stores encrypted envelopes temporarily (deleted after
-  delivery or 30 days)
+  delivery or 120 days)
 - Cannot decrypt any content
-- Logs connection metadata (IP address, timestamps) for
-  rate limiting, retained for 24 hours
+- Logs connection metadata (cryptographic identity hash,
+  connection timestamps) for rate limiting — IP addresses
+  are not stored or logged, and connection metadata is
+  retained for 24 hours
 - May be rate-limited to prevent abuse
 
 We provide the relay service on a best-effort basis and
