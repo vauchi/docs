@@ -1,8 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
-<!-- SSOT: This is the single source of truth
-for Vauchi principles and philosophy -->
 # Vauchi Principles
 
 **The single source of truth for core principles and philosophy.**

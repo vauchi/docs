@@ -1,7 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
-<!-- SSOT: This is the single source of truth for contribution guidelines -->
 # Contributing to Vauchi
 
 ## Quick Start

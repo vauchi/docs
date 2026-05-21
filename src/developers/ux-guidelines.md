@@ -1,7 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
-<!-- SSOT: This is the single source of truth for UX interaction guidelines -->
 # UX Interaction Guidelines
 
 **Cross-platform interaction rules for all vauchi clients — smartphones, dumb-phones, smartwatches, tablets, laptops, desktops (Windows, macOS, Linux, Android, iOS).**
