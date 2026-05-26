@@ -56,6 +56,10 @@ just git branch feature/remote-content-updates features core docs
   5. Tests must trace to `features/*.feature` scenarios
 - Commit atomically — each commit should be a single logical change.
 - Run `just check` before pushing (formats, lints, tests).
+- For tighter loops, run only what you changed: `just test-diff` runs
+  each touched repo's tests (Rust, web, Android) scoped to your branch's
+  diff, and `just mutants-diff` runs mutation testing on just the changed
+  Rust lines. Both are on-demand — they are not push gates.
 - See [Principles](../about/principles.md) for core values.
 
 Commit message format:
@@ -256,6 +260,8 @@ tags do.
 ```bash
 just help              # Show all commands
 just check-annotations # Check test coverage vs features
+just test-diff         # Test only the repos you changed (scoped to branch diff)
+just mutants-diff      # Mutation-test only the Rust lines you changed
 just relay             # Start local relay for testing
 just run cli           # Run CLI
 just git sync          # Fetch all + pull where on main
