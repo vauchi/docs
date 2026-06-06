@@ -9,28 +9,35 @@ Privacy-focused updatable contact cards via in-person exchange.
 
 ## What We're Building
 
-Vauchi is a contact card that updates automatically.
-When you change your phone number, everyone who has
-your card sees the change — no need to notify them
-manually.
+Vauchi is a contact card you exchange face to face —
+a small, deliberate moment, like a handshake. After
+that, when your details change, everyone who holds
+your card sees the update automatically. No reminders
+to send, no "I got a new number" group text.
+
+The relationship is yours and the person's you met.
+No one else is in the room.
 
 Unlike traditional contact apps:
 
-- **No sign-up required** — Your device is your identity
-- **No phone number required** — Exchange cards in person
-- **End-to-end encrypted** — Only you and your contacts can read your data
-- **Open source** — Verify every claim yourself
+- **Meet once, stay in touch** — exchange in person; it keeps itself current
+- **No sign-up, no phone number** — your device is your identity
+- **Yours alone** — end-to-end encrypted, so only you and your contacts can read it
+- **Open source** — verify every claim yourself
 
 ## Why We Built It
 
-Contact information goes stale. You change jobs, move
-cities, get a new number — and suddenly half your
-contacts have outdated info. The usual solution is to
-use a platform (social network, messaging app) as the
-source of truth, but that means trusting a company
-with your data.
+Your address book quietly rots. You change jobs, move
+cities, get a new number — and one by one, the people
+who matter drift out of reach. The usual fix is to let
+a platform — a social network, a messaging app — be
+the keeper of who you know. That works, but the price
+is handing your relationships to a company.
 
-We believe there's a better way: updatable contact cards that stay private.
+We think the moment you meet someone is worth
+protecting. So Vauchi keeps your details current for
+the people you've actually met, and keeps everyone
+else — including us — out of it.
 
 ## Learn More
 

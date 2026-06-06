@@ -3,7 +3,7 @@
 
 # For Users
 
-Welcome to Vauchi! This section contains everything you need to get started and make the most of the app.
+Welcome to Vauchi — where you meet someone once, swap details in person, and never lose touch as life changes. This section has everything you need to get started and make the most of the app.
 
 ## Getting Started
 

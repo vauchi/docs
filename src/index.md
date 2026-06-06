@@ -3,25 +3,35 @@
 
 # Vauchi Documentation
 
-Privacy-focused updatable contact cards via
-in-person exchange. End-to-end encrypted,
-decentralized.
+**Contacts that never go stale.**
+
+Swap details once, in person — and they keep
+themselves current, forever. New number, new job,
+new city: the people who matter just *know*, without
+you ever having to send another "my number changed"
+text.
 
 ---
 
 ## What is Vauchi?
 
-Vauchi is a contact card that updates
-automatically. When you change your phone number,
-everyone who has your card sees the change.
+Vauchi is a contact card you exchange face to face,
+in a single moment — a kind of digital handshake.
+From then on, whenever your details change, everyone
+who holds your card sees the update automatically. No
+feeds, no accounts, no company sitting in the middle
+of your relationships.
 
-- **No sign-up required** — Your device is your
-  identity
-- **No phone number required** — Exchange contact
-  cards in person
-- **End-to-end encrypted** — Only you and your
-  contacts can read your data
-- **Open source** — Verify every claim yourself
+The relationship is yours and theirs. No one else is
+in the room.
+
+- **Meet once, stay in touch** — exchange in person;
+  it keeps itself current forever
+- **No sign-up, no phone number** — your device is
+  your identity
+- **Yours alone** — end-to-end encrypted, so only you
+  and your contacts can ever read it
+- **Open source** — verify every claim yourself
 
 ## Quick Links
 
@@ -56,4 +66,4 @@ everyone who has your card sees the change.
 
 ---
 
-*Your privacy matters. Vauchi is built to prove it.*
+*Exchange once. Stay in touch — whatever changes.*
