@@ -15,8 +15,8 @@ text.
 
 ## What is Vauchi?
 
-Vauchi is a contact card you exchange face to face,
-in a single moment — a kind of digital handshake.
+Vauchi is a living contact card you exchange face to
+face, in a single moment — a kind of digital handshake.
 From then on, whenever your details change, everyone
 who holds your card sees the update automatically. No
 feeds, no accounts, no company sitting in the middle

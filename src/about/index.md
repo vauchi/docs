@@ -9,8 +9,8 @@ Privacy-focused updatable contact cards via in-person exchange.
 
 ## What We're Building
 
-Vauchi is a contact card you exchange face to face —
-a small, deliberate moment, like a handshake. After
+Vauchi is a living contact card you exchange face to
+face — a small, deliberate moment, like a handshake. After
 that, when your details change, everyone who holds
 your card sees the update automatically. No reminders
 to send, no "I got a new number" group text.
