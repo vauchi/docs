@@ -272,18 +272,19 @@ register today's and yesterday's tokens to absorb
 clock skew. Source:
 `core/vauchi-core/src/network/mailbox_token.rs`.
 
-### Noise NK (Legacy / Relay-Side)
+### Noise NK (Removed — Historical)
 
-The original transport was a Noise NK inner layer
-(`Noise_NK_25519_ChaChaPoly_BLAKE2s`) over WebSocket,
-as defense-in-depth inside TLS. The **relay still
-implements it** (`snow`, `tokio-tungstenite`), and a
-relay Noise public key is still carried in exchange
-QR payloads as residual plumbing, but the shipping
-client no longer performs the Noise handshake — it
-uses HTTP v2 + OHTTP above. Treat the Noise NK
-description as historical until/unless the client
-path is reinstated.
+The original relay transport was a Noise NK inner layer
+(`Noise_NK_25519_ChaChaPoly_BLAKE2s`) over WebSocket, as
+defense-in-depth inside TLS. It is fully retired: the
+shipping client migrated to HTTP v2 + OHTTP (ADR-004,
+superseded), and the relay's Noise NK implementation —
+the `snow` dependency and the Noise transport — was
+deleted. The relay keeps only its X25519 identity
+keypair, from which its Ed25519 federation signing key
+is derived; no client or relay performs a Noise
+handshake. (A residual relay identity public key field
+still rides in the discovery payload, unused by clients.)
 
 ## Security Properties
 
