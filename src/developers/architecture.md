@@ -37,7 +37,7 @@ flowchart TB
     Gateway["OHTTP Gateway<br/>(strips client IP)"]
 
     Core -- "OHTTP encrypted" --> Gateway
-    Gateway -- "WebSocket (TLS)" --> Relay
+    Gateway -- "HTTP v2 (TLS 1.3)" --> Relay
 ```
 
 > **Note:** All remote client↔relay traffic flows through an OHTTP
@@ -75,7 +75,7 @@ Shared protocol message types used by both `vauchi-core` and the relay:
 
 Rust server for message routing (depends on `vauchi-protocol` for shared types):
 
-- WebSocket-based store-and-forward
+- HTTP v2 store-and-forward (synchronous `/v2/` request/response API)
 - TLS required in production
 - No user accounts — just encrypted blobs
 - Background cleanup tasks (hourly)
@@ -167,7 +167,7 @@ sequenceDiagram
 flowchart TB
     Update["Alice updates phone number"]
     Encrypt["Encrypt delta with CEK<br/>(per-contact shared key, Double Ratchet)"]
-    Send["Send to relay<br/>(WebSocket)"]
+    Send["Send to relay<br/>(HTTP v2)"]
     Store["Relay stores encrypted blob<br/>(indexed by recipient_id)"]
     Bob["Bob connects<br/>(receives pending messages)"]
     Decrypt["Decrypt delta<br/>(update Alice's card locally)"]
@@ -245,7 +245,7 @@ Contact exchange requires in-person presence:
 ```
 vauchi/                    ← Orchestrator repo
 ├── core/                  ← vauchi-core + vauchi-platform + vauchi-protocol
-├── relay/                 ← WebSocket relay server (uses vauchi-protocol)
+├── relay/                 ← HTTP v2 relay server (uses vauchi-protocol)
 ├── linux-gtk/             ← GTK4 Linux desktop app
 ├── linux-qt/              ← Qt6 (Widgets) Linux desktop app
 ├── macos/                 ← macOS native app (SwiftUI)

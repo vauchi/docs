@@ -12,7 +12,7 @@ acknowledgment.
 
 - **Alice** - User sending card update
 - **Alice's Device** - Source device
-- **Relay** - WebSocket relay server
+- **Relay** - HTTP v2 relay server
 - **Bob's Device** - Recipient device
 - **Bob** - Contact receiving update
 
@@ -62,7 +62,7 @@ sequenceDiagram
     %% Send to relay
     activate AD
     AD->>R: EncryptedUpdate(recipient=Bob, blob=...)
-    Note over AD,R: WebSocket frame:<br/>4-byte length + JSON envelope
+    Note over AD,R: HTTP v2 POST /v2/:<br/>4-byte length + JSON envelope
     deactivate AD
 
     %% Relay processing

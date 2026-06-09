@@ -12,7 +12,7 @@ Contact card changes propagate automatically to contacts via the relay network. 
 - **Alice** - User updating their contact card
 - **Alice's Device** - Device where change is made
 - **Alice's Other Device** - Another linked device
-- **Relay** - WebSocket relay server
+- **Relay** - HTTP v2 relay server
 - **Bob's Device** - Contact receiving the update
 - **Bob** - Contact who will see the update
 

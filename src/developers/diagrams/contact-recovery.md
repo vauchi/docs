@@ -13,7 +13,7 @@ When a user loses all devices, they can recover their contact relationships thro
 - **Alice's New Device** - Fresh install, new identity
 - **Bob, Charlie, Betty** - Alice's contacts who will vouch
 - **John, David** - Alice's contacts who will receive recovery proof
-- **Relay** - WebSocket relay server
+- **Relay** - HTTP v2 relay server
 
 ## Overview
 

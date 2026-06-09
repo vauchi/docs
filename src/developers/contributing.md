@@ -192,7 +192,7 @@ Git repo at `gitlab.com/vauchi/<name>`.
 vauchi/                          ← root repo (justfile, CI config)
 │
 ├── core/                        ← Rust workspace: vauchi-core + vauchi-platform (UniFFI)
-├── relay/                       ← WebSocket relay server (standalone Rust)
+├── relay/                       ← HTTP v2 relay server (standalone Rust)
 ├── cli/                         ← Command-line interface
 ├── tui/                         ← Terminal user interface
 │

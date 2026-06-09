@@ -17,7 +17,7 @@ prevent remote/screenshot attacks.
   Vauchi
 - **Bob** - User completing exchange (scans QR)
 - **Bob's Device** - Mobile/Desktop running Vauchi
-- **Relay** - WebSocket relay server
+- **Relay** - HTTP v2 relay server
   (fallback only)
 
 ## Sequence Diagram

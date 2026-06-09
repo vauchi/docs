@@ -11,6 +11,8 @@
 | Crypto | `ed25519-dalek`, `x25519-dalek`, `chacha20poly1305`, `argon2` | Audited (`ed25519/x25519`: Trail of Bits) + IETF-standardized (`chacha20/argon2`) |
 | Storage | SQLite | Encrypted with XChaCha20-Poly1305 |
 | Serialization | serde + JSON | Protocol messages |
+| Networking | `ureq` (HTTP v2) + `ohttp` (OHTTP, RFC 9458) | Client talks to the relay over the synchronous `/v2/` HTTP API, wrapped in Oblivious HTTP through an independent gateway to hide the client IP |
+| TLS | rustls (`aws-lc-rs`) | TLS 1.3 with SPKI certificate pinning |
 | FFI | UniFFI | Swift/Kotlin bindings |
 
 ## Mobile Apps
@@ -62,8 +64,10 @@
 | Component | Technology | Notes |
 |-----------|------------|-------|
 | Language | Rust | Standalone binary |
-| WebSocket | tokio-tungstenite | Async runtime |
-| TLS | rustls | Certificate handling |
+| Client API | HTTP v2 (`/v2/`) | Synchronous request/response; client WebSocket is rejected (HTTP 426) |
+| Federation | tokio-tungstenite | WebSocket used only for relay-to-relay federation, not the client path |
+| OHTTP gateway | `ohttp` (RFC 9458) | Decrypts client requests; operated by a separate party from the relay |
+| TLS | rustls (`aws-lc-rs`) | TLS 1.3, certificate handling |
 | Storage | In-memory + disk | Encrypted blobs only |
 
 ## Development Tools

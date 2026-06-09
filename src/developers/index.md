@@ -42,7 +42,7 @@ Vauchi is a multi-repo project under the
 |------------|---------|
 | `vauchi/` | Orchestrator repo (this documentation) |
 | `core/` | Rust workspace: vauchi-core + UniFFI bindings |
-| `relay/` | WebSocket relay server |
+| `relay/` | HTTP v2 relay server |
 | `linux-gtk/` | GTK4 Linux desktop app |
 | `linux-qt/` | Qt6 (Widgets) Linux desktop app |
 | `macos/` | macOS native app (SwiftUI) |

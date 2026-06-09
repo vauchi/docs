@@ -49,29 +49,100 @@ control.**
 All your personal data is stored locally on your device:
 
 - **Encryption at Rest:** Your data is encrypted
-  using XChaCha20-Poly1305 with a key stored in
-  your device's platform keychain
-  (iOS Keychain / Android KeyStore)
+  using XChaCha20-Poly1305. The key is derived from
+  a master key (the SMK) held in your device's
+  platform secure storage (iOS Keychain / Android
+  KeyStore / OS credential manager), never written
+  to disk in the clear.
 - **No Cloud Backup by Default:** Your data is not
-  automatically backed up to any cloud service
+  automatically backed up to any cloud service.
+  Nothing leaves your device unless you ask it to.
 - **You Control Exports:** You can create encrypted
   backups manually, protected by a password you
-  choose
+  choose (see *Backups* below).
+
+### Backups
+
+A backup is a single encrypted file that **you**
+create and **you** keep — we never receive it, store
+it, or see inside it.
+
+- **What's in it:** your identity (the master seed
+  that all your keys derive from), your contacts,
+  your own card, and your labels/groups.
+- **How it's protected:** the file is encrypted with
+  XChaCha20-Poly1305 under a key stretched from your
+  password with **Argon2id** (memory-hard:
+  64 MB, 3 passes, 4 lanes). A weak password is the
+  only weak link — the cryptography assumes your
+  password is the secret, so choose a strong one.
+- **What is deliberately *not* in it:** the
+  per-conversation forward-secrecy keys (the Double
+  Ratchet state) for each contact. These are
+  intentionally ephemeral. After you restore onto a
+  new device, secure channels re-establish
+  themselves the next time you and a contact sync —
+  you don't lose contacts, only the short-lived keys
+  that protect old messages, which is exactly the
+  property forward secrecy is meant to give you.
+- **Where it lives:** wherever you put it. The file
+  is just bytes; its safety is your password plus
+  wherever you store it.
 
 ### Relay Server
 
-The relay server delivers encrypted contact card
-updates between your devices and your contacts.
-It operates as a store-and-forward broker:
+The relay is a blind dead-drop. Think of it as a
+left-luggage locker that the staff can never open
+and whose tickets change every day. It moves
+encrypted contact-card updates between your devices
+and your contacts and knows as little as the design
+allows:
 
-- Contact card updates are end-to-end encrypted before leaving your device
-- The server cannot decrypt any envelope content
-- Envelopes are deleted immediately after delivery
-  or after 120 days if undelivered
-- Server logs contain only connection metadata, not contact card content
-- Rate limiting data (based on cryptographic
-  identity hash, not IP address) is retained for
-  up to 30 minutes of inactivity
+- **It cannot read anything.** Updates are
+  end-to-end encrypted before they leave your
+  device. The relay only ever holds opaque
+  ciphertext blobs — it has none of your keys.
+- **It cannot build a social graph.** Messages are
+  addressed to **daily-rotating mailbox tokens**
+  derived from a secret shared only between you and
+  each contact. The token for "you → Alice" is a
+  different random-looking value tomorrow, so the
+  relay cannot link who talks to whom across days,
+  or tie a mailbox to a person.
+- **Retention:** an undelivered blob is deleted
+  after delivery, or after 120 days, whichever comes
+  first.
+- **Logs:** connection metadata only (a
+  cryptographic identity hash and timestamps), never
+  card content. **IP addresses are not stored or
+  logged.** Rate-limiting state (keyed on the
+  identity hash, not IP) is discarded after 30
+  minutes of inactivity.
+
+### Oblivious HTTP (Hiding Your IP)
+
+There is a subtle gap in "we don't log IP
+addresses": a server that *receives* a connection
+still *sees* the source IP, log or no log. We close
+that gap structurally rather than asking you to
+trust a promise.
+
+Client requests are wrapped in **Oblivious HTTP
+(OHTTP, RFC 9458)** and routed through an
+independent **OHTTP gateway** operated by a
+*different party* than the relay:
+
+- The **gateway** sees your IP address but only an
+  encrypted request it cannot read.
+- The **relay** sees the request but only the
+  gateway's IP — never yours.
+
+No single party holds both your identity and your
+network location. The relay can't log your IP
+because, by construction, it never receives it.
+Transport throughout is HTTPS (TLS 1.3) with SPKI
+certificate pinning to block man-in-the-middle
+attacks.
 
 ## Data Sharing
 
@@ -102,13 +173,19 @@ do not have access to it.
 
 ### Cryptographic Protections
 
-- **Identity Keys:** Ed25519 signing keys, never leave your device
-- **Encryption:** X25519 key exchange +
+- **Identity Keys:** Ed25519 signing keys, derived
+  from a 256-bit master seed, never leave your device
+- **Encryption:** X25519 key agreement +
   XChaCha20-Poly1305 for all contact card updates
-- **Key Derivation:** Argon2id for password-based encryption (backups)
+- **Key Derivation:** HKDF-SHA256 with domain
+  separation for all internal keys; Argon2id for
+  password-based encryption (backups)
 - **Forward Secrecy:** Double Ratchet protocol
-  ensures each contact card update uses a unique
-  encryption key
+  ensures each contact card update uses a unique,
+  single-use encryption key that is deleted after use
+- **Network Privacy:** Oblivious HTTP (RFC 9458)
+  separates your IP address from your requests; the
+  relay never sees your network location
 
 ### Platform Security
 
@@ -217,8 +294,11 @@ For privacy-related questions or concerns:
 |----------|--------|
 | Store my contacts on servers? | No, only on your device |
 | Can you read my card updates? | No, end-to-end encrypted |
+| Can you see who I talk to? | No, daily-rotating mailbox tokens |
+| Do you log my IP address? | No — Oblivious HTTP hides it from the relay |
 | Do you sell my data? | No, never |
 | Do you use tracking/analytics? | No |
 | Can I delete my data? | Yes, Settings > Delete Account (7-day grace) |
+| What's in a backup? | Your identity, contacts, card, labels — encrypted with your password |
 | Data backed up automatically? | No, you control backups |
 | What if I lose my device? | Linked device or social recovery |

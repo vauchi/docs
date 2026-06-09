@@ -16,7 +16,8 @@ Concise reference for all cryptographic operations in Vauchi.
 | **Key Derivation** | HKDF-SHA256 | `hkdf` | RFC 5869 |
 | **Password KDF** | Argon2id | `argon2` | m=64MB, t=3, p=4 |
 | **CSPRNG** | OsRng | `rand` | OS entropy |
-| **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs`) | Relay only |
+| **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs`) | Relay transport + SPKI pinning |
+| **IP Privacy** | OHTTP (RFC 9458) | `ohttp` (`rust-hpke`) | Unlinks client IP from request |
 
 ## Key Types
 
@@ -173,7 +174,38 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 
 ## Backup Format
 
-### v2 (Current)
+### v3 — Full Backup (Current)
+
+```
+[0x03] || salt(16) || ciphertext
+```
+
+- Key derivation: Argon2id (m=64MB, t=3, p=4),
+  followed by HKDF-SHA256 with domain separation
+  `b"vauchi-backup-v3"`
+- Cipher: XChaCha20-Poly1305
+- Plaintext: JSON `FullBackupEnvelope`
+
+```text
+FullBackupEnvelope {
+  version, created_at,
+  sections: {
+    identity:  { display_name, master_seed_b64, device_index, device_name },
+    contacts:  [ ... ],
+    own_card:  ContactCard?,     // optional
+    labels:    [ LabelSection ]  // optional
+  }
+}
+```
+
+The v3 envelope carries the full account: identity
+master seed, contacts, your own card, and labels.
+Per-contact Double Ratchet state is **not** included
+— it is ephemeral by design and re-established on
+the next sync after restore. Source:
+`core/vauchi-core/src/backup/full_backup.rs`.
+
+### v2 — Identity-Only (Legacy)
 
 ```
 [0x02] || salt(16) || ciphertext
@@ -183,6 +215,8 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 - Cipher: XChaCha20-Poly1305
 - Plaintext:
   `display_name_len(4) || display_name || master_seed(32) || device_index(4) || device_name_len(4) || device_name`
+- **Status:** Superseded by v3. Read path retained
+  for migration; new backups are written as v3.
 
 ### v1 (Removed)
 
@@ -194,64 +228,62 @@ salt(16) || nonce(12) || ciphertext || tag(16)
 - Cipher: AES-256-GCM
 - **Status:** Removed from codebase. Documented for format reference only.
 
-## Transport Encryption (Noise NK)
+## Transport Encryption
 
-Client-to-relay communication uses a Noise NK inner
-transport layer as defense-in-depth inside TLS.
+The shipping client (`vauchi-core`) talks to the
+relay over the **HTTP v2 protocol**: a synchronous
+request/response API (suited to contact-card sync,
+not real-time chat), carried over **TLS 1.3** with
+SPKI certificate pinning. The WebSocket + Noise
+modules were removed from the client in favour of
+HTTP v2 (`core/vauchi-core/src/network/mod.rs`:
+"websocket and noise modules removed — relay uses
+HTTP v2 transport").
 
-### Pattern
+### Oblivious HTTP (OHTTP, RFC 9458)
 
-```
-Noise_NK_25519_ChaChaPoly_BLAKE2s
-```
+To unlink the client's IP address from its requests,
+HTTP v2 requests are encapsulated with **OHTTP** and
+relayed through an independent **OHTTP gateway**:
 
-**NK** means the relay's static public key is known
-to the client before the handshake (distributed via
-the `/info` HTTP endpoint as base64url). The client
-does **not** authenticate to the relay (anonymous
-initiator).
+- Gateway key config is fetched from
+  `GET /v2/ohttp-key` (`application/ohttp-keys`).
+- Each request is encapsulated single-use
+  (`OhttpClient::encapsulate`), HPKE-sealed to the
+  gateway.
+- **ADR-037 requires the gateway operator and the
+  relay operator to be distinct entities** — the
+  gateway sees the client IP but not the (sealed)
+  request; the relay sees the request but only the
+  gateway's IP. Neither sees both.
 
-### Handshake
+Source: `core/vauchi-core/src/network/http_transport.rs`,
+`core/vauchi-core/src/network/ohttp_client.rs`,
+`relay/src/ohttp_gateway.rs`.
 
-```
-Pre-message:  <- s   (relay's static public key, known to client)
-Message 1:    -> e, es   (client sends ephemeral, DH with relay static)
-Message 2:    <- e, ee   (relay sends ephemeral, DH between ephemerals)
-```
+### Mailbox Routing (Daily-Rotating Tokens)
 
-After Message 2, both sides derive symmetric keys for bidirectional encryption.
+The relay routes without identities. Messages are
+addressed to **daily-rotating mailbox tokens**,
+`HKDF(shared_key, day_epoch, "Vauchi_Mailbox_v1")`,
+which both parties derive independently for a given
+UTC day (`day_epoch = unix_time / 86400`). Clients
+register today's and yesterday's tokens to absorb
+clock skew. Source:
+`core/vauchi-core/src/network/mailbox_token.rs`.
 
-### v2 Framing
+### Noise NK (Legacy / Relay-Side)
 
-v2 (Noise-encrypted) connections are identified by a 3-byte magic prefix:
-
-```
-0x00 'V' '2' || 48-byte NK handshake message
-```
-
-All connections use the 3-byte `0x00 V 2` prefix
-followed by the NK handshake. After the handshake
-completes, all subsequent WebSocket frames are
-Noise-encrypted.
-
-### Why NK?
-
-| Property | Benefit |
-|----------|---------|
-| **No client auth** | Relay cannot link connections to identities |
-| **Forward secrecy** | Past sessions cannot be decrypted |
-| **Relay auth** | Client verifies relay via static key |
-| **Defense-in-depth** | Routing metadata encrypted if TLS fails |
-
-### Configuration
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| ~~`RELAY_REQUIRE_NOISE`~~ | ~~`false`~~ | Removed — NK always on |
-
-The relay's Noise keypair is auto-generated on first
-start and persisted to
-`{data_dir}/relay_noise_key.bin`.
+The original transport was a Noise NK inner layer
+(`Noise_NK_25519_ChaChaPoly_BLAKE2s`) over WebSocket,
+as defense-in-depth inside TLS. The **relay still
+implements it** (`snow`, `tokio-tungstenite`), and a
+relay Noise public key is still carried in exchange
+QR payloads as residual plumbing, but the shipping
+client no longer performs the Noise handshake — it
+uses HTTP v2 + OHTTP above. Treat the Noise NK
+description as historical until/unless the client
+path is reinstated.
 
 ## Security Properties
 
@@ -266,7 +298,9 @@ start and persisted to
 | **Memory Safety** | `zeroize` on drop for all keys |
 | **Traffic Analysis Prevention** | Standardized bucket-size message padding |
 | **Replay Prevention** | Double Ratchet counters |
-| **Transport Encryption** | Noise NK inside TLS (defense-in-depth) |
+| **Transport Encryption** | TLS 1.3 + SPKI certificate pinning (HTTP v2) |
+| **Network-Location Privacy** | Oblivious HTTP (RFC 9458), independent gateway |
+| **Unlinkable Routing** | Daily-rotating mailbox tokens |
 
 ## Source Files
 
