@@ -3,57 +3,68 @@
 
 # Features
 
-Vauchi is designed to be simple, private, and useful. Here's what it can do.
+A feature list is usually a brag sheet. This one is closer to a set of
+deliberate refusals — the things Vauchi *won't* do (track you, lock you
+into an account, let a server read your life) turn out to be what makes
+the things it *does* do worth having.
 
 ---
 
-## Core Features
+## What's here
 
 ### [Contact Exchange](contact-exchange.md)
 
-Exchange contact cards in person via QR code. Both parties must be physically present, preventing spam and impersonation.
+Swap cards in person, as an intentional act. Both people present, no
+spam, no impersonation — a handshake the software respects rather than
+replaces.
 
 ### [Privacy Controls](privacy-controls.md)
 
-Control what each contact can see. Show your work email to colleagues, your personal number to friends, and hide your home address from acquaintances.
+Decide, per person, what they may see. Work email for colleagues, real
+number for friends, home address for nobody you wouldn't invite over.
 
 ### [Multi-Device Sync](multi-device.md)
 
-Use Vauchi on your phone, tablet, and computer. All devices share the same identity and stay in sync.
+One identity across phone, tablet, and computer — kept in step without
+ever passing through an account you'd have to trust.
 
-### [Auto Updates](auto-updates.md)
+### [Automatic Updates](auto-updates.md)
 
-When you update your contact card, everyone who has it sees the change automatically. No more outdated contact information.
+Change a detail once; every copy in the world catches up on its own. The
+end of "ignore my old number."
 
 ### [Backup & Recovery](backup-recovery.md)
 
-Protect your identity with encrypted backups. If you lose access to all devices, social recovery lets trusted contacts help you regain access.
+An encrypted backup you control, plus social recovery — trusted contacts
+who can vouch you back in if every device is lost.
 
 ### [Encryption](encryption.md)
 
-Everything is end-to-end encrypted. Your data is unreadable to anyone except you and your contacts — including us.
+Everything end-to-end encrypted. Unreadable to anyone but you and the
+person you shared it with — us emphatically included.
 
 ---
 
-## Feature Comparison
+## Vauchi vs. the address book you already have
 
-| Feature | Traditional Contacts | Vauchi |
-|---------|---------------------|--------|
-| Updates automatically | No | Yes |
-| Privacy controls per contact | No | Yes |
+| | Traditional contacts | Vauchi |
+|---|---|---|
+| Updates itself when details change | No | Yes |
+| Per-contact privacy | No | Yes |
 | End-to-end encrypted | No | Yes |
-| Requires phone number | Usually | No |
-| Requires account | Usually | No |
-| Works across platforms | Varies | Yes |
+| Needs your phone number | Usually | No |
+| Needs an account | Usually | No |
+| Works across platforms | Sometimes | Yes |
 
 ---
 
-## Design Principles
+## The principles underneath
 
-Every feature in Vauchi is guided by our [principles](../../about/principles.md):
+Every feature traces back to a small set of
+[principles](../../about/principles.md):
 
-1. **Privacy is a right** — Encryption by default, no tracking
-2. **Trust is earned in person** — QR exchange, not account lookup
-3. **Quality comes from rigor** — Tested, audited crypto
-4. **Simplicity serves the user** — Do one thing well
-5. **Beauty adapts to the user** — Customizable appearance
+1. **Privacy is a right** — encrypted by default, never tracked
+2. **Trust is earned in person** — a real meeting, not an account lookup
+3. **Quality comes from rigour** — tested, audited cryptography
+4. **Simplicity serves the user** — do one thing, properly
+5. **Beauty adapts to the user** — it should feel like yours

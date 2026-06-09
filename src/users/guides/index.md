@@ -3,7 +3,8 @@
 
 # How-To Guides
 
-Step-by-step instructions for common tasks.
+The pages above explain *why*; these explain *how*. No philosophy here —
+just the shortest path from "I want to do X" to "X is done."
 
 ---
 

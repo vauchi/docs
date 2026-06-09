@@ -3,41 +3,64 @@
 
 # For Users
 
-Welcome to Vauchi — where you meet someone once, swap details in person, and never lose touch as life changes. This section has everything you need to get started and make the most of the app.
+A paper business card is a small act of optimism. You hand someone a
+rectangle of card and quietly hope that, months later, when they finally
+need you, the ink still means something. Usually it doesn't. By then
+you've changed job, number, or city, and your carefully chosen typeface
+is a fossil in a drawer.
 
-## Getting Started
+Vauchi starts from a different premise. The valuable part of meeting
+someone is the *meeting* — the fact that you chose to be in the same
+room. The data is just the residue. So Vauchi keeps the human bit
+exactly as it is — you swap details face to face, on purpose — and
+quietly fixes the part that always rots. When your number changes,
+theirs updates. No re-sending, no "hi, new phone!" group text, no
+fossils.
 
-New to Vauchi? Start here:
+This section is the owner's manual. It is shorter than you fear.
 
-- [**Getting Started Guide**](getting-started.md) — Set up your identity and exchange your first contact
-- [**FAQ**](faq.md) — Answers to common questions
+## Start here
 
-## Features
+New to Vauchi? Two pages get you running:
 
-Learn what Vauchi can do:
+- [**Getting Started**](getting-started.md) — create your identity and
+  make your first exchange (about five minutes)
+- [**FAQ**](faq.md) — the questions everyone asks, answered plainly
 
-| Feature | Description |
+## What it does
+
+| Feature | In one line |
 |---------|-------------|
-| [Contact Exchange](features/contact-exchange.md) | Exchange contact cards in person via QR code |
-| [Privacy Controls](features/privacy-controls.md) | Control what each contact can see |
-| [Multi-Device Sync](features/multi-device.md) | Use Vauchi on multiple devices |
-| [Auto Updates](features/auto-updates.md) | Your contacts always have your latest info |
-| [Backup & Recovery](features/backup-recovery.md) | Protect and restore your identity |
-| [Encryption](features/encryption.md) | How your data stays private |
+| [Contact Exchange](features/contact-exchange.md) | Swap cards in person — a deliberate, private handshake |
+| [Automatic Updates](features/auto-updates.md) | Change your details once; everyone's copy follows |
+| [Privacy Controls](features/privacy-controls.md) | Decide, per person, what they're allowed to see |
+| [End-to-End Encryption](features/encryption.md) | Why nobody in the middle can read any of it |
+| [Backup & Recovery](features/backup-recovery.md) | Survive a lost phone without surrendering to a cloud |
+| [Multi-Device Support](features/multi-device.md) | One identity, every screen you own |
 
-## How-To Guides
+## How to do things
 
-Step-by-step instructions:
-
-| Guide | What You'll Learn |
+| Guide | What you'll learn |
 |-------|-------------------|
-| [Exchange Contacts](guides/exchange.md) | How to add someone using QR codes |
-| [Set Up Multi-Device](guides/multi-device.md) | Link Vauchi to another device |
-| [Recover Your Account](guides/recovery.md) | Restore access after losing a device |
-| [Manage Visibility](guides/visibility.md) | Control who sees what |
+| [Exchanging Contacts](guides/exchange.md) | Add someone, step by step |
+| [Setting Visibility](guides/visibility.md) | Show your mobile to friends, not to the conference |
+| [Device Recovery](guides/recovery.md) | Get back in after losing a device |
+| [Multi-Device Setup](guides/multi-device.md) | Link a second device safely |
 
-## Need Help?
+## Why this one is different
 
-- Check the [FAQ](faq.md) for common questions
-- Report issues at [GitLab](https://gitlab.com/vauchi/vauchi/-/issues)
+Most apps want to be the room you live in: a feed to scroll, a follower
+count to mind, a profile to perform. Vauchi wants to be the handshake,
+and then get out of the way. There is no feed, no audience, no number
+going up.
+
+The whole thing rests on one slightly unfashionable idea — that giving
+someone your real details, in person, because you decided to, is worth
+*more* for being scarce, not less. A contact you met is a contact you
+meant. Everything in the app is built to protect that.
+
+## Need help?
+
+- The [FAQ](faq.md) covers most things
+- Found a bug? [Report it on GitLab](https://gitlab.com/vauchi/vauchi/-/issues)
 - Email: support@vauchi.app

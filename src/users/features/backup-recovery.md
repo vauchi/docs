@@ -3,83 +3,84 @@
 
 # Backup & Recovery
 
-Protect your identity and recover access if
-something goes wrong.
+Because your device is your account, losing it would matter — so Vauchi
+gives you two quite different safety nets, and they're at their best when
+you set them up *before* you need them. A backup is the five-minute
+insurance policy you'll be grateful for on a bad day. Social recovery is
+the same trick humans have always used when documents fail: people who
+know you, vouching that you're you.
+
+| Method | When it's for | What it needs |
+|--------|---------------|---------------|
+| **Encrypted backup** | A planned safety net | Your backup file + password |
+| **Social recovery** | Every device lost, no backup | A few trusted contacts to vouch |
 
 ---
 
-## Overview
+## Encrypted backup
 
-Vauchi offers two ways to recover your identity:
-
-| Method | When to Use | Requires |
-|--------|-------------|----------|
-| **Encrypted Backup** | Planned recovery | Backup code + password |
-| **Social Recovery** | Lost all devices | 3+ contacts to vouch |
-
-## Encrypted Backup
-
-### Creating a Backup
+### Make one
 
 1. Go to **Settings > Backup**
 2. Tap **Export Backup**
-3. Enter a strong password
-  (must pass strength check)
-4. Confirm the password
-5. Copy or save the backup code
+3. Choose a strong password (it must pass the strength check)
+4. Confirm it
+5. Save the backup file somewhere safe
 
 ```admonish important
-- Store your backup code securely
-  (password manager, printed copy)
-- Remember your backup password —
-  it cannot be recovered
-- The backup code + password =
-  your entire identity
+- Keep the backup file somewhere you'll find it (a password manager, a
+  printed copy in a drawer).
+- Memorise the password — it genuinely cannot be recovered.
+- Backup file **plus** password equals your whole account. Guard them
+  the way you'd guard the two halves of a safe combination.
 ```
 
-### What's Included
+### What's inside
+
+A full backup is exactly that — a complete copy of your account:
 
 | Data | Included? |
 |------|-----------|
-| Your identity (keys) | Yes |
-| Your display name | Yes |
-| Device information | Yes |
-| Contacts | No* |
+| Your identity (the master seed your keys grow from) | Yes |
+| Your contacts | Yes |
+| Your own card | Yes |
+| Your labels and groups | Yes |
+| Per-conversation forward-secrecy keys | No* |
 
-*Contact relationships are re-established through
-the relay when you restore.
+\*Those short-lived keys are *meant* to be disposable — that's what
+gives you forward secrecy. After you restore, each secure channel simply
+re-establishes itself the next time you and a contact sync. You get your
+people back without dragging yesterday's throwaway keys along.
 
-### Restoring from Backup
+### Restore from it
 
-1. Install Vauchi on a new device
+1. Install Vauchi on the new device
 2. Choose **Restore from Backup**
-3. Paste your backup code
-4. Enter your backup password
-5. Your identity is restored
+3. Provide your backup file
+4. Enter your password
+5. You're back
 
-After restoration:
+Your identity, contacts, card, and labels return intact, and secure
+channels re-form on the next sync.
 
-- Your identity is fully restored
-- Contacts sync automatically via relay
-- You can link additional devices
-
-### Backup Security
+### How the backup is protected
 
 - **Encryption:** XChaCha20-Poly1305
-- **Key derivation:** Argon2id
-  (resistant to brute force)
-- **Without the password:** Backup is useless
+- **Key stretch:** Argon2id — deliberately slow and memory-hungry, so
+  guessing the password is expensive even with serious hardware
+- **Without the password:** the file is meaningless noise
 
-We recommend passphrases (4+ random words) for
-memorable yet secure passwords.
+Reach for a passphrase, not a password: a handful of ordinary words
+strung together is both easier to remember and harder to crack than the
+clever tangle of symbols you'll have forgotten by Tuesday.
 
-## Social Recovery
+## Social recovery
 
-If you lose access to all devices AND don't have
-a backup, social recovery lets trusted contacts
-help migrate your contacts to a new identity.
+Lost every device *and* have no backup? This is the net beneath the net.
+Trusted contacts confirm your identity and migrate your contacts to a
+fresh one.
 
-### How It Works
+### How it works
 
 ```mermaid
 sequenceDiagram
@@ -100,125 +101,96 @@ sequenceDiagram
     Y->>C3: Meet in person, share claim
     C3->>Y: Create voucher
 
-    Y->>R: Submit recovery proof (3 vouchers)
+    Y->>R: Submit recovery proof (vouchers)
     R->>R: Verify vouchers
 
     Note over Y: Contacts migrated to new identity!
 ```
 
-### Starting Recovery
+It guards both doors at once: you can't be locked out (your friends can
+let you in), and an impostor can't walk in (they'd have to fool several
+of your friends, in person, at once).
 
-1. Install Vauchi on a new device
+### Start recovery
+
+1. Install Vauchi on the new device
 2. Create a new identity
 3. Go to **Settings > Recovery**
 4. Tap **Recover Old Identity**
 5. Enter your old public ID
 6. A recovery claim is generated
 
-### Getting Vouchers
+### Collect vouchers
 
-For each voucher:
+For each one:
 
 1. Meet the contact in person
-2. Share your recovery claim with them
-3. They verify it's really you
-  (visual recognition)
-4. They create a voucher in their app
-5. They share the voucher with you
+2. Share your recovery claim
+3. They confirm it's really you (they're looking right at you)
+4. They create a voucher
+5. They send it to you
 
-### Requirements
+### What it takes
 
-- You need vouchers from **3 or more** contacts
-- Each contact must have previously exchanged with
-  your old identity
-- This proves your social network recognizes the
-  recovery request
+- Vouchers from a small threshold of contacts (a handful, by default)
+- Each must have previously exchanged with your old identity
+- Together they prove your real social network recognises the request
 
-### Completing Recovery
+### Finish
 
-Once you have enough vouchers:
-
-1. Import all vouchers into your app
+1. Import the vouchers
 2. Vauchi submits the recovery proof
-3. Other contacts verify via mutual connections
-4. Your identity transitions to the new
-  device
+3. The network verifies through mutual connections
+4. Your identity settles onto the new device
 
-## Helping Others Recover
+Social recovery mints a *new* cryptographic identity — your old signing
+keys stay lost, and a few settings (like per-contact visibility) may
+need re-tuning. You keep your people; you replace the lock.
 
-If a contact asks you to vouch for their
-recovery:
+## Vouching for someone else
+
+If a contact asks you to vouch:
 
 1. Go to **Settings > Recovery**
 2. Tap **Help Someone Recover**
 3. Paste their recovery claim
-4. **Verify their identity**
-  (call them, meet in person)
+4. **Verify it's really them** — call them, or meet in person
 5. Create a voucher
-6. Share the voucher with them
+6. Send it over
 
 ```admonish warning
-Only vouch if you're **certain** of their identity.
-This prevents identity theft.
+Only vouch when you are **certain** who you're vouching for. The whole
+defence against identity theft is that you check. A careless voucher is
+the one an attacker is counting on.
 ```
 
-## Recovery Best Practices
+## Good habits
 
-### Before You Need It
+**Before you ever need it:** make a backup the day you set up; store it
+somewhere safe; use a memorable passphrase; and keep enough trusted
+contacts (five or so) that a couple being unreachable won't sink you.
 
-1. **Create a backup** as soon as you set up
-2. **Store backup securely**
-  (password manager, safe)
-3. **Use a memorable passphrase** for the password
-4. **Have 5+ contacts** in case some are
-  unavailable
-
-### When You Need It
-
-1. Try backup restore first (faster, simpler)
-2. Use social recovery only if backup
-  unavailable
-3. Meet contacts in person for vouching
-4. Don't rush — verify everything carefully
+**When the day comes:** try backup restore first — it's faster and
+simpler. Fall back to social recovery only if you must, do the vouching
+in person, and don't rush. Verifying carefully is the point, not the
+obstacle.
 
 ## Troubleshooting
 
-### Forgot Backup Password
+**Forgot the backup password.** It can't be recovered — that's the
+guarantee working as designed. Fall back to social recovery, or to
+another linked device if you still have one; failing both, start a new
+identity and re-exchange.
 
-Unfortunately, backup passwords cannot be
-recovered. The encryption is designed so only you
-can decrypt your backup. Options:
+**Can't reach enough contacts.** See who's still reachable, give it a
+little time if some are temporarily away, and treat a new identity as the
+last resort.
 
-1. Use social recovery if available
-2. Create a new identity and re-exchange with
-  contacts
-3. Check if you have another linked device still
-  accessible
-
-### Not Enough Vouchers
-
-If you can't reach 3 contacts:
-
-1. Check if old contacts are still available
-2. Wait if contacts are temporarily unavailable
-3. Consider creating a new identity as last
-  resort
-
-### Voucher Rejected
-
-Vouchers may be rejected if:
-
-- The voucher is for a different identity
-- The voucher is corrupted
-- The voucher has expired (90 days)
-
-Ask the contact to create a new voucher.
+**A voucher was rejected.** Usually it's for the wrong identity,
+corrupted, or expired (90 days). Ask the contact to issue a fresh one.
 
 ## Related
 
-- [How to Recover Your Account](../guides/recovery.md)
-  — Step-by-step guide
-- [Multi-Device Sync](multi-device.md)
-  — Another way to access your identity
-- [Encryption](encryption.md)
-  — How backup encryption works
+- [How to Recover Your Account](../guides/recovery.md) — step by step
+- [Multi-Device Sync](multi-device.md) — the other way back in
+- [Encryption](encryption.md) — how backups are protected

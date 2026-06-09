@@ -3,13 +3,18 @@
 
 # Multi-Device Sync
 
-Use Vauchi on multiple devices with the same identity.
+A single device holding your only identity is a single point of failure —
+and single points of failure have a way of failing at the worst moment.
+A second device changes the whole risk calculation: lose your phone and
+it's an inconvenience, not a catastrophe. One identity, several windows
+onto it, kept quietly in step.
 
 ---
 
-## How It Works
+## How it works
 
-All your devices share the same identity and stay in sync. Changes made on one device appear on all others.
+Every device you link shares the same identity. A change on one shows up
+on all of them.
 
 ```mermaid
 graph TB
@@ -32,41 +37,41 @@ graph TB
     D3 <--> R
 ```
 
-## Linking a New Device
+## Link a new device
 
-### Prerequisites
+**You'll need:** your existing device set up, the new device with Vauchi
+installed, and both online.
 
-- Your existing device with Vauchi set up
-- The new device with Vauchi installed
-- Both devices online
-
-### Steps
-
-1. On your **existing device**, go to **Settings > Devices**
+1. On the **existing device**, go to **Settings > Devices**
 2. Tap **Link New Device**
-3. A QR code appears (valid for 5 minutes)
-4. On your **new device**, install Vauchi
+3. A QR code appears — valid for **5 minutes**
+4. On the **new device**, install Vauchi
 5. Choose **Join Existing Identity**
-6. Scan the QR code (or paste the data string on desktop/CLI)
-7. Verify the **confirmation code** matches on both devices
-8. Confirm to complete linking
+6. Scan the QR (or paste the data string on desktop/CLI)
+7. Check the **confirmation code** matches on both screens
+8. Confirm
 
-Both devices now share your identity and sync automatically.
+Both devices now share your identity and sync on their own.
 
-### Confirmation Code
+### The confirmation code
 
-When linking, both devices display a 6-digit code (e.g., `123-456`). This code is derived cryptographically from the shared link data — only the two devices involved can compute it. If the codes match, you know the link is authentic.
+Both devices show a 6-digit code (e.g. `123-456`), derived
+cryptographically from the shared link data — only the two devices in
+the link can compute it. Matching codes mean nobody slipped into the
+middle. It takes a second to check and closes the one gap a network
+attacker might hope for; check it.
 
-## Device Limits
+## How many devices
 
-- **Maximum:** 10 devices per identity
-- **Minimum:** 1 device (your primary)
+- **Maximum:** 10 per identity — more than most people own, few enough
+  to keep the circle of trust small
+- **Minimum:** 1
 
-If you need to add an 11th device, revoke an existing one first.
+Need an 11th? Revoke one first.
 
-## Platform Support
+## Platform support
 
-| Platform | Link (Generate) | Join (Scan/Paste) | Manage Devices |
+| Platform | Link (generate) | Join (scan/paste) | Manage devices |
 |----------|-----------------|-------------------|----------------|
 | iOS | Planned | Planned | Planned |
 | Android | Planned | Planned | Planned |
@@ -74,47 +79,30 @@ If you need to add an 11th device, revoke an existing one first.
 | TUI | Yes | Planned | Yes |
 | CLI | Yes | Yes | Yes |
 
-## Managing Devices
+## Managing devices
 
-### Viewing Linked Devices
+**See what's linked.** **Settings > Devices** lists every device — name,
+platform, and status — with your current one marked.
 
-1. Go to **Settings > Devices**
-2. See all linked devices
-3. Your current device is marked
+**Revoke a device** that's lost, stolen, or retired:
 
-Each device shows:
-
-- Device name
-- Platform (iOS, Android, Desktop, CLI, TUI)
-- Status (active, revoked)
-
-### Revoking a Device
-
-If a device is lost, stolen, or no longer needed:
-
-1. Go to **Settings > Devices** on another device
-2. Find the device to revoke
-3. Tap **Revoke**
-4. Confirm the action
+1. On *another* linked device, go to **Settings > Devices**
+2. Find the one to remove
+3. Tap **Revoke** and confirm
 
 ```admonish warning
-You cannot revoke your current device. Use another linked device to revoke a lost one.
+You can't revoke the device you're holding — use another linked device
+to cut off a lost one. (Which is itself a quiet argument for having a
+second device.)
 ```
 
-A revoked device:
+A revoked device loses access instantly, can no longer send or receive
+updates, and can't be re-linked without starting fresh.
 
-- Loses access to your identity immediately
-- Cannot send or receive updates
-- Cannot be re-linked without starting fresh
+## What syncs, and how
 
-## How Sync Works
-
-- Changes sync automatically when online
-- Sync uses end-to-end encryption
-- The relay server cannot read your data
-- Offline changes sync when connectivity returns
-
-### What Syncs
+Changes sync automatically when you're online, end-to-end encrypted, with
+the relay none the wiser. Offline changes catch up when you reconnect.
 
 | Data | Syncs? |
 |------|--------|
@@ -124,55 +112,39 @@ A revoked device:
 | App preferences | Yes |
 | Device-specific settings | No |
 
-### Sync Frequency
+**Timing:** near-instant when both devices are online; a pull of anything
+pending whenever you open the app; and a manual **Settings > Sync Now**
+when you're impatient.
 
-- **Real-time:** When both devices are online
-- **On app open:** Pulls any pending changes
-- **Manual:** Pull to refresh or Settings > Sync Now
+## Moving to a new phone
 
-## Migration
+**Link it (recommended).** Link the new phone as a device, let it sync,
+then optionally revoke the old one. This preserves each device's own keys
+and hands over cleanly.
 
-### Moving to a New Phone
-
-**Option 1: Device Linking (Recommended)**
-
-1. On old phone: Link the new phone as a device
-2. Wait for sync to complete
-3. On old phone: Revoke the old phone (optional)
-
-**Option 2: Backup & Restore**
-
-1. On old phone: Create an encrypted backup
-2. On new phone: Restore from backup
-
-Device linking is preferred because it preserves device-specific keys and ensures a clean handoff.
+**Or restore from backup.** Create an encrypted backup on the old phone;
+restore it on the new one. Ideal when the old phone is already gone.
 
 ## Troubleshooting
 
-### Sync Not Working
+**Sync isn't working.** Check connectivity on both devices, make sure the
+app is open on each, try a manual sync, and confirm the device wasn't
+revoked.
 
-1. Check internet connectivity on both devices
-2. Ensure both devices have the app open
-3. Try manual sync (Settings > Sync Now)
-4. Check that the device hasn't been revoked
-
-### Device Not Appearing
-
-1. Wait a few minutes for sync
-2. Restart the app on both devices
-3. Check the link code hasn't expired (5 minutes)
-4. Try generating a new link code
+**A device won't appear.** Give sync a few minutes, restart the app on
+both ends, make sure the link code hasn't expired (5 minutes), and
+generate a fresh one if needed.
 
 ## Security
 
-- Each device has its own keys derived from your master seed
+- Each device holds its own keys, derived from your master seed
 - Revoking a device invalidates its keys immediately
-- The relay server never sees plaintext data
-- Device-to-device communication is end-to-end encrypted
-- Confirmation codes prevent man-in-the-middle attacks during linking
+- The relay never sees plaintext
+- Device-to-device traffic is end-to-end encrypted
+- Confirmation codes block man-in-the-middle attempts during linking
 
 ## Related
 
-- [How to Set Up Multi-Device](../guides/multi-device.md) — Step-by-step guide
-- [Backup & Recovery](backup-recovery.md) — Alternative recovery method
-- [Encryption](encryption.md) — How multi-device encryption works
+- [How to Set Up Multi-Device](../guides/multi-device.md) — step by step
+- [Backup & Recovery](backup-recovery.md) — the other way back in
+- [Encryption](encryption.md) — how multi-device encryption works

@@ -5,13 +5,15 @@
 
 Step-by-step guide for restoring access to your Vauchi identity.
 
+Self-custody is a marvellous thing right up until the afternoon you're locked out. Vauchi holds nothing on your behalf — there's no "forgot password" email, because there's no one on the other end who could honour it. So recovery isn't a single button; it's whichever of these you prepared for in advance. Pick the highest row in the table you can satisfy.
+
 ---
 
 ## Choose Your Recovery Method
 
 | Situation | Method | Time Required |
 |-----------|--------|---------------|
-| Have backup code + password | [Backup Restore](#backup-restore) | 5 minutes |
+| Have backup file + password | [Backup Restore](#backup-restore) | 5 minutes |
 | Have another linked device | [Device Link](#device-link) | 5 minutes |
 | Lost everything | [Social Recovery](#social-recovery) | Hours to days |
 
@@ -19,7 +21,7 @@ Step-by-step guide for restoring access to your Vauchi identity.
 
 ## Backup Restore
 
-If you have your encrypted backup code and password:
+If you have your encrypted backup and its password:
 
 ### Step 1: Start Fresh
 
@@ -38,12 +40,16 @@ If you have your encrypted backup code and password:
 
 ### Step 4: Wait for Sync
 
-1. Vauchi restores your identity
-2. Your contacts sync automatically via the relay
+1. Vauchi restores your identity, contacts, your own card, and your labels straight from the backup
+2. Per-contact forward-secrecy state isn't in the file; it quietly re-establishes itself on the next sync with each contact
 3. Within minutes, you should see your contacts
 
 ```admonish success
 You're back! Your identity is fully restored.
+```
+
+```admonish info
+The backup is sealed with your password and nothing else. Vauchi stretches that password with Argon2id (deliberately slow, to make guessing expensive) and then encrypts everything with XChaCha20-Poly1305. The flip side of that strength: a forgotten password is unrecoverable, by design. No key escrow means no back door — for you or anyone else.
 ```
 
 ---
@@ -85,7 +91,12 @@ If you've lost all devices and don't have a backup:
 
 ### Overview
 
-Social recovery uses your real-world relationships to verify your identity. You need vouchers from 3 or more contacts who have previously exchanged with you.
+Long before passwords, identity was vouched for by people who knew you — and that older system never forgot a face. Social recovery makes it cryptographic. A handful of contacts who once exchanged with your **old** identity, in person, confirm that you are still you.
+
+Two things to understand before you start:
+
+- The number of vouchers needed is a small, configurable threshold — a few by default, not a magic "exactly 3." Treat "round up a handful" as the plan.
+- Social recovery rebuilds your *relationships*, not your old keys. It mints a **new** cryptographic identity; the old signing keys stay lost for good. Most things carry over, but some settings — visibility rules in particular — may want re-tuning afterwards.
 
 ### Step 1: Create New Identity
 
@@ -99,7 +110,7 @@ Social recovery uses your real-world relationships to verify your identity. You 
 2. Tap **Recover Old Identity**
 3. Enter your old public ID (if you know it)
    - If you don't know it, ask a contact — they can find it in your contact details
-4. A recovery claim is generated (valid for 48 hours)
+4. A recovery claim is generated
 
 ### Step 3: Collect Vouchers
 
@@ -113,7 +124,7 @@ For each voucher, you need to meet a contact in person:
 6. They tap **Create Voucher**
 7. They share the voucher with you
 
-Repeat until you have **3 or more vouchers**.
+Repeat until you reach the threshold (a handful by default).
 
 ```admonish tip
 Ask contacts you've met in person and who will recognize you immediately.
@@ -123,7 +134,7 @@ Ask contacts you've met in person and who will recognize you immediately.
 
 1. Go to **Settings > Recovery**
 2. Import each voucher you received
-3. Once you have 3+, tap **Complete Recovery**
+3. Once you've reached the threshold, tap **Complete Recovery**
 4. Vauchi submits your recovery proof
 
 ### Step 5: Wait for Verification
@@ -136,7 +147,7 @@ Ask contacts you've met in person and who will recognize you immediately.
 
 Some contacts may need to re-verify you:
 
-1. They'll see a notification about your recovery
+1. They'll see your card update through recovery
 2. Meet them in person to confirm
 3. Your relationship continues
 
@@ -159,7 +170,7 @@ Before creating a voucher:
 - Be suspicious of unusual requests
 
 ```admonish warning
-Only vouch if you're certain. False vouching enables identity theft.
+Only vouch if you're certain. A voucher is you putting your name on "yes, this is really them" — false vouching is how identity theft gets in the door.
 ```
 
 ### Step 2: Create Voucher
@@ -184,7 +195,7 @@ Only vouch if you're certain. False vouching enables identity theft.
 - Passwords are case-sensitive
 - Try any variations you might have used
 
-If you truly can't remember the password, you'll need to use social recovery.
+If you truly can't remember the password, there's no recovering the backup — that's the design, not a bug. Fall back to social recovery.
 
 ### Backup Restore: "Invalid Backup Code"
 
@@ -194,15 +205,15 @@ If you truly can't remember the password, you'll need to use social recovery.
 
 ### Social Recovery: "Not Enough Vouchers"
 
-- You need at least 3 vouchers
-- Contact more people who have exchanged with your old identity
-- Vouchers must be from different contacts
+- You haven't reached the threshold yet (a handful by default)
+- Round up more contacts who exchanged with your old identity
+- Vouchers must come from different contacts
 
 ### Social Recovery: "Voucher Rejected"
 
 - The voucher may be for a different identity
-- The voucher may have expired (90 days)
-- Ask the contact to create a fresh voucher
+- The voucher may have expired (vouchers go stale after about 90 days)
+- Ask the contact to create a fresh one
 
 ### Can't Remember Old Public ID
 
@@ -214,21 +225,22 @@ If you truly can't remember the password, you'll need to use social recovery.
 
 ## Prevention Tips
 
-To avoid needing recovery:
+A backup you make today is a favour to a future, locked-out version of yourself. The cheapest recovery is the one you never need.
 
 1. **Create a backup** as soon as you set up
 2. **Store backup securely** (password manager, safe)
 3. **Link multiple devices** (phone + tablet/desktop)
-4. **Remember your password** (use a passphrase)
-5. **Have 5+ contacts** who could vouch for you
+4. **Remember your password** (use a passphrase — long beats cryptic)
+5. **Stay in touch with a handful of contacts** who could vouch for you
 
 ---
 
 ## Security Notes
 
-- Social recovery requires in-person verification
-- 3 vouchers prevent single-point-of-failure attacks
-- Vouchers expire after 90 days
-- Recovery is logged for transparency
+- Social recovery requires in-person verification — presence is the proof
+- Needing several independent vouchers prevents any single person from impersonating you
+- Vouchers expire after about 90 days, so a stolen one doesn't stay useful
+- A backup is yours alone: Argon2id + XChaCha20-Poly1305, no escrow, no back door
+- The relay only ever forwards encrypted blobs, routed by daily-rotating mailbox tokens — it never sees your identity, your IP, or your data
 
 For more on security, see [Backup & Recovery Feature](../features/backup-recovery.md).

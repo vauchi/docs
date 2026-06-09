@@ -9,7 +9,9 @@ Step-by-step guide for controlling what each contact can see.
 
 ## Overview
 
-Visibility lets you control who sees what on your contact card. Show your work email to colleagues, your personal phone to friends, and hide your home address from everyone else.
+A paper business card has exactly one privacy setting: whoever holds it sees all of it. Vauchi splits that decision down to the field. Every field on your card is, for every contact, one of three things: visible to everyone, visible to a chosen few, or hidden from all. Show your work email to colleagues, your personal phone to friends, hide your home address from everyone else — and change your mind later without reprinting anything.
+
+The rule that matters: **visibility is per field, per contact.** Everything else in this guide is shortcuts on top of that.
 
 ---
 
@@ -34,7 +36,7 @@ Tap any field to toggle it.
 
 ### Step 4: Confirm
 
-Changes apply immediately. The contact will see the update next time they sync.
+Your choice is saved at once, but the contact's copy isn't updated until they next sync or open the app. Visibility is a change to the card you publish, not a live feed into their phone — so "immediately" means immediately for you, and "soon" for them.
 
 ---
 
@@ -60,7 +62,7 @@ Changes apply immediately. The contact will see the update next time they sync.
 
 ## Using Labels
 
-Labels help you manage visibility for groups instead of individuals.
+Setting visibility one contact at a time is honest but tedious, like addressing wedding invitations by hand. Labels — Work, Family, Friends — let you decide once for a category. But they aren't a separate permission system bolted on the side: a label is just a faster way to write the same per-contact rules. Under the hood, "show this to Family" expands to "show this to Alice, Bob, and Mum." Move someone out of Family and their access updates with them; the rule was always about the people, never the badge.
 
 ### Creating a Label
 
@@ -118,7 +120,7 @@ Share a field temporarily:
 2. Complete whatever you needed
 3. Hide the field again
 
-They lose access immediately when you hide it.
+Hiding takes effect on their side the next time they sync — quick, but not instant, so don't treat "hide" as a remote wipe of something they may already have copied down.
 
 ---
 
@@ -207,9 +209,10 @@ It's easier to show more later than to hide after sharing.
 
 ## Privacy Notes
 
-- Hidden fields disappear from their view
-- They aren't notified when you hide fields
-- They can't see your visibility settings
-- Hiding is per-contact — it doesn't delete the field
+- Hidden fields simply vanish from their view — and a hidden field looks exactly like one you never had. The contact can't tell "she's hiding her address" from "she never listed an address." Absence carries no information.
+- No notification fires when you hide a field. The polite cough doesn't happen; the field is just gone next time they look.
+- Contacts only ever see your current card — never its history. There's no changelog of what you showed and then withdrew.
+- They can't see your visibility settings, only their own resulting view.
+- Hiding is per field, per contact — it withdraws access, it doesn't delete the field from your card.
 
 For more on privacy, see [Privacy Controls](../features/privacy-controls.md).

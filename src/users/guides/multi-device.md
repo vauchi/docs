@@ -6,6 +6,8 @@
 Step-by-step guide for using Vauchi on multiple
 devices.
 
+Adding a device is less like copying a file and more like introducing two people who then keep each other up to date. The introduction has to happen once, in a way no eavesdropper can fake — after that, your phone and your laptop hold the same identity and sync between themselves. This guide covers the introduction, and what to do when a device is lost.
+
 ---
 
 ## Prerequisites
@@ -93,6 +95,10 @@ request data from the new device:
 vauchi device complete <request-data>
 ```
 
+```admonish info title="That six-digit code is doing real work"
+Both devices show a short confirmation code like `123-456`. It isn't a password or a formality — each device computes it independently from the keys they just agreed on, so the numbers can only match if the two devices really negotiated with each other and nobody slipped into the middle. Matching codes are your proof of no man-in-the-middle. If they differ, stop and start over.
+```
+
 ### Step 3: Confirm
 
 Both devices should show:
@@ -129,10 +135,9 @@ After linking:
 
 ## Syncing Data
 
-Data syncs automatically:
+Sync is request-and-response, not a live broadcast — each device asks the relay for what's waiting and sends what's new. So changes land **near-instantly when both devices are online**, and catch up the moment a sleeping device wakes. Throughout, the relay only ever handles end-to-end encrypted blobs; it never sees your plaintext.
 
-- **Immediately:** When both devices are online
-
+- **Near-instant:** When both devices are online
 - **On app open:** When you open the app
 - **Manual:** Pull to refresh or
   Settings > Sync Now
@@ -193,8 +198,9 @@ vauchi device revoke <device-id>
 ```
 
 ```admonish warning
-You cannot revoke your current device.
-Use another linked device.
+You can't revoke the device in your hand — a chair
+can't be pulled out from under the person sitting in
+it. Revoke from another linked device.
 ```
 
 ```admonish danger
@@ -223,8 +229,8 @@ QR codes are valid for 5 minutes. If expired:
 
 ### "Too Many Devices" Error
 
-You can have up to 10 devices. To add
-another:
+Ten is the ceiling — generous, but a ceiling. An
+eleventh device has to wait for a seat:
 
 1. Go to **Settings > Devices**
 2. Revoke a device you no longer use
@@ -258,10 +264,15 @@ If you can't access your old phone:
 - Each device has its own derived keys
 - Revoking a device invalidates its keys
   immediately
-- The relay never sees plaintext data
+- Up to 10 devices per identity; revoke one to make
+  room for an eleventh
+- The relay only forwards end-to-end encrypted data,
+  routed by daily-rotating mailbox tokens — never
+  your plaintext, identity, or IP
 - Link codes expire after 5 minutes
-- A 6-digit confirmation code ensures you're
-  linking the right devices
+- A 6-digit confirmation code, computed
+  independently on both devices, proves you're
+  linking the right two — no man-in-the-middle
 
 For more on security, see
 [Multi-Device Feature](../features/multi-device.md).

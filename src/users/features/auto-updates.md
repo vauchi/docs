@@ -1,17 +1,23 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
-# Auto Updates
+# Automatic Updates
 
-Your contacts always have your latest information.
+Here's a small mystery of human behaviour: people rarely keep their
+contact details current, not because they don't care, but because the
+effort is all theirs and the benefit is all someone else's. Telling
+forty people you've changed your number is a chore; suffering one
+person's outdated entry is mildly annoying. So nobody updates anything,
+and we all quietly drift out of date.
+
+Vauchi removes the chore entirely. You change your number once, for
+yourself, and everyone who holds your card simply has the new one. No
+broadcast, no "please update your records," no awkward text six months
+later. The address book finally maintains itself.
 
 ---
 
-## How It Works
-
-When you update your contact card, everyone who has
-your card automatically sees the change. No need to
-send them the new info — it just appears.
+## How it works
 
 ```mermaid
 sequenceDiagram
@@ -37,119 +43,76 @@ sequenceDiagram
     Note over C1,C2: Both see your new number
 ```
 
-## What Updates
+## What gets pushed out
 
-When you change your contact card:
+| You do this | Your contacts see |
+|-------------|-------------------|
+| Add a field | It appears (for those allowed to see it) |
+| Edit a field | The new value, in place |
+| Remove a field | It quietly disappears |
+| Change visibility | It appears or vanishes, per person |
 
-| Action | What Happens |
-|--------|--------------|
-| Add a field | Visible contacts get notified |
-| Edit a field | Contacts see the new value |
-| Remove a field | Contacts see it disappear |
-| Change visibility | Appears/disappears per contact |
+## When it lands
 
-## Update Timing
+**When you're online.** Updates go out in seconds; a contact sees the
+change the next time they open the app — near-instant when you're both
+active.
 
-### When Online
+**When a contact's offline.** The encrypted update waits on the relay
+and is delivered the moment they reconnect. Nothing is lost in the gap.
 
-- Updates deliver within seconds
-- Contacts see changes when they open the app
-- Real-time sync when both are active
+**If anyone's impatient.** A pull-to-refresh, or **Settings > Sync
+Now**, fetches whatever's pending on demand.
 
-### When Offline
+## Updates stay private
 
-- Updates queue on the relay server
-- Delivered when the contact comes online
-- Messages kept until the contact comes online
+Every update is end-to-end encrypted, and — crucially — encrypted
+*per contact*, which is what lets the same change mean different things
+to different people:
 
-### Manual Refresh
+| The relay sees | The relay can't see |
+|----------------|---------------------|
+| An encrypted blob | The field names |
+| A rotating routing token | The field values |
+| A timestamp | Who you are |
+| Padded message size | What actually changed |
 
-Contacts can always:
+### Visibility comes along for the ride
 
-- Pull to refresh their contact list
-- Go to Settings > Sync Now
+Updates obey your visibility settings automatically. Hide a field from
+someone and they never receive its updates; reveal it and they start.
+It's all per-contact, never global — which is the whole point:
 
-## Privacy of Updates
-
-Updates are end-to-end encrypted:
-
-- The relay server cannot read update content
-- Each contact receives updates encrypted with
-  their unique key
-- Different contacts may see different fields
-  (per visibility settings)
-
-### What the Relay Sees
-
-| Sees | Doesn't See |
-|------|-------------|
-| Encrypted blob | Field names |
-| Recipient ID | Field values |
-| Timestamp | Who you are |
-| Message size (padded) | What changed |
-
-## Visibility and Updates
-
-Updates respect your visibility settings:
-
-- If you hide a field from someone, they don't
-  receive updates for it
-- If you show a field to someone, they start
-  receiving updates
-- Changes are per-contact, not global
-
-### Example
-
-You change your phone number:
-
-| Contact | Visibility | What They See |
+| Contact | Visibility | What they get |
 |---------|------------|---------------|
-| Family | Phone visible | New number |
-| Work | Phone hidden | Nothing |
-| Friend | Phone visible | New number |
+| Family | Phone visible | Your new number |
+| Work | Phone hidden | Nothing at all |
+| Friend | Phone visible | Your new number |
 
-## Forward Secrecy
+You changed one number. Three people got exactly what you'd intend each
+of them to have.
 
-Each update uses a unique encryption key:
+## Forward secrecy, even here
 
-- Keys are derived via Double Ratchet
-- Even if one key is compromised, other updates
-  stay secure
-- Past messages can't be decrypted with current keys
+Each update rides its own one-time key, derived through the Double
+Ratchet. Compromise a single key and you've exposed a single update —
+never the history, never the future.
 
 ## Troubleshooting
 
-### Contact Doesn't See My Update
+**A contact doesn't see my update.** Check the field is actually visible
+to them; check you're online; give it a few seconds; ask them to
+refresh.
 
-1. **Check visibility** — Is the field visible to
-  them?
-2. **Check your connection** — Are you online?
-3. **Wait a moment** — Updates may take a few
-  seconds
-4. **Ask them to refresh** — Pull to refresh or
-  manual sync
+**Updates feel slow.** Both ends need a connection — confirm theirs as
+well as yours. Occasionally the relay has a hiccup. A manual sync
+(**Settings > Sync Now**) usually settles it.
 
-### Updates Seem Slow
-
-1. **Check both connections** — You and the contact
-  need internet
-2. **Check relay status** — Rare server issues may
-  delay delivery
-3. **Try manual sync** — Settings > Sync Now
-
-### Update Stuck
-
-If an update seems stuck:
-
-1. Close and reopen the app
-2. Check internet connectivity
-3. Try editing and saving the field again
+**One update seems stuck.** Reopen the app, check connectivity, then
+edit and re-save the field to nudge it through.
 
 ## Related
 
-- [Privacy Controls](privacy-controls.md)
-  — Control who sees what
-- [Multi-Device Sync](multi-device.md)
-  — Updates across your devices
-- [Encryption](encryption.md)
-  — How updates are protected
+- [Privacy Controls](privacy-controls.md) — who sees what
+- [Multi-Device Sync](multi-device.md) — updates across your own devices
+- [Encryption](encryption.md) — how updates are protected

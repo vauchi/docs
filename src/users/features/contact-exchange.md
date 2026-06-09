@@ -3,13 +3,19 @@
 
 # Contact Exchange
 
-Exchange contact cards securely by scanning QR codes in person.
+Adding a contact in Vauchi looks almost too simple — you hold up a code,
+they scan it, done. The simplicity is the achievement. Underneath that
+moment sits the thing every messaging app quietly struggles with: how do
+you *know* the person you just connected with is really them, and that
+nobody slipped into the middle? Vauchi's answer is wonderfully
+low-tech — you were both there.
 
 ---
 
-## How It Works
+## How it works
 
-Vauchi uses in-person exchange to establish contact relationships. Both parties must be physically present to complete an exchange.
+The default exchange is a deliberate, two-way act between people in the
+same place:
 
 ```mermaid
 sequenceDiagram
@@ -27,75 +33,91 @@ sequenceDiagram
     Note over A,B: Both have each other's cards
 ```
 
-## Why In-Person?
+## Why in person?
 
-The in-person requirement is a privacy and security feature:
+Presence is a security feature you've trusted your whole life without
+calling it one. Standing in front of someone does, for free, what
+elaborate protocols strain to do:
 
-| Threat | How In-Person Prevents It |
-|--------|---------------------------|
-| Spam | Can't be added by strangers |
-| Impersonation | You verify identity yourself |
-| Man-in-the-middle | Direct device communication |
-| Screenshot attacks | Proximity verification |
+| Threat | How being there defeats it |
+|--------|----------------------------|
+| Spam | Strangers can't add you from afar |
+| Impersonation | You're looking at who you're connecting to |
+| Man-in-the-middle | Devices talk directly; there's no middle |
+| Screenshot scraping | Proximity is checked, not just a picture |
 
-## Exchange Methods
+A connection you made in the room is one you *meant* to make. That
+intention is exactly what spam, bots, and impostors can't reproduce.
 
-### QR Code (Primary)
+## Ways to exchange
 
-The main method for exchanging contacts:
+### QR code — the one to start with
+
+Works on every device, every time:
 
 1. Open the **Exchange** tab
 2. Show your QR code
-3. Have the other person scan it
-4. Scan their QR code
-5. Exchange complete
+3. Have them scan it
+4. Scan theirs
+5. Connected
 
-QR codes expire after 5 minutes for security.
+For security, a QR code expires after **5 minutes** — long enough to
+introduce yourselves, short enough that a stale screenshot is worthless.
 
-## Proximity Verification
+### And, when you need them, others
 
-On iOS, Vauchi verifies physical proximity using ultrasonic audio:
+QR is the dependable default, but it isn't the only door. Depending on
+your devices you may also exchange by **tapping phones together**,
+**bumping** them, or — when you simply can't be in the same room — by
+sharing a one-off **Link** (`vauchi://exchange?…`) that completes
+remotely through the relay over the next few days. The in-person methods
+give the strongest guarantee; Link mode trades a little of that for
+reach. The full menu lives in the
+[Exchange Contacts guide](../guides/exchange.md).
 
-- Both phones emit and listen for an audio handshake (18-20 kHz)
-- Range: approximately 3 meters
-- If verification fails, exchange falls back to manual confirmation
-- This prevents screenshot attacks
+## Proximity verification
 
-Android proximity verification is planned.
+On iOS, Vauchi confirms you're actually together using sound your ears
+can't hear:
 
-### Troubleshooting Proximity (iOS)
+- Both phones emit and listen for an ultrasonic handshake (18–20 kHz)
+- Range: roughly 3 metres
+- If it can't hear the other phone, it falls back to manual confirmation
+- This is what stops someone exchanging with a *photo* of your code
+  instead of you
 
-If proximity verification fails:
+(Android proximity verification is planned; on desktop and CLI/TUI you
+simply confirm manually.)
 
-1. Ensure both phones have working speakers/microphones
-2. Move closer together (within 2-3 meters)
-3. Reduce background noise
-4. Disable any audio-blocking apps
-5. Try again — or confirm manually when prompted
+### If proximity won't verify (iOS)
 
-On desktop and CLI/TUI, proximity verification is not available — manual confirmation is required instead.
+1. Check both phones have working speakers and microphones
+2. Move closer — within 2–3 metres
+3. Quieten the surroundings
+4. Disable anything that hijacks audio
+5. Try again, or just confirm manually when prompted
 
-## After Exchange
+## After the exchange
 
-Once exchange completes:
+The moment it completes:
 
 - The new contact appears in your **Contacts** list
-- You can see their contact card (fields they've shared)
-- They can see your contact card (fields you've shared)
-- Future updates sync automatically
+- You see the fields they chose to share
+- They see the fields you chose to share
+- From here on, both cards keep themselves up to date
 
-## Security Properties
+## Security properties
 
 | Property | Mechanism |
 |----------|-----------|
-| Proximity required | Ultrasonic audio handshake (iOS); manual confirmation (other platforms) |
-| No man-in-the-middle | X3DH key agreement with identity keys |
+| Proximity required | Ultrasonic handshake (iOS); manual confirm elsewhere |
+| No man-in-the-middle | X3DH key agreement bound to identity keys |
 | Forward secrecy | Ephemeral keys discarded after exchange |
 | Replay prevention | One-time token, 5-minute expiry |
-| Card authenticity | Ed25519 signature on contact card |
+| Card authenticity | Ed25519 signature on every card |
 
 ## Related
 
-- [How to Exchange Contacts](../guides/exchange.md) — Step-by-step guide
-- [Privacy Controls](privacy-controls.md) — Control what they see
-- [Encryption](encryption.md) — How exchange data is protected
+- [How to Exchange Contacts](../guides/exchange.md) — step by step
+- [Privacy Controls](privacy-controls.md) — deciding what they see
+- [Encryption](encryption.md) — how the exchange is protected

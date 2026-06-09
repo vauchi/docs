@@ -3,7 +3,7 @@
 
 # Frequently Asked Questions
 
-Answers to common questions about Vauchi.
+The questions people actually ask, answered without the hand-waving.
 
 ---
 
@@ -11,50 +11,54 @@ Answers to common questions about Vauchi.
 
 ### Is my data encrypted?
 
-**Yes, comprehensively:**
+Yes — in every state it can be in:
 
-- **At rest:** All data on your device is encrypted
-  with XChaCha20-Poly1305 using a key stored in your
-  device's platform keychain
-  (iOS Keychain / Android KeyStore)
-- **In transit:** All communication uses end-to-end
-  encryption (X25519 + XChaCha20-Poly1305)
-- **Backups:** Protected with Argon2id key derivation
-  and XChaCha20-Poly1305
+- **At rest:** everything on your device is encrypted with
+  XChaCha20-Poly1305. The key is held in your platform's secure store
+  (iOS Keychain / Android KeyStore), not lying around on disk.
+- **In transit:** end-to-end encrypted (X25519 key agreement +
+  XChaCha20-Poly1305), so the journey is sealed from end to end.
+- **In backups:** protected by Argon2id (a deliberately slow,
+  memory-hungry key stretch) plus XChaCha20-Poly1305.
+
+The short version: the only place your data is ever readable is on the
+screens of the people you chose to share it with.
 
 ### Can the relay server read my contacts?
 
-**No.** The relay server only sees encrypted message envelopes. It cannot:
+No. The relay only ever handles sealed, encrypted blobs. It cannot
+decrypt content, cannot see your contact list, cannot read a single
+field, and cannot tie your identity to your data. It is, by design, a
+courier that has never once been given a key.
 
-- Decrypt any message content
-- See your contact list
-- Read your contact card fields
-- Associate your identity with your data
+### What does the relay actually store?
 
-The relay is essentially a "dumb pipe" that passes
-encrypted blobs between devices.
+Almost the least it possibly could:
 
-### What data does the relay server store?
+- Encrypted envelopes (deleted on delivery, or after 120 days)
+- A little connection metadata for rate-limiting (a cryptographic
+  identity hash — *not* your IP — discarded after 30 minutes idle)
 
-Only:
+And it never even learns your IP address: requests reach it through an
+independent **Oblivious HTTP** gateway, run by a different party. The
+gateway sees where you are but not what you're asking; the relay sees
+what you're asking but not where you are. No one holds both halves.
 
-- Encrypted message envelopes
-  (deleted after delivery or 120 days)
-- Connection metadata for rate limiting
-  (cryptographic identity hash — deleted after
-  30 minutes of inactivity)
+### Is Vauchi *truly* private?
 
-### Is Vauchi truly private?
+Here's the honest distinction. Most apps ask you to *trust* that they
+won't peek. Vauchi tries to make peeking structurally impossible, so
+trust isn't required:
 
-Yes. Vauchi is designed with privacy as the core principle:
+- Your data lives on your device, not our servers
+- End-to-end encryption means we couldn't read it if we wanted to —
+  and we don't want the liability of being able to
+- No analytics, no trackers, no ad identifiers, no accounts
+- It's open source, so you don't have to take any of this on faith —
+  you can check
 
-- Local-first architecture
-  (your data lives on your device)
-- End-to-end encryption
-  (we can't read your data even if we wanted to)
-- No analytics or tracking
-- No cloud accounts
-- Open source (you can verify our claims)
+The best privacy policy is the one you can't break even under
+subpoena. That's the one we aimed for.
 
 ---
 
@@ -62,50 +66,45 @@ Yes. Vauchi is designed with privacy as the core principle:
 
 ### What happens if I lose my device?
 
-You have several options:
+You have several ways back in, in rough order of painlessness:
 
-1. **Another linked device:** Continue using Vauchi
-  normally
-2. **Backup:** Restore your identity from an
-  encrypted backup
-3. **Social recovery:** Get vouchers from contacts
-  who can verify your identity
-4. **Start fresh:** Create a new identity and
-  re-exchange with contacts
+1. **Another linked device** — if you have one, you've already lost
+   nothing. Carry on.
+2. **A backup** — restore from your encrypted backup file.
+3. **Social recovery** — trusted contacts vouch that you are you.
+4. **Start fresh** — mint a new identity and re-exchange. Always
+   available, never necessary if you planned ahead.
+
+The lesson hidden in that list: the five minutes you spend making a
+backup *today* is what turns a lost phone from a tragedy into an errand.
 
 ### How does social recovery work?
 
-Social recovery uses your real-world relationships
-to verify your identity:
+It borrows the oldest security system humans have: people who know you.
 
-1. You create a "recovery claim" on a new device
-2. You share this claim with trusted contacts
-3. Each contact creates a "voucher" confirming they
-  recognize you
-4. After collecting enough vouchers (typically 3),
-  your contacts are migrated to your new identity.
-  Note: social recovery creates a new cryptographic
-  identity — your old signing keys cannot be
-  recovered. Visibility settings may need to be
-  reconfigured.
+1. On a new device, you create a "recovery claim"
+2. You share it with contacts you previously marked as trusted
+3. Each one issues a "voucher" confirming they recognise you
+4. Once enough vouchers arrive (a handful by default), your contacts
+   migrate to your new identity
 
-This prevents both:
-
-- You being locked out
-  (contacts can vouch for you)
-- Someone else stealing your identity
-  (they'd need to fool multiple contacts)
+It guards both doors at once: you can't be locked out (your friends can
+let you in), and you can't be impersonated (a stranger would have to
+fool several of your friends at the same time). Note that social
+recovery mints a *new* cryptographic identity — your old signing keys
+stay lost, and a few settings like per-contact visibility may need
+re-tuning. You keep your people; you replace the lock.
 
 ### Can I change my display name?
 
-Yes, go to Settings and edit your display name.
-The change syncs to all your devices and contacts
-see the update.
+Yes — Settings, edit, done. The change rolls out to your other devices
+and to your contacts automatically.
 
 ### Do I need an account?
 
-No. Your identity is created on your device.
-There's nothing to sign up for.
+No. There is nothing to sign up for, no email to confirm, no password
+to forget on our end. Your identity is created on your device and stays
+there. Refreshingly little, isn't it.
 
 ---
 
@@ -113,40 +112,47 @@ There's nothing to sign up for.
 
 ### How do I exchange contacts?
 
-1. Meet the person in real life
-2. Open the Exchange screen
-3. Show them your QR code to scan
-4. Scan their QR code
-5. Done! You're now contacts
+The everyday way:
 
-### Why do I need to meet in person?
+1. Meet the person — actually, in person
+2. Open the **Exchange** screen
+3. Show them your QR code
+4. Scan theirs
+5. You're connected, encrypted, and you'll both stay up to date
 
-In-person exchange ensures:
+### Why meet in person?
 
-- You're connecting with who you think you are
-- No man-in-the-middle can intercept the exchange
-- The trust relationship is established in the real world
+Because proximity is a security feature you already understand. When
+you're standing in front of someone, three things become true at once:
+you know they are who they appear to be, no one in the middle can slip
+between you, and the trust is anchored in the real world rather than in
+a username someone could have faked. It's the same instinct that makes
+a handshake mean more than a friend request.
 
 ### Can I exchange contacts remotely?
 
-Not currently. Exchange requires physical
-proximity — both people must be in the same
-location so the devices can verify co-presence.
-This is a deliberate security design to prevent
-man-in-the-middle attacks.
+Yes — there's a **Link mode** for when you can't be in the same room.
+You share a one-off `vauchi://exchange?…` link (by message, email,
+however you like) and the other person opens it; the exchange completes
+through the relay, asynchronously, within a few days.
+
+The in-person methods are still the default, and for good reason — they
+give the strongest guarantee against a man-in-the-middle, because
+physical presence is the one thing an attacker on the network can't
+forge. Link mode trades a little of that assurance for reach. Use it
+knowingly, the way you'd post a key versus handing it over.
 
 ### Can I remove a contact?
 
 Yes:
 
-1. Go to Contacts
-2. Select the contact
-3. Tap Delete/Remove
-4. Confirm
+1. Go to **Contacts**
+2. Select the person
+3. Tap **Delete / Remove** and confirm
 
-This removes them from your device. They still have
-your data (whatever was visible to them), but won't
-receive future updates.
+That deletes them from your device and cuts off future updates. What
+they already saw, they keep — you can close the tap, but you can't
+un-pour the water. Which is simply how sharing works, here as anywhere.
 
 ---
 
@@ -154,33 +160,29 @@ receive future updates.
 
 ### Can I use Vauchi on multiple devices?
 
-Yes! Vauchi supports multi-device sync:
+Yes:
 
 1. Set up Vauchi on your first device
-2. Go to Settings, open the Devices screen, and
-  generate a device link
-3. Follow the linking process on your second device
-4. Both devices now share the same identity
+2. Go to **Settings > Devices** and generate a device link
+3. Follow the linking steps on the second device
+4. Both now share one identity and stay in sync
 
 ### How many devices can I link?
 
-Up to 10 devices can be linked to one identity.
+Up to **10** per identity — comfortably more than most people own, and
+few enough to keep the trust circle small.
 
-### How do I migrate to a new phone?
+### How do I move to a new phone?
 
-**Method 1: Device Linking**
+Either method works:
 
-1. On old phone: Go to Settings, then open the
-  Devices screen and generate a device link
-2. On new phone: Install Vauchi and join existing
-  identity
-3. Once synced, you can uninstall from old phone
+**Link it (recommended).** On the old phone, **Settings > Devices >**
+generate a link; on the new phone, install Vauchi and join. Once synced,
+retire the old phone.
 
-**Method 2: Backup & Restore**
-
-1. On old phone: Create an encrypted backup
-2. On new phone: Install Vauchi and restore from
-  backup
+**Restore from backup.** On the old phone, create an encrypted backup;
+on the new phone, install and restore. Handy when the old phone is
+already gone.
 
 ---
 
@@ -188,28 +190,37 @@ Up to 10 devices can be linked to one identity.
 
 ### How do backups work?
 
-1. You create a backup with a password you choose
-2. Vauchi encrypts all your data using that password
-3. You receive a backup file or code
-  (format varies by platform)
-4. To restore: backup data + password = your identity
+1. You pick a password
+2. Vauchi encrypts a complete copy of your account under it
+3. You get a backup file to keep wherever you like
+4. To restore: backup file + password = you, again
 
-### What's included in a backup?
+The password never leaves your head, and the file never leaves your
+control. That's the whole trick.
 
-- Your identity (cryptographic keys)
-- Your display name
-- Device information
+### What's in a backup?
 
-Contacts are NOT included in the identity backup.
-Contact relationships are re-established through
-the relay when you restore.
+A full backup carries your whole account:
+
+- Your **identity** (the master seed all your keys grow from)
+- Your **contacts**
+- Your **own card**
+- Your **labels and groups**
+
+The one thing it deliberately *omits* is the per-conversation
+forward-secrecy state (the Double Ratchet keys) for each contact. Those
+are meant to be short-lived — that's what gives you forward secrecy —
+so they simply re-establish themselves the next time you and a contact
+sync. You get your people back; you don't drag along yesterday's
+disposable keys.
 
 ### I forgot my backup password. Can you recover it?
 
-No. The encryption is designed so that only you can
-decrypt your backup. This is a security feature,
-not a bug. Without the password, the backup cannot
-be decrypted by anyone, including us.
+No — and you should be glad. The backup is encrypted so that *only* the
+password unlocks it. If we could recover it for you, so could anyone who
+compromised us, and the whole guarantee would be theatre. The price of a
+lock no one else can pick is that you have to keep the key. Choose a
+passphrase you'll remember; write it somewhere safe if you must.
 
 ---
 
@@ -218,22 +229,25 @@ be decrypted by anyone, including us.
 ### How do I control what each contact sees?
 
 1. Open a contact's detail page
-2. Scroll to "What They Can See"
-3. Toggle individual fields on/off
+2. Find **What They Can See**
+3. Toggle individual fields on or off
 
-### Do contacts know when I hide fields?
+### Do contacts know when I hide a field?
 
-They see fields disappear from your card, but don't
-receive a notification. It appears as if you
-removed the field.
+No notification fires. The field simply stops appearing on your card,
+indistinguishable from your having removed it. Privacy that announces
+itself isn't privacy.
 
-### Can I share different info with different contacts?
+### Can I share different details with different people?
 
-Yes! That's the core feature:
+Yes — this is the whole point, not a side feature:
 
-- Work contacts: Show work email, hide personal phone
-- Family: Show everything
-- Acquaintances: Show only basic info
+- **Work contacts:** work email, no personal mobile
+- **Family:** everything
+- **People you just met:** the basics, until they earn more
+
+One card, many faces — the same way you already behave in real life,
+just finally possible in software.
 
 ---
 
@@ -241,52 +255,44 @@ Yes! That's the core feature:
 
 ### What's the relay server for?
 
-The relay server:
+Think of it as a post office for sealed envelopes — one that rewrites
+the address label every night so it can't keep a diary of who writes to
+whom. It:
 
-- Routes encrypted messages between your devices
-- Enables real-time sync
-- Stores messages temporarily if a device is offline
-- Cannot read any message content
-
-Think of it like a post office that handles sealed
-envelopes.
+- Routes encrypted messages between your devices and contacts
+- Holds messages briefly when a device is offline, then forwards them
+- Addresses everything by daily-rotating tokens, so it never learns the
+  social graph
+- Cannot read a word of any of it
 
 ### Does Vauchi work offline?
 
-Partially:
+Partly, and sensibly so:
 
-- You can view all your data offline
-- You can make changes offline
-- Changes sync when you're back online
-- You cannot exchange contacts offline
-  (needs camera + network)
+- View all your data offline — yes
+- Edit your card offline — yes; changes sync when you reconnect
+- Exchange a *new* contact — needs the relevant hardware (camera, etc.)
+  and, for remote Link exchanges, a network
 
-### What encryption does Vauchi use?
+### What cryptography does Vauchi use?
 
 - **Signing:** Ed25519
-- **Key Exchange:** X25519 (Curve25519)
-- **Symmetric Encryption:** XChaCha20-Poly1305
-- **Key Derivation:** Argon2id (for passwords)
-- **Forward Secrecy:** Double Ratchet protocol
+- **Key agreement:** X25519 (Curve25519)
+- **Symmetric encryption:** XChaCha20-Poly1305
+- **Key derivation:** HKDF-SHA256 internally; Argon2id for passwords
+- **Forward secrecy:** the Double Ratchet protocol
 
-All cryptography uses well-known Rust libraries.
-Core signing and key-exchange libraries
-(ed25519-dalek, x25519-dalek) were professionally
-audited by Trail of Bits. Encryption and KDF
-libraries (chacha20poly1305, argon2) implement
-IETF-standardized algorithms.
+All of it is built on well-known, audited Rust libraries implementing
+IETF-standardised algorithms — nothing home-rolled where a reviewed
+standard exists. For the full reference, see the
+[Cryptography](../developers/crypto.md) page.
 
 ### Is Vauchi open source?
 
-Yes! The complete source code is available at:
-[https://gitlab.com/vauchi](https://gitlab.com/vauchi)
-
-You can:
-
-- Inspect how your data is handled
-- Verify our security claims
-- Contribute improvements
-- Run your own relay server
+Yes — every line:
+[gitlab.com/vauchi](https://gitlab.com/vauchi). You can read how your
+data is handled, check the security claims yourself, contribute, or run
+your own relay. "Trust us" is a weaker promise than "go and look."
 
 ---
 
@@ -295,30 +301,29 @@ You can:
 ### My contacts don't see my updates
 
 1. Check your internet connection
-2. Ensure sync is working
-  (Settings > check last sync time)
-3. Verify the field is visible to that contact
-4. Ask them to manually refresh
+2. Confirm sync is current (**Settings >** last-sync time)
+3. Make sure the field is actually visible to that contact
+4. Ask them to refresh manually
 
-### The QR scanner doesn't work
+### The QR scanner won't read the code
 
 1. Check camera permissions
-2. Ensure adequate lighting
-3. Clean your camera lens
-4. Try adjusting distance to the QR code
+2. Add light
+3. Wipe the lens
+4. Adjust your distance to the code
 5. Restart the app
 
 ### Sync seems stuck
 
-1. Check internet connectivity
-2. Try manual sync (pull to refresh or Settings > Sync)
-3. Check if the relay server is reachable
+1. Check connectivity
+2. Trigger a manual sync (pull to refresh, or **Settings > Sync**)
+3. Confirm the relay is reachable
 4. Restart the app
 
 ---
 
-## Still Have Questions?
+## Still have questions?
 
-- **GitLab Issues:**
+- **GitLab issues:**
   [gitlab.com/vauchi/vauchi/-/issues](https://gitlab.com/vauchi/vauchi/-/issues)
 - **Email:** support@vauchi.app

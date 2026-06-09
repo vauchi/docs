@@ -3,8 +3,10 @@
 
 # Known Issues
 
-This page lists known issues in the current release. Check back after
-updating to see if your issue has been resolved.
+Every honest product has a page like this; most hide it. Here is ours,
+in plain sight. If something you're hitting is listed below, it's a known
+limitation we're already working on — not something you broke. Check back
+after updating to see if it's gone.
 
 ---
 
