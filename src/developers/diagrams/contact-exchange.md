@@ -125,7 +125,7 @@ name_len (2 bytes, big-endian)
 name (N bytes, UTF-8)
 flags (1 byte, bitfield)
   [if bit 0] relay_url_len (2 bytes) + relay_url (M bytes)
-  [if bit 1] relay_noise_pubkey (32 bytes)
+  [bits 1-7 reserved]
 signature (64 bytes, Ed25519 over all preceding fields)
 ```
 
