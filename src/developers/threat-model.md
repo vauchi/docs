@@ -73,6 +73,7 @@ flowchart TB
 |-----------|------------|------------|
 | Passive observer | Encrypted traffic only | Surveillance |
 | Malicious relay | Blobs + timing, no IPs | Data harvesting |
+| Harvest-now adversary | Records ciphertext now | Decrypt at Q-Day |
 | OHTTP relay | Client IP, no content | Correlation |
 | Compromised device | Full device access | Targeted attack |
 | Physical attacker | Steals/seizes device | Law enforcement |
@@ -348,6 +349,7 @@ across reconnections.
 | No key transparency | Not auditable | Signed key log (future) |
 | Remote trust weaker | No in-person | Tier gating; upgrade path |
 | Push leaks metadata | Delivery timing | Empty push + fetch |
+| Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
 
 ## Core-UI Trust Boundary
 
@@ -579,6 +581,12 @@ explicitly prohibited.
 | Key derivation | HKDF-SHA256 | `hkdf` |
 | CSPRNG | OsRng | `rand` |
 | TLS | TLS 1.2/1.3 | `rustls` (`aws-lc-rs` backend) |
+
+**Post-quantum:** key agreement is classical-only today. A hybrid
+X25519 + ML-KEM-768 upgrade is proposed (ADR-060) to close the
+harvest-now-decrypt-later gap on relay-carried ciphertext. Ed25519
+signatures are not subject to harvest-now-forge-later, so they migrate
+later, not now.
 
 For the full cryptographic specification, see the
 [Cryptography Reference](crypto.md).

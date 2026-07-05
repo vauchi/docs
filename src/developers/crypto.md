@@ -19,6 +19,11 @@ Concise reference for all cryptographic operations in Vauchi.
 | **TLS** | TLS 1.2/1.3 | `rustls` (`aws-lc-rs`) | Relay transport + SPKI pinning |
 | **IP Privacy** | OHTTP (RFC 9458) | `ohttp` (`rust-hpke`) | Unlinks client IP from request |
 
+**Post-quantum (proposed, ADR-060).** Key agreement is classical-only
+today. A hybrid X25519 + ML-KEM-768 upgrade is proposed to close the
+harvest-now-decrypt-later gap on relay-carried ciphertext; signatures
+(Ed25519) migrate later since they are not harvest-now-forge-later.
+
 ## Key Types
 
 ### Identity Keys
