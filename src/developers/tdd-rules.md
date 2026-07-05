@@ -72,6 +72,50 @@ Small, safe, structural-only changes (from *Tidy First?*):
 | Integration | Multiple components | < 5s | Critical paths |
 | E2E | Full system | < 60s | All Gherkin scenarios |
 
+## Test Behavior, Not Implementation
+
+Test *what* a module promises through its public **API** — not *how* it keeps
+that promise, and not its internal **content**. A good test pins a contract the
+module offers its callers: it survives any refactor that preserves that contract
+and fails only when the contract is broken.
+
+**Test through the module's API — the surface a real caller uses:**
+
+- Exercise the module via its exported functions, types, and interfaces.
+- Assert on inputs and outputs, returned errors, and state observable through
+  that surface.
+- Assert the *outcome* of an action, not the steps taken to reach it.
+
+**Do not couple tests to implementation or internal content:**
+
+- Private functions, fields, or internal data structures — reach them only
+  through the public API that exercises them.
+- The specific sequence or count of internal calls — unless the call *is* the
+  contract (e.g. "sends exactly one network request").
+- The concrete algorithm or data layout chosen inside the module.
+- Log lines, intermediate variables, or rendering internals.
+
+**Litmus:** *could this test fail while the module still honors its API
+contract?* If yes, it is testing implementation — it will break on healthy
+refactors and erode trust in the suite. Rewrite it to assert behavior through
+the API, or delete it.
+
+**Put a behavior test where the behavior lives.** If a test asserts an outcome
+owned by another module — business logic reached through a UI, a value persisted
+by a core service — it belongs with that module's API, not the caller's. A
+behavior test stranded in a consumer breaks whenever the boundary shifts, even
+though nothing it cares about changed.
+
+**The unit of isolation is the test, not the function, class, or module.**
+Isolate tests from *each other* — independent, order-independent, no shared
+mutable state — not each function or class from its collaborators. A single
+test may drive several functions, classes, or modules together through one
+public API; that is normal, not a smell. Don't
+add a mock just because a collaborator exists: mock only true boundaries
+(network, clock, external services — see *Mocking Strategy* below) and use real
+collaborators everywhere else. (Kent Beck's classical TDD: "unit" names the
+test's isolation, not the code under test.)
+
 ## Naming
 
 ```
