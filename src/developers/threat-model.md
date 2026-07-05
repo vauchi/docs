@@ -583,7 +583,7 @@ explicitly prohibited.
 | TLS | TLS 1.2/1.3 | `rustls` (`aws-lc-rs` backend) |
 
 **Post-quantum:** key agreement is classical-only today. A hybrid
-X25519 + ML-KEM-768 upgrade is proposed (ADR-060) to close the
+X25519 + ML-KEM-768 upgrade is planned (ADR-060) to close the
 harvest-now-decrypt-later gap on relay-carried ciphertext. Ed25519
 signatures are not subject to harvest-now-forge-later, so they migrate
 later, not now.
