@@ -23,7 +23,7 @@ default:
 
 include:
   - project: 'vauchi/scripts'
-    ref: ci-templates-v2026.07.1
+    ref: ci-templates-v2026.07.2
     file:
       - '/ci-templates/mr-rules.yml'
       - '/ci-templates/reuse.yml'
@@ -32,7 +32,7 @@ include:
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 variables:
-  VAUCHI_SCRIPTS_REF: "ci-templates-v2026.07.1"
+  VAUCHI_SCRIPTS_REF: "ci-templates-v2026.07.2"
 
 stages:
   - lint
