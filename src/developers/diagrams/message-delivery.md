@@ -61,8 +61,8 @@ sequenceDiagram
 
     %% Send to relay
     activate AD
-    AD->>R: EncryptedUpdate(recipient=Bob, blob=...)
-    Note over AD,R: HTTP v2 POST /v2/:<br/>4-byte length + JSON envelope
+    AD->>R: POST /v2/send (recipient_token, blob)
+    Note over AD,R: HTTP v2:<br/>JSON body, base64-encoded blob
     deactivate AD
 
     %% Relay processing
