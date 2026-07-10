@@ -53,14 +53,14 @@ The Rust core library provides all cryptographic and protocol functionality:
 
 | Module | Purpose | Key Files |
 |--------|---------|-----------|
-| `crypto/` | Encryption, signing, KDF | `encryption.rs`, `signing.rs` |
-| `exchange/` | Contact exchange protocol | `session.rs`, `qr.rs`, `x3dh.rs` |
-| `sync/` | Update propagation | `device_sync.rs`, `delta.rs` |
-| `recovery/` | Social recovery | `mod.rs` |
-| `storage/` | Local encrypted database | `contacts.rs`, `identity.rs` |
-| `network/` | Relay communication | `connection.rs`, `protocol.rs` |
-| `ui/` | Core-driven UI (`vauchi-app`) | `screen.rs`, `component.rs` |
-| `i18n` | Internationalization (`vauchi-app`) | `i18n.rs` |
+| [`crypto/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/crypto) | Encryption, signing, KDF | `encryption.rs`, `signing.rs` |
+| [`exchange/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/exchange) | Contact exchange protocol | `session.rs`, `qr.rs`, `x3dh.rs` |
+| [`sync/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/sync) | Update propagation | `device_sync.rs`, `delta.rs` |
+| [`recovery/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/recovery) | Social recovery | `mod.rs` |
+| [`storage/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/storage) | Local encrypted database | `contacts.rs`, `identity.rs` |
+| [`network/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/src/network) | Relay communication | `connection.rs`, `protocol.rs` |
+| [`ui/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-app/src/ui) | Core-driven UI (`vauchi-app`) | `screen.rs`, `component.rs` |
+| [`i18n`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-app/src/i18n.rs) | Internationalization (`vauchi-app`) | `i18n.rs` |
 
 ### vauchi-protocol
 

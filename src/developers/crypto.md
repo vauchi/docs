@@ -311,19 +311,22 @@ still rides in the discovery payload, unused by clients.)
 
 ## Source Files
 
+Paths are in the [core repository](https://gitlab.com/vauchi/core).
+
 | Module | Path |
 |--------|------|
-| Key Derivation | `core/vauchi-core/src/crypto/kdf.rs` |
-| Signing | `core/vauchi-core/src/crypto/signing.rs` |
-| Encryption | `core/vauchi-core/src/crypto/encryption.rs` |
-| Double Ratchet | `core/vauchi-core/src/crypto/ratchet.rs` |
-| Chain Key | `core/vauchi-core/src/crypto/chain.rs` |
-| CEK | `core/vauchi-core/src/crypto/cek.rs` |
-| Shredding | `core/vauchi-core/src/crypto/shredding.rs` |
-| Password KDF | `core/vauchi-core/src/crypto/password_kdf.rs` |
-| X3DH | `core/vauchi-core/src/exchange/x3dh.rs` |
-| X3DH Session (Symmetric) | `core/vauchi-core/src/exchange/session.rs` |
-| Padding | `core/vauchi-core/src/crypto/padding.rs` |
+| Key Derivation | [`vauchi-core/src/crypto/kdf.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/kdf.rs) |
+| Signing | [`vauchi-core/src/crypto/signing.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/signing.rs) |
+| Encryption | [`vauchi-core/src/crypto/encryption.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/encryption.rs) |
+| Double Ratchet | [`vauchi-core/src/crypto/ratchet.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/ratchet.rs) |
+| Chain Key | [`vauchi-core/src/crypto/chain.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/chain.rs) |
+| CEK | [`vauchi-core/src/crypto/cek.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/cek.rs) |
+| Shredding | [`vauchi-core/src/crypto/shredding.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/shredding.rs) |
+| Password KDF | [`vauchi-core/src/crypto/password_kdf.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/password_kdf.rs) |
+| X3DH | [`vauchi-core/src/exchange/x3dh.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/x3dh.rs) |
+| X3DH Session (Symmetric) | [`vauchi-core/src/exchange/session.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/session.rs) |
+| Padding | [`vauchi-core/src/crypto/padding.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/padding.rs) |
+| HKDF Test Vectors (RFC 5869) | [`vauchi-core/tests/it/crypto_kdf_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/crypto_kdf_tests.rs) |
 
 ## Related Documentation
 
