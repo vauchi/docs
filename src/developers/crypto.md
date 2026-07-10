@@ -72,9 +72,9 @@ domain string as info. All derivations use
 | `Vauchi_Message_Key` | Symmetric ratchet message key |
 | `Vauchi_Chain_Key` | Symmetric ratchet chain key advance |
 | `Vauchi_AnonymousSender_v2` | Anonymous sender ID derivation |
-| `Vauchi_Mailbox_v1` | Contact mailbox token (daily rotation, SP-33) |
+| `Vauchi_Mailbox_v1` | Contact mailbox token (daily rotation) |
 | `Vauchi_DeviceSync` | Device-to-device encryption key derivation |
-| `Vauchi_DeviceSync_v1` | Device sync self-token (daily rotation, SP-33) |
+| `Vauchi_DeviceSync_v1` | Device sync self-token (daily rotation) |
 
 ### Ratchet Keys
 
