@@ -57,6 +57,7 @@
 - [Threat Model](./developers/threat-model.md)
 - [Contributing](./developers/contributing.md)
 - [Tech Stack](./developers/tech-stack.md)
+- [Glossary](./developers/glossary.md)
 - [TDD Rules](./developers/tdd-rules.md)
 - [GUI Guidelines](./developers/gui-guidelines.md)
 - [UX Guidelines](./developers/ux-guidelines.md)

@@ -330,7 +330,9 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 
 ## Related Documentation
 
+- [Glossary](glossary.md) — Terms and acronyms used here
 - [Architecture Overview](architecture.md) — System design
+- [Threat Model](threat-model.md) — STRIDE analysis and mitigations
 - [Encryption Feature](../users/features/encryption.md)
   — User-friendly explanation
 - [Security](../about/security.md) — Security model overview
