@@ -149,17 +149,18 @@ At the bottom of the contact, you'll see:
 
 ### For New Fields
 
-When you add a new field, it's **visible to everyone** by default.
+When you add a new field, it's **hidden** by default. Nobody sees it
+until you choose to share it.
 
-To change this:
+To share it:
 
 1. Add the field
-2. Immediately tap the visibility icon
-3. Adjust as needed
+2. Tap the visibility icon
+3. Choose who can see it
 
 ### For New Contacts
 
-When you exchange with someone new, they see all fields that are currently visible to "everyone".
+When you exchange with someone new, they see only the fields you've made visible to "everyone".
 
 ---
 
