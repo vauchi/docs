@@ -39,10 +39,12 @@ Almost the least it possibly could:
 - A little connection metadata for rate-limiting (a cryptographic
   identity hash — *not* your IP — discarded after 30 minutes idle)
 
-And it never even learns your IP address: requests reach it through an
-independent **Oblivious HTTP** gateway, run by a different party. The
-gateway sees where you are but not what you're asking; the relay sees
-what you're asking but not where you are. No one holds both halves.
+The application relay does not receive your IP address: an **Oblivious
+HTTP** relay sees where you are but only an encrypted request, while the
+application relay sees the request from the OHTTP relay. Vauchi currently
+operates both hops. Separate servers reduce the impact of one server being
+compromised, but Vauchi could still correlate timing and network metadata
+across both. Your contact-card data remains end-to-end encrypted.
 
 ### Is Vauchi *truly* private?
 

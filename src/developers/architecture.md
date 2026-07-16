@@ -41,9 +41,12 @@ flowchart TB
 ```
 
 > **Note:** All remote client↔relay traffic flows through an OHTTP
-> gateway per ADR-037 — the relay never sees client IP addresses, and
-> the gateway never sees request content. Sequence diagrams below omit
-> the gateway hop for protocol clarity.
+> gateway per ADR-037 — the OHTTP relay sees the client IP but cannot
+> decapsulate the request, while the gateway sees the request but only
+> the OHTTP relay's IP. End-to-end encryption protects card contents.
+> Vauchi currently operates both hops, so this does not yet provide the
+> ADR's distinct-operator non-collusion property. Sequence diagrams
+> below omit the gateway hop for protocol clarity.
 
 ## Core Components
 

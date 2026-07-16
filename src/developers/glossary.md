@@ -56,7 +56,9 @@ a stable identity; public keys are never routing identifiers.
 
 **OHTTP (Oblivious HTTP)** — RFC 9458 relaying that hides client IP
 addresses from the relay; the OHTTP gateway and the relay must be run
-by distinct operators. See
+by distinct operators for the non-collusion privacy property. Vauchi's
+current two-hop deployment remains under one operator, so that property
+is not yet provided. See
 [Transport Encryption](crypto.md#transport-encryption).
 
 **SPKI pinning** — TLS certificate pinning against the SHA-256 hash

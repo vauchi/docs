@@ -37,7 +37,7 @@ flowchart TB
 
     Proxy["SELF-HOSTED REVERSE PROXY (nginx/caddy)<br/>• Strips all client-identifying headers<br/>• Relay never sees client IP addresses"]
 
-    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot read content<br/>• Gateway: decrypts content, sees only OHTTP relay IP<br/>• No single hop sees both client identity and request"]
+    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot decapsulate request<br/>• Gateway: sees request, only OHTTP relay IP<br/>• E2E protects card contents; separate operators prevent collusion"]
 
     Relay["RELAY SERVER<br/>• Assumed compromised (oblivious design)<br/>• Sees only encrypted blobs, never client IPs<br/>• No user accounts, no decryption keys<br/>• Store-and-forward with TTL<br/>• Timing obfuscation: sync jitter, payload padding"]
 
@@ -52,7 +52,7 @@ flowchart TB
 |----------|-----------|-------------|
 | Client ↔ Rev. Proxy | TLS | **Trusted** (self-hosted) |
 | Rev. Proxy ↔ Relay | Internal net | **Untrusted** (no client IPs) |
-| Client ↔ OHTTP ↔ GW | OHTTP (9458) | No hop sees both ID + content |
+| Client ↔ OHTTP ↔ GW | OHTTP (9458) | No single server sees both; independent operators are required to prevent cross-hop correlation |
 | Client ↔ Client | E2E (X3DH + DR) | Verified in person |
 | Device ↔ Device | HKDF device keys | Trusted (same seed) |
 | Contact ↔ Contact | Per-contact CEK | Verified at exchange |
@@ -440,12 +440,15 @@ messaging apps** because:
    strips all client-identifying headers before
    forwarding to relay. The relay provably never
    touches client IP addresses.
-2. **OHTTP** (RFC 9458) — cryptographic content
-   protection. The OHTTP relay sees the client IP
-   but cannot read request content (encrypted to
-   gateway). The gateway decrypts but only sees the
-   OHTTP relay's internal IP. No single hop sees
-   both client identity and request content.
+2. **OHTTP** (RFC 9458) — the OHTTP relay sees the
+   client IP but cannot decapsulate the request. The
+   gateway sees the decapsulated request but only the
+   OHTTP relay's IP. End-to-end encryption protects
+   card contents from both. No single server sees
+   both client identity and the decapsulated request.
+   Vauchi currently operates both hops, so it could
+   still correlate cross-hop metadata; independent
+   operation remains the target.
 3. **Timing obfuscation** — post-exchange sync
    jitter (30s-5min random delay), sync interval
    jitter (+-15%), payload padding to bucket sizes.

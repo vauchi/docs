@@ -263,6 +263,13 @@ relayed through an independent **OHTTP gateway**:
   request; the relay sees the request but only the
   gateway's IP. Neither sees both.
 
+The protocol supports this separation, but the
+current Vauchi deployment operates both hops. Using
+separate hosts reduces single-host compromise risk;
+it does not provide the distinct-operator guarantee.
+This limitation concerns IP and timing metadata, not
+the end-to-end encryption of contact-card contents.
+
 Source: `core/vauchi-core/src/network/http_transport.rs`,
 `core/vauchi-core/src/network/ohttp_client.rs`,
 `relay/src/ohttp_gateway.rs`.

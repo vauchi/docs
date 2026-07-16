@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Last Updated:** May 2026
+**Last Updated:** July 2026
 
 ## Overview
 
@@ -124,25 +124,29 @@ allows:
 There is a subtle gap in "we don't log IP
 addresses": a server that *receives* a connection
 still *sees* the source IP, log or no log. We close
-that gap structurally rather than asking you to
-trust a promise.
+part of that gap structurally rather than relying
+only on a promise.
 
 Client requests are wrapped in **Oblivious HTTP
-(OHTTP, RFC 9458)** and routed through an
-independent **OHTTP gateway** operated by a
-*different party* than the relay:
+(OHTTP, RFC 9458)** and routed through an OHTTP
+relay before reaching the application relay:
 
-- The **gateway** sees your IP address but only an
-  encrypted request it cannot read.
-- The **relay** sees the request but only the
-  gateway's IP — never yours.
+- The **OHTTP relay** sees your IP address but only
+  an encrypted request it cannot read.
+- The **application relay** sees the request but
+  only the OHTTP relay's IP — never yours.
 
-No single party holds both your identity and your
-network location. The relay can't log your IP
-because, by construction, it never receives it.
-Transport throughout is HTTPS (TLS 1.3) with SPKI
-certificate pinning to block man-in-the-middle
-attacks.
+Vauchi currently operates both hops. Putting them on
+separate servers limits what a compromise of one
+server reveals, but Vauchi could still correlate
+metadata from both hops, such as timing and IP
+address. Contact-card contents remain end-to-end
+encrypted. Independent operation of the OHTTP relay
+is the target architecture; until then, OHTTP does
+not remove the need to trust Vauchi with that
+metadata. Transport throughout is HTTPS (TLS 1.3)
+with SPKI certificate pinning to block
+man-in-the-middle attacks.
 
 ## Data Sharing
 
