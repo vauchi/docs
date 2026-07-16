@@ -17,4 +17,8 @@ COPY ./book/ /usr/share/nginx/html/
 # Use custom nginx config with security headers + compression
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
+# Service label used by Kamal 2 to verify that the deployed image matches the
+# intended service (prevents cross-service image mix-ups).
+LABEL service="vauchi-docs"
+
 EXPOSE 80
