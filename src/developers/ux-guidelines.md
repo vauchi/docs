@@ -258,7 +258,9 @@ These rules apply to all platforms, but implementation adapts:
 
 - **[GUI Design Guidelines](gui-guidelines.md):** Component-level behavior — how toasts, inline confirmations, and inline editing work. UX guidelines say *when* to use them; GUI guidelines say *how* they behave.
 - **[Principles](../about/principles.md):** Philosophical foundation. UX guidelines are the practical application of Principles 2 (trust in person) and 4 (simplicity serves the user).
-- **ADR-022 (Core-driven UI):** UX guidelines inform what `WorkflowEngine` implementations should produce; ADR-022 defines the mechanism. See the internal Architecture Decision Records for details.
+- **ADR-066 (generic presentation protocol):** UX guidelines inform the
+  fully prepared presentation commands Core emits. Frontends map those
+  commands to native output without domain interpretation.
 
 ---
 

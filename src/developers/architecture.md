@@ -96,58 +96,53 @@ Rust server for message routing (depends on `vauchi-protocol` for shared types):
 | CLI | Rust | Direct library use |
 | TUI | Rust (ratatui) | Direct library use |
 
-## Core-Driven UI
+## Core-Driven Presentation
 
-Core defines what to show; frontends only decide how
-to render natively. New workflows are pure Rust —
-zero frontend code unless a new component type is
-needed.
+Core prepares every user-visible decision. Frontends are display-only shells:
+they render or execute generic commands and report opaque events. The same
+contract serves GUI, TUI, CLI, and web clients.
 
 ```mermaid
-flowchart TB
-    subgraph Core["Core (Rust)"]
-        We["WorkflowEngine trait<br/>• current_screen() → ScreenModel<br/>• handle_action(UserAction) → ActionResult"]
-        SM["ScreenModel { screen_id, title, subtitle,<br/>components, actions, progress }"]
-        C["Component { TextInput, ToggleList, FieldList,<br/>CardPreview, InfoPanel, Text, Divider, ... }"]
-        UA["UserAction { TextChanged, ItemToggled,<br/>ActionPressed, ... }"]
-        AR["ActionResult { UpdateScreen, NavigateTo,<br/>ValidationError, Complete, ShowToast, ... }"]
-    end
-
-    subgraph Frontend["Frontend (per platform)"]
-        CL["Component Library (one native widget per Component)<br/>TextInput → TextField / OutlinedTextField / &lt;input&gt;<br/>ToggleList → Toggle list / Checkboxes / [x]/[ ]<br/>..."]
-        SR["ScreenRenderer<br/>Maps ScreenModel → native UI<br/>Sends UserAction back to core"]
-    end
-
-    Core -- "ScreenModel (JSON or direct)<br/>UserAction (JSON or direct)" --> Frontend
+flowchart LR
+    OS["User / OS / hardware"] --> Shell
+    Shell["Display-only shell<br/>native rendering + platform adapters"]
+    Core["Core<br/>state + policy + workflow + presentation preparation"]
+    Shell -- "Event<br/>opaque interaction, value, capability, outcome" --> Core
+    Core -- "Command<br/>fully prepared presentation or platform operation" --> Shell
 ```
 
-Each frontend implements a **component library**
-(one native component per `Component` variant) and
-a **ScreenRenderer** that maps `ScreenModel` to
-native UI. The component library is built once and
-reused across all workflows.
+`Command` is the only Core-to-shell envelope. Presentation commands use a
+small, reusable vocabulary such as text, input, action, list, row, image,
+badge, progress, layout, focus, announcement, and dismissal. Core supplies
+the copy, accessibility text, enabled and selected state, design tokens,
+ordering, and opaque identifiers.
 
-| Component | Linux GTK4 | Linux Qt (Widgets) | macOS/iOS (SwiftUI) | Android (Compose) | Windows (WinUI3) | TUI (Ratatui) | CLI |
-|-----------|------------|-------------|---------------------|-------------------|-----------------|---------------|-----|
-| TextInput | `gtk::Entry` | `TextField` | `TextField` | `OutlinedTextField` | `TextBox` | Input widget | stdin prompt |
-| ToggleList | `gtk::CheckButton` | `CheckBox` | List + Toggle | LazyColumn + Checkbox | `ToggleSwitch` | [x]/[ ] list | numbered choice |
-| FieldList | `gtk::ListBox` | `ListView` | List + chips | LazyColumn + chips | `ListView` | Table rows | formatted output |
-| CardPreview | `gtk::Frame` | `Frame` | Card view | Card composable | `Border` | Box render | text output |
-| InfoPanel | `gtk::Box` | `ColumnLayout` | VStack | Column | `StackPanel` | Block | println sections |
+`Event` is the only shell-to-Core envelope. A shell reports that an opaque
+action was activated, a bound value changed, a viewport or capability
+changed, or a platform operation completed. Core validates the event against
+its current state and decides what happens next.
 
-**Transport**: Rust clients (CLI, TUI, Desktop)
-call `WorkflowEngine` directly. Mobile clients
-(iOS, Android) use JSON over UniFFI.
+| Primitive | Native GUI | TUI | CLI |
+|-----------|------------|-----|-----|
+| Text | Native text label | Styled text span | Formatted line |
+| Input | Native input control | Input widget | Prompt or argument |
+| Action | Native button or menu item | Key or selectable action | Subcommand or numbered choice |
+| List / row | Native list and row | Table or list | Repeated formatted records |
+| Image | Native image view | Text fallback | Path, bytes, or textual fallback prepared by Core |
+| Progress | Native progress control | Gauge or status line | Progress or status output |
 
-**Adding workflows**: Implement a new
-`WorkflowEngine` in core. All frontends render it
-automatically via the existing component library —
-no frontend changes needed.
+Frontends know presentation mechanics and platform APIs, not Vauchi domain
+concepts. They do not know whether a row represents a contact, a device, or a
+recovery guardian. They do not interpret visibility, trust, exchange,
+notification, or navigation categories. Core converts those concepts into
+complete generic commands.
 
-**Adding component types**: Define a new `Component`
-variant in core, then implement the corresponding
-native widget in each frontend's component library.
-This is rare — the vocabulary stabilizes quickly.
+Rust clients use the canonical types directly. UniFFI, C ABI, and JSON
+consumers use generated representations of the same versioned schema.
+Adding or changing a feature requires no frontend change when existing
+primitives can express it. A new primitive is a cross-platform contract
+change and must describe reusable presentation mechanics rather than a
+Vauchi feature.
 
 ## Data Flow
 
