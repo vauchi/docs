@@ -81,6 +81,9 @@ build:docs:
         cargo install mdbook --version "$MDBOOK_VERSION" --locked 2>/dev/null || true
       fi
     - mdbook build
+    # Generate sitemap.xml from the actual book/ output (replaces the old
+    # hand-maintained src/sitemap.xml that drifted and emitted 404 URLs).
+    - sh scripts/gen-sitemap.sh book
     # .well-known/ now lives under src/ and is copied by mdBook automatically.
     - |
       cat > book/build-info.json <<EOF
