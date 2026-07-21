@@ -37,7 +37,7 @@ flowchart TB
 
     Proxy["SELF-HOSTED REVERSE PROXY (nginx/caddy)<br/>• Strips all client-identifying headers<br/>• Relay never sees client IP addresses"]
 
-    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot decapsulate request<br/>• Gateway: sees request, only OHTTP relay IP<br/>• E2E protects card contents; separate operators prevent collusion"]
+    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot decapsulate request<br/>• Gateway: sees request, only OHTTP relay IP<br/>• E2E protects card contents; distinct operators mean no single one links IP to request (not collusion-proof)"]
 
     Relay["RELAY SERVER<br/>• Assumed compromised (oblivious design)<br/>• Sees only encrypted blobs, never client IPs<br/>• No user accounts, no decryption keys<br/>• Store-and-forward with TTL<br/>• Timing obfuscation: sync jitter, payload padding"]
 
@@ -52,7 +52,7 @@ flowchart TB
 |----------|-----------|-------------|
 | Client ↔ Rev. Proxy | TLS | **Trusted** (self-hosted) |
 | Rev. Proxy ↔ Relay | Internal net | **Untrusted** (no client IPs) |
-| Client ↔ OHTTP ↔ GW | OHTTP (9458) | No single server sees both; independent operators are required to prevent cross-hop correlation |
+| Client ↔ OHTTP ↔ GW | OHTTP (9458) | No single server sees both IP and request; distinct operators raise the cost of correlation but do not prevent timing/network correlation |
 | Client ↔ Client | E2E (X3DH + DR) | Verified in person |
 | Device ↔ Device | HKDF device keys | Trusted (same seed) |
 | Contact ↔ Contact | Per-contact CEK | Verified at exchange |
@@ -420,8 +420,11 @@ observes metadata that can reveal the social graph:
 
 **Risk assessment for Vauchi**:
 
-The social graph inference risk is **lower than for
-messaging apps** because:
+The social graph inference risk is, *by design*, **lower than for
+messaging apps** because of the factors below — though this is a design
+expectation, not yet an empirically measured guarantee, and a network
+observer correlating connection timing across hops can still infer
+relationship structure:
 
 1. Updates are infrequent (users rarely change contact info)
 2. Updates are small and padded to fixed buckets
