@@ -233,6 +233,8 @@ A backup you make today is a favour to a future, locked-out version of yourself.
 3. **Link multiple devices** (phone + tablet/desktop)
 4. **Remember your password** (use a passphrase — long beats cryptic)
 5. **Stay in touch with a handful of contacts** who could vouch for you
+6. **Keep your vouching circle to yourself** — if nobody knows who
+   could vouch for you, nobody can target or impersonate them
 
 ---
 
