@@ -97,31 +97,42 @@ build:docs:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
-# Build Docker image (main branch only)
+# Build Docker image (main branch only) — daemonless via kaniko.
+# Both CI docker runners run a rootless, unprivileged dockerd since the
+# 2026-07-20 reinstall, so docker:dind (needs --privileged) cannot start
+# ("dial tcp: lookup docker: no such host"). Same pattern as
+# ohttp-relay's .kaniko-build (5c625d2b).
 package:docker:
   stage: package
   tags: [docker]
-  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27
-  services:
-    - ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/docker:27-dind
+  image:
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
+    entrypoint: [""]
   variables:
     IMAGE: registry.gitlab.com/vauchi/docs
   needs:
     - build:docs
+  before_script:
+    # kaniko reads registry + dependency-proxy creds from this file. The
+    # proxy auth routes the Dockerfile's `FROM ${HUB}/nginx:alpine` pull
+    # through GitLab's dependency proxy (default HUB is `docker.io/library`
+    # so local `docker build .` still works without args).
+    - mkdir -p /kaniko/.docker
+    - |
+      cat > /kaniko/.docker/config.json <<JSON
+      {"auths":{
+        "${CI_REGISTRY}":{"auth":"$(printf '%s:%s' "$CI_REGISTRY_USER" "$CI_REGISTRY_PASSWORD" | base64 | tr -d '\n')"},
+        "${CI_DEPENDENCY_PROXY_SERVER}":{"auth":"$(printf '%s:%s' "$CI_DEPENDENCY_PROXY_USER" "$CI_DEPENDENCY_PROXY_PASSWORD" | base64 | tr -d '\n')"}
+      }}
+      JSON
   script:
-    # Authenticate the in-build docker daemon (dind) against the
-    # dependency proxy. Without this, in-build `FROM` pulls return
-    # 403 Forbidden (caught on relay!270 pipeline 2497760220 even
-    # after the FROM-prefix fix).
-    - echo "$CI_DEPENDENCY_PROXY_PASSWORD" | docker login -u "$CI_DEPENDENCY_PROXY_USER" --password-stdin "$CI_DEPENDENCY_PROXY_SERVER"
-    # --build-arg HUB= routes the Dockerfile's `FROM nginx:alpine`
-    # through GitLab's dependency proxy. Default in the Dockerfile
-    # is `docker.io/library` so local `docker build .` still works
-    # without args.
-    - docker build --build-arg HUB="${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}" -t $IMAGE:$CI_COMMIT_SHA -t $IMAGE:latest .
-    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-    - docker push $IMAGE:$CI_COMMIT_SHA
-    - docker push $IMAGE:latest
+    - |
+      /kaniko/executor \
+        --context "$CI_PROJECT_DIR" \
+        --dockerfile "$CI_PROJECT_DIR/Dockerfile" \
+        --build-arg HUB="${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}" \
+        --destination "$IMAGE:$CI_COMMIT_SHA" \
+        --destination "$IMAGE:latest"
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
