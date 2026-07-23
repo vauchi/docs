@@ -187,7 +187,9 @@ little time if some are temporarily away, and treat a new identity as the
 last resort.
 
 **A voucher was rejected.** Usually it's for the wrong identity,
-corrupted, or expired (90 days). Ask the contact to issue a fresh one.
+corrupted, or tied to an expired recovery claim (claims are valid for
+48 hours; an assembled proof lasts 90 days). Ask the contact to issue
+a fresh one.
 
 ## Related
 

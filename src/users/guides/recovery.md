@@ -212,7 +212,8 @@ If you truly can't remember the password, there's no recovering the backup — t
 ### Social Recovery: "Voucher Rejected"
 
 - The voucher may be for a different identity
-- The voucher may have expired (vouchers go stale after about 90 days)
+- Your recovery claim may have expired — a claim is valid for 48
+  hours; create a fresh one and ask contacts to vouch again
 - Ask the contact to create a fresh one
 
 ### Can't Remember Old Public ID
@@ -239,7 +240,7 @@ A backup you make today is a favour to a future, locked-out version of yourself.
 
 - Social recovery requires in-person verification — presence is the proof
 - Needing several independent vouchers prevents any single person from impersonating you
-- Vouchers expire after about 90 days, so a stolen one doesn't stay useful
+- Recovery material ages out: the claim you show contacts is valid for 48 hours, and an assembled recovery proof expires after 90 days — so stolen recovery material doesn't stay useful
 - A backup is yours alone: Argon2id + XChaCha20-Poly1305, no escrow, no back door
 - The relay only ever forwards encrypted blobs, routed by daily-rotating mailbox tokens — it never sees your identity, your IP, or your data
 
