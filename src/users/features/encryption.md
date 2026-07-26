@@ -117,6 +117,11 @@ even the *shape* of your traffic gives nothing away, and requests arrive
 via an Oblivious HTTP gateway that strips your IP. The relay is told the
 absolute minimum required to be a courier, and not one byte more.
 
+Today Vauchi runs both the gateway and the relay, so this keeps your IP
+away from the relay itself. Making your IP fully unlinkable to Vauchi as a
+whole is the target design — it arrives once the gateway is run by an
+independent operator.
+
 ## On your device
 
 Your keys rest in whatever vault your operating system already trusts:
