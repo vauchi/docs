@@ -60,9 +60,11 @@ path = ["**/*.webp"]
 SPDX-FileCopyrightText = "2026 Mattia Egloff <mattia.egloff@pm.me>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
-# Config/infra files without comment syntax
+# Config/infra files without comment syntax. llms.txt joins robots.txt
+# here rather than carrying a header: both are served verbatim to
+# crawlers, so an SPDX comment would be part of the published document.
 [[annotations]]
-path = ["Dockerfile", "nginx.conf", "src/robots.txt"]
+path = ["Dockerfile", "nginx.conf", "src/robots.txt", "src/llms.txt"]
 SPDX-FileCopyrightText = "2026 Mattia Egloff <mattia.egloff@pm.me>"
 SPDX-License-Identifier = "GPL-3.0-or-later"
 
