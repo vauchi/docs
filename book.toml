@@ -20,7 +20,9 @@ default-theme = "coal"
 preferred-dark-theme = "coal"
 git-repository-url = "https://gitlab.com/vauchi/docs"
 edit-url-template = "https://gitlab.com/vauchi/docs/-/edit/main/src/{path}"
-site-url = "/"
+# The book is served at vauchi.app/docs (kamal-proxy path-prefix routing),
+# so every generated link and asset reference must carry the /docs/ base.
+site-url = "/docs/"
 no-section-label = false
 additional-css = ["src/theme/vauchi.css", "mdbook-admonish.css"]
 additional-js = ["theme-switcher.js"]

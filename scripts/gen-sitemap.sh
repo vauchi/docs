@@ -6,10 +6,11 @@
 # old hand-maintained src/sitemap.xml (which drifted and emitted broken
 # ".html/" trailing-slash URLs that 404). Run AFTER `mdbook build`.
 #
-# URL mapping mirrors how mdBook names files:
-#   book/index.html          -> https://docs.vauchi.app/
-#   book/<dir>/index.html    -> https://docs.vauchi.app/<dir>/   (README.md)
-#   book/<path>.html         -> https://docs.vauchi.app/<path>.html
+# URL mapping mirrors how mdBook names files (the book is served under
+# vauchi.app/docs since the 2026-08 move off the docs.vauchi.app subdomain):
+#   book/index.html          -> https://vauchi.app/docs/
+#   book/<dir>/index.html    -> https://vauchi.app/docs/<dir>/   (README.md)
+#   book/<path>.html         -> https://vauchi.app/docs/<path>.html
 #
 # print.html (a full-content duplicate) and 404.html are not indexable
 # and are excluded on purpose.
@@ -17,7 +18,7 @@
 set -eu
 
 BOOK_DIR="${1:-book}"
-BASE_URL="https://docs.vauchi.app"
+BASE_URL="https://vauchi.app/docs"
 OUT="$BOOK_DIR/sitemap.xml"
 
 if [ ! -d "$BOOK_DIR" ]; then
