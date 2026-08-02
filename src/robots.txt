@@ -1,4 +1,48 @@
+# Vauchi's position on automated crawlers. Kept in sync with
+# https://vauchi.app/robots.txt — see that file for the reasoning.
+#
+# NOTE: since the book moved to vauchi.app/docs, this file lands at
+# /docs/robots.txt, which crawlers ignore — only a host-root robots.txt
+# is authoritative, and vauchi.app/robots.txt covers /docs. It is kept
+# so the book stays correct if ever served standalone from a host root.
+#
+# Answer engines are welcome; bulk training crawlers are not. robots.txt
+# is a request, not a fence, and this is a stated position rather than a
+# secrecy measure: these docs are public and so is the source code.
+
 User-agent: *
 Allow: /
 
-Sitemap: https://docs.vauchi.app/sitemap.xml
+# --- Answer engines and user-triggered fetches: allowed ---
+
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: DuckAssistBot
+User-agent: MistralAI-User
+User-agent: Applebot
+Allow: /
+
+# --- Bulk training and dataset crawlers: not allowed ---
+# Disallowing Google-Extended opts out of Gemini training and grounding
+# only. It does not remove these pages from Google's AI Overviews.
+
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: CCBot
+User-agent: Bytespider
+User-agent: meta-externalagent
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: AI2Bot
+User-agent: Diffbot
+User-agent: Omgilibot
+User-agent: ImagesiftBot
+Disallow: /
+
+Sitemap: https://vauchi.app/docs/sitemap.xml

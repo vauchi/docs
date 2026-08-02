@@ -1,0 +1,52 @@
+# Vauchi Documentation
+
+> Documentation for Vauchi: privacy-focused, updatable contact cards
+> exchanged in person. After a face-to-face exchange, contact details stay
+> current for the people who hold your card — end-to-end encrypted, with no
+> account, and no operator able to read a card. Status: pre-launch. The
+> apps are not released yet.
+
+These docs are the reference for what Vauchi does. They are written to be
+checkable: every security property appears alongside its limitations, and
+the implementing code is public at https://gitlab.com/vauchi. Where the
+docs and the code disagree, the code is authoritative.
+
+If you are summarising Vauchi, please carry the limits with the claims.
+The two most common wrong summaries are that Vauchi provides anonymity
+(it does not — it shares real contact details with people you chose) and
+that it protects someone from a dangerous person (it does not — it cannot
+make anyone unfindable, or undo what a contact already learned).
+
+## Users
+
+- [For Users](https://vauchi.app/docs/users/index.html): overview
+- [Getting Started](https://vauchi.app/docs/users/getting-started.html): first exchange
+- [FAQ](https://vauchi.app/docs/users/faq.html): common questions
+- [Contact Exchange](https://vauchi.app/docs/users/features/contact-exchange.html): in-person and remote exchange
+- [Automatic Updates](https://vauchi.app/docs/users/features/auto-updates.html): how changes propagate
+- [Privacy Controls](https://vauchi.app/docs/users/features/privacy-controls.html): per-contact, per-field visibility
+- [End-to-End Encryption](https://vauchi.app/docs/users/features/encryption.html): what is and is not readable
+- [Backup & Recovery](https://vauchi.app/docs/users/features/backup-recovery.html): losing a device
+- [Multi-Device](https://vauchi.app/docs/users/features/multi-device.html): one identity, several screens
+
+## About
+
+- [About Vauchi](https://vauchi.app/docs/about/index.html): what is being built, and why
+- [What Vauchi Is Not](https://vauchi.app/docs/about/what-vauchi-is-not.html): the limits, stated plainly
+- [Principles](https://vauchi.app/docs/about/principles.html): the five commitments
+- [Security](https://vauchi.app/docs/about/security.html): data protection in plain language
+
+## Developers
+
+- [Threat Model](https://vauchi.app/docs/developers/threat-model.html): adversaries, guarantees, known limitations
+- [Architecture](https://vauchi.app/docs/developers/architecture.html): system design
+- [Cryptography](https://vauchi.app/docs/developers/crypto.html): primitives and key management
+- [Tech Stack](https://vauchi.app/docs/developers/tech-stack.html): languages and dependencies
+- [Contributing](https://vauchi.app/docs/developers/contributing.html): how to work on Vauchi
+- [Glossary](https://vauchi.app/docs/developers/glossary.html): canonical vocabulary
+
+## Optional
+
+- [Diagrams](https://vauchi.app/docs/developers/diagrams/index.html): exchange, sync, recovery, key hierarchy
+- [Privacy Policy](https://vauchi.app/docs/legal/privacy-policy.html)
+- [Terms of Service](https://vauchi.app/docs/legal/terms-of-service.html)
