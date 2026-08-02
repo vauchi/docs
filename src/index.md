@@ -3,13 +3,12 @@
 
 # Vauchi Documentation
 
-**Contacts that never go stale.**
+**Stay reachable, on your own terms.**
 
-Swap details once, in person — and they keep
-themselves current, forever. New number, new job,
-new city: the people who matter just *know*, without
-you ever having to send another "my number changed"
-text.
+Your number, your inbox, your job and your city will
+all change at some point. The people you chose to
+meet shouldn't have to keep up — and no company
+should have to sit in the middle to make that work.
 
 ---
 
@@ -32,6 +31,9 @@ in the room.
 - **Yours alone** — end-to-end encrypted, so only you
   and your contacts can ever read it
 - **Open source** — verify every claim yourself
+
+We are also clear about the other half:
+[what Vauchi is not](about/what-vauchi-is-not.md).
 
 ## Quick Links
 

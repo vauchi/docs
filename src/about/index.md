@@ -39,9 +39,44 @@ protecting. So Vauchi keeps your details current for
 the people you've actually met, and keeps everyone
 else — including us — out of it.
 
+## What We Believe
+
+Three convictions sit underneath every decision in
+this project:
+
+**Contact details were never meant to be permanent.**
+The internet handed everyone a fixed address — a
+number, an inbox, a profile — and then made it
+expensive to leave. People change jobs, countries,
+phones and names. The way we reach each other should
+be allowed to change too.
+
+**A relationship belongs to the two people in it.**
+Staying reachable should not require a company to
+hold the list of who you know. Vauchi is built so
+that no operator — including us — can read your card
+or work out your social graph. Not because we promise
+restraint, but because the design does not give us
+the option.
+
+**A claim you cannot check is not a claim.** Every
+security property here is written down in the
+[threat model](../developers/threat-model.md), with
+its limitations in the same table, and the code that
+implements it is public. That includes the parts that
+are unfinished or imperfect.
+
+This is a position, not a marketing line, so it comes
+with its opposite:
+[what Vauchi is not](what-vauchi-is-not.md) — the
+things people reasonably hope for that we cannot
+deliver, written down so nobody has to find out the
+hard way.
+
 ## Learn More
 
 - [**Our Principles**](principles.md) — The values that guide every decision
+- [**What Vauchi Is Not**](what-vauchi-is-not.md) — The limits, stated plainly
 - [**Security**](security.md) — How we protect your data
 - [**Community**](community.md) — How to participate
 - [**Supporters**](supporters.md) — Those who help make Vauchi possible

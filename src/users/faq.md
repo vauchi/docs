@@ -263,8 +263,10 @@ whom. It:
 
 - Routes encrypted messages between your devices and contacts
 - Holds messages briefly when a device is offline, then forwards them
-- Addresses everything by daily-rotating tokens, so it never learns the
-  social graph
+- Addresses everything by daily-rotating tokens, so it is never handed
+  the social graph — though a patient observer watching the network can
+  still infer some connections from timing, which is why timing is
+  jittered and message sizes are padded
 - Cannot read a word of any of it
 
 ### Does Vauchi work offline?

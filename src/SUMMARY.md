@@ -9,7 +9,7 @@
 
 # For Users
 
-- [Overview](./users/index.md)
+- [For Users](./users/index.md)
 - [Getting Started](./users/getting-started.md)
 - [FAQ](./users/faq.md)
 - [Known Issues](./users/known-issues.md)
@@ -34,10 +34,11 @@
 
 # About
 
-- [Overview](./about/index.md)
+- [About Vauchi](./about/index.md)
 - [Principles](./about/principles.md)
 - [Security](./about/security.md)
 - [Community](./about/community.md)
+- [What Vauchi Is Not](./about/what-vauchi-is-not.md)
 - [Supporters](./about/supporters.md)
 
 ---
@@ -51,7 +52,7 @@
 
 # For Developers
 
-- [Overview](./developers/index.md)
+- [For Developers](./developers/index.md)
 - [Architecture](./developers/architecture.md)
 - [Cryptography](./developers/crypto.md)
 - [Threat Model](./developers/threat-model.md)
@@ -64,7 +65,7 @@
 
 ## Architecture Diagrams
 
-- [Overview](./developers/diagrams/index.md)
+- [Diagrams](./developers/diagrams/index.md)
 - [Contact Exchange](./developers/diagrams/contact-exchange.md)
 - [Sync & Updates](./developers/diagrams/sync-updates.md)
 - [Message Delivery](./developers/diagrams/message-delivery.md)
