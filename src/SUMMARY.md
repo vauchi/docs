@@ -16,6 +16,7 @@
 
 ## Features
 
+- [Features Overview](./users/features/index.md)
 - [Contact Exchange](./users/features/contact-exchange.md)
 - [Automatic Updates](./users/features/auto-updates.md)
 - [Privacy Controls](./users/features/privacy-controls.md)
@@ -25,6 +26,7 @@
 
 ## How-To Guides
 
+- [Guides Overview](./users/guides/index.md)
 - [Exchanging Contacts](./users/guides/exchange.md)
 - [Setting Visibility](./users/guides/visibility.md)
 - [Device Recovery](./users/guides/recovery.md)
