@@ -16,21 +16,44 @@ for await (const chunk of process.stdin) {
 
 const [_context, book] = JSON.parse(input);
 
+function attr(value) {
+  return value.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+}
+
+function directive(lines, name) {
+  const line = lines.find((l) => new RegExp(`^\\s*${name}\\s*:`).test(l));
+  return line ? line.replace(new RegExp(`^\\s*${name}\\s*:\\s*`), "").trim() : "";
+}
+
 function processContent(content) {
   return content.replace(
     /```mermaid\r?\n([\s\S]*?)```/g,
     (match, diagram) => {
       try {
+        const lines = diagram.trim().split("\n");
         // Strip Mermaid accessibility directives (accTitle, accDescr)
         // that beautiful-mermaid doesn't understand
-        const cleaned = diagram.trim()
-          .split("\n")
+        const cleaned = lines
           .filter(l => !/^\s*acc(Title|Descr)/.test(l))
           .join("\n")
           .trim();
         if (!cleaned) return match;
         const ascii = renderMermaidASCII(cleaned);
-        return "```\n" + ascii + "\n```";
+        // The `ascii-diagram` info string is the hook ascii-diagram.js and
+        // .css key off. Without it a diagram is indistinguishable from a
+        // shell transcript, and shrinking real code samples would be wrong.
+        const fence = "```ascii-diagram\n" + ascii + "\n```";
+        // accTitle/accDescr are dropped from the render above but carry the
+        // only human description we have. Emitting them keeps the diagram
+        // reachable to screen readers, which otherwise get box-drawing
+        // characters read out one by one.
+        const title = directive(lines, "accTitle");
+        const descr = directive(lines, "accDescr");
+        if (!title && !descr) return fence;
+        return (
+          `<p class="ascii-diagram-desc" data-ascii-title="${attr(title)}">` +
+          `${attr(descr || title)}</p>\n\n${fence}`
+        );
       } catch (err) {
         process.stderr.write(
           `[beautiful-mermaid] Failed to render diagram: ${err.message}\n`

@@ -1,0 +1,217 @@
+/* SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> */
+/* SPDX-License-Identifier: GPL-3.0-or-later */
+
+/* ASCII diagrams (beautiful-mermaid output).
+ *
+ * These run 116 columns at the median and 236 at the widest, against a
+ * content column that fits roughly 89. Shrinking one to fit and calling it
+ * done yields text nobody can read, so the inline block is a preview --
+ * scaled to fit, height-capped -- and the real diagram lives in an overlay.
+ * ascii-diagram.js sets --ascii-font-size after measuring; the value here is
+ * the no-JS fallback, where the block simply scrolls as it always did. */
+
+.ascii-diagram-desc {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ascii-diagram {
+    --ascii-font-size: 0.85em;
+    position: relative;
+    margin: 1.25em 0;
+}
+
+.ascii-diagram pre {
+    margin: 0;
+}
+
+.ascii-diagram code {
+    font-size: var(--ascii-font-size);
+    line-height: 1.15;
+}
+
+/* Only interactive once JS has wired the overlay up. */
+.ascii-diagram.is-interactive pre {
+    cursor: zoom-in;
+    max-height: var(--ascii-max-height, 26rem);
+    overflow: hidden;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: border-color 0.15s ease;
+}
+
+.ascii-diagram.is-interactive:hover pre,
+.ascii-diagram.is-interactive:focus-visible pre {
+    border-color: color-mix(in srgb, var(--links) 55%, transparent);
+}
+
+.ascii-diagram.is-interactive:focus-visible {
+    outline: none;
+}
+
+.ascii-diagram.is-interactive:focus-visible pre {
+    outline: 2px solid var(--links);
+    outline-offset: 2px;
+}
+
+/* Too wide even at the minimum preview size: scroll rather than clip, so no
+ * part of the diagram is lost without a way to reach it. */
+.ascii-diagram.is-overflowing pre {
+    overflow-x: auto;
+}
+
+/* Taller than the cap: fade the cut edge so it reads as "there is more"
+ * rather than as a rendering bug. */
+.ascii-diagram.is-clipped pre {
+    -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 78%, transparent 100%);
+}
+
+.ascii-diagram-expand {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.3em 0.7em;
+    font-size: 0.78rem;
+    font-family: inherit;
+    color: var(--fg);
+    background: var(--theme-popup-bg, var(--sidebar-bg));
+    border: 1px solid var(--table-border-color);
+    border-radius: 6px;
+    cursor: zoom-in;
+    opacity: 0.85;
+}
+
+.ascii-diagram-expand:hover {
+    opacity: 1;
+    border-color: var(--links);
+}
+
+/* ---- Overlay ---- */
+
+.ascii-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(0.5rem, 3vw, 2rem);
+    background: color-mix(in srgb, var(--bg) 88%, #000);
+    backdrop-filter: blur(3px);
+}
+
+.ascii-overlay[hidden] {
+    display: none;
+}
+
+.ascii-overlay-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    background: var(--bg);
+    border: 1px solid var(--table-border-color);
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgb(0 0 0 / 45%);
+}
+
+.ascii-overlay-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+.ascii-overlay-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.ascii-overlay-bar button {
+    min-width: 2rem;
+    padding: 0.25em 0.6em;
+    font-size: 1rem;
+    font-family: inherit;
+    color: var(--fg);
+    background: var(--sidebar-bg);
+    border: 1px solid var(--table-border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1.4;
+}
+
+.ascii-overlay-bar button:hover {
+    border-color: var(--links);
+}
+
+.ascii-overlay-bar button:focus-visible {
+    outline: 2px solid var(--links);
+    outline-offset: 2px;
+}
+
+.ascii-overlay-body {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.ascii-overlay-body pre {
+    margin: 0;
+    background: none;
+    border: none;
+    /* The diagram must keep its own geometry -- wrapping ASCII art destroys
+     * it -- so the body scrolls instead. */
+    width: max-content;
+    min-width: 100%;
+}
+
+.ascii-overlay-body code {
+    font-size: var(--ascii-overlay-font-size, 0.85rem);
+    line-height: 1.15;
+    white-space: pre;
+}
+
+body.ascii-overlay-open {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ascii-diagram.is-interactive pre {
+        transition: none;
+    }
+    .ascii-overlay {
+        backdrop-filter: none;
+    }
+}
+
+/* Printing has no overlay to open, so show diagrams whole. */
+@media print {
+    .ascii-diagram.is-interactive pre {
+        max-height: none;
+        overflow: visible;
+    }
+    .ascii-diagram.is-clipped pre {
+        -webkit-mask-image: none;
+        mask-image: none;
+    }
+    .ascii-diagram-expand,
+    .ascii-overlay {
+        display: none;
+    }
+}
