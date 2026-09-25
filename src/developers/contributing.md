@@ -70,7 +70,23 @@ Commit message format:
 {Longer description if needed}
 ```
 
-Types: `feat`, `fix`, `refactor`, `tidy`, `docs`, `test`, `chore`
+Types: `feat`, `fix`, `refactor`, `tidy`, `docs`, `test`, `chore`,
+`diag`
+
+A `fix:` that changes code either includes the test that shows the fix or
+ends with an `Evidence:` trailer saying what you saw before and after:
+
+```text
+fix: reject empty display names
+
+Evidence: before: an empty name saved; after: the form shows "Name
+required" and nothing is saved
+```
+
+If you have not yet seen the change work — for example, it can only be
+checked in CI — use `diag:` and name what you are testing
+(`diag: pin the font cache to test the slow-startup theory`). Once it is
+confirmed, follow up with the `fix:`.
 
 Use imperative mood: "Add feature" not "Added
 feature". Keep first line under 72 characters.
