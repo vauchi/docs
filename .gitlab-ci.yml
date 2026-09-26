@@ -150,6 +150,8 @@ deploy:trigger:
     DEPLOY_SERVICE: docs
     DEPLOY_IMAGE: registry.gitlab.com/vauchi/docs:$CI_COMMIT_SHA
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 pages:
