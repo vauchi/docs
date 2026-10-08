@@ -82,7 +82,7 @@ Each message uses a unique key derived via Double Ratchet:
 | Threat | Mitigation |
 |--------|------------|
 | **Server compromise** | E2E encryption; server can't read data |
-| **Network surveillance** | TLS 1.3 + OHTTP (IP privacy) + E2E; three layers |
+| **Network surveillance** | TLS 1.3 + OHTTP (IP privacy) + E2E; three layers. Vauchi runs both OHTTP hops on separate hosts, so IP privacy holds against either host alone, not against Vauchi as operator |
 | **Man-in-the-middle** | In-person verification of identity |
 | **Spam/harvesting** | Proximity required; no remote adding |
 | **Device theft** | OS-level key storage, optional biometrics |

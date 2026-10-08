@@ -250,7 +250,7 @@ HTTP v2 transport").
 
 To unlink the client's IP address from its requests,
 HTTP v2 requests are encapsulated with **OHTTP** and
-relayed through an independent **OHTTP gateway**:
+sent through an **OHTTP relay** to a separate **OHTTP gateway**:
 
 - Gateway key config is fetched from
   `GET /v2/ohttp-key` (`application/ohttp-keys`).
@@ -264,9 +264,11 @@ relayed through an independent **OHTTP gateway**:
   gateway's IP. Neither sees both.
 
 The protocol supports this separation, but the
-current Vauchi deployment operates both hops. Using
-separate hosts reduces single-host compromise risk;
-it does not provide the distinct-operator guarantee.
+current Vauchi deployment operates both hops. Since
+October 2026 they run on separate hosts, linked by a
+private tunnel: compromising one host no longer
+exposes both sides. One operator still runs both, so
+this does not provide the distinct-operator guarantee.
 This limitation concerns IP and timing metadata, not
 the end-to-end encryption of contact-card contents.
 
