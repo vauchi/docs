@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import http.client
-import os
 from pathlib import Path
 import socket
 import subprocess
@@ -28,6 +27,10 @@ class DocsRoutingTests(unittest.TestCase):
         (public / "users/getting-started.html").write_text("Getting started")
         (public / "build-info.json").write_text('{"sha":"routing-test"}')
         (public / "404.html").write_text("Page not found")
+        root.chmod(0o755)
+        for path in public.rglob("*"):
+            path.chmod(0o755 if path.is_dir() else 0o644)
+        public.chmod(0o755)
         with socket.socket() as listener:
             listener.bind(("127.0.0.1", 0))
             cls.port = listener.getsockname()[1]
@@ -50,7 +53,7 @@ class DocsRoutingTests(unittest.TestCase):
         )
         cls.nginx = subprocess.Popen(
             [
-                os.environ.get("DOCS_TEST_NGINX", "nginx"), "-e", "stderr",
+                "nginx", "-e", "stderr",
                 "-p", str(root), "-c", str(config),
             ],
             stderr=subprocess.PIPE,
