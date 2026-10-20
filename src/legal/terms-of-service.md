@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Last Updated:** May 2026
+**Last Updated:** October 2026
 
 ## 1. Acceptance of Terms
 
@@ -49,6 +49,9 @@ contact card updates between devices. The relay:
 - Stores encrypted envelopes temporarily (deleted after
   delivery or 120 days)
 - Cannot decrypt any content
+- If you use social recovery, holds an encrypted list of
+  your trusted contacts (up to 365 days) and recovery
+  proofs (up to 90 days)
 - Logs connection metadata (cryptographic identity hash,
   connection timestamps) for rate limiting — IP addresses
   are not stored or logged, and connection metadata is
@@ -72,14 +75,19 @@ You agree to:
 - Not abuse the relay service (automated mass requests,
   denial-of-service attempts)
 
-## 6. Account Deletion
+## 6. Identity Deletion
 
-You can delete your account and all associated data at
-any time from Settings > Delete Account. A 7-day grace
-period allows cancellation. After deletion:
+You can delete your identity and all associated data at
+any time from Settings > Privacy > Delete Identity. If
+you trust contacts for recovery, you choose whether the
+relay keeps your encrypted list of them for up to 365
+days, so recovery stays possible, or erases it. A 7-day
+grace period allows cancellation. After deletion:
 
 - A revocation signal is sent to all your contacts
-- The relay purges all stored data for your account
+- The relay erases what it holds for your identity;
+  updates still waiting for delivery expire within 120
+  days
 - All local data is permanently destroyed
 - This action is irreversible after the grace period
 

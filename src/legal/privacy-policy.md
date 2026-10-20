@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Last Updated:** July 2026
+**Last Updated:** October 2026
 
 ## Overview
 
@@ -32,6 +32,11 @@ control.**
 - Connection metadata (cryptographic identity hash,
   connection timestamps) for rate limiting — IP
   addresses are NOT stored or logged
+- If you set up social recovery: an encrypted list of
+  the contacts you trust for recovery (kept up to 365
+  days), and, after a recovery, the signed proof your
+  contacts check (kept up to 90 days). The relay
+  cannot read who is on the list.
 - No envelope content is ever readable by the server
 
 ### What We Don't Collect
@@ -217,25 +222,34 @@ at any time from Settings > Backup.
 
 ### Delete Your Data
 
-- **Account Deletion:** Use Settings > Delete
-  Account to initiate deletion. A 7-day grace
-  period allows you to cancel. After 7 days, the
-  app sends a revocation signal to all your
+- **Identity Deletion:** Use Settings > Privacy >
+  Delete Identity. If you trust contacts for
+  recovery, you choose first:
+  - **Keep recovery:** the relay keeps your encrypted
+    list of trusted contacts for up to 365 days, so
+    they can still help you move your contacts to a
+    new identity.
+  - **Erase everything:** the list goes too, and
+    recovery is no longer possible.
+
+  A 7-day grace period lets you cancel. After it,
+  the app sends a revocation signal to all your
   contacts (authenticated with your cryptographic
-  identity), requests the relay server to purge
-  all stored data for your account, and
+  identity), asks the relay to erase what it holds
+  for your identity — including any recovery proof
+  you uploaded and, if you chose to erase
+  everything, your list of trusted contacts — and
   permanently deletes all local data (database,
-  keys, and secure storage entries). Your
-  contacts' apps will automatically delete your
-  card upon receiving the revocation.
+  keys, and secure storage entries). Your contacts'
+  apps automatically delete your card when the
+  revocation arrives. Updates still waiting for
+  delivery expire on the relay within 120 days.
 - **Single Contact Removal:** You can remove any
   contact, which deletes their data from your
   device
-- **Multi-Device:** Account deletion is synchronized
-  across all your linked devices. Initiating
-  deletion on one device starts the grace period
-  on all devices; cancellation from any device
-  cancels on all devices.
+- **Linked devices:** Delete your identity on each
+  linked device; a deletion started on one device
+  does not yet reach the others.
 
 ### Data Portability
 
@@ -302,7 +316,7 @@ For privacy-related questions or concerns:
 | Do you log my IP address? | No — Oblivious HTTP hides it from the relay |
 | Do you sell my data? | No, never |
 | Do you use tracking/analytics? | No |
-| Can I delete my data? | Yes, Settings > Delete Account (7-day grace) |
+| Can I delete my data? | Yes, Settings > Privacy > Delete Identity (7-day grace) |
 | What's in a backup? | Your identity, contacts, card, labels — encrypted with your password |
 | Data backed up automatically? | No, you control backups |
 | What if I lose my device? | Linked device or social recovery |
