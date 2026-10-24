@@ -59,6 +59,8 @@
 - [Cryptography](./developers/crypto.md)
 - [Threat Model](./developers/threat-model.md)
 - [Contributing](./developers/contributing.md)
+  - [Contributor License Agreement](./developers/cla.md)
+  - [CLA Signatures](./developers/cla-signatures.md)
 - [Tech Stack](./developers/tech-stack.md)
 - [Glossary](./developers/glossary.md)
 - [TDD Rules](./developers/tdd-rules.md)

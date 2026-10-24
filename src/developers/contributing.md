@@ -288,7 +288,18 @@ just git sync          # Fetch all + pull where on main
 - Review existing issues
 - Ask in [GitLab Issues](https://gitlab.com/vauchi/vauchi/-/issues)
 
-## License
+## License and Contributor License Agreement
 
-By contributing, you agree that your contributions
-will be licensed under GPL-3.0-or-later.
+The core library and the relays are licensed under
+AGPL-3.0-or-later; the apps and tooling under
+GPL-3.0-or-later. Your contributions are published under
+the license of the repository you contribute to.
+
+Before your first contribution is merged, sign the
+[Contributor License Agreement](./cla.md) — once, by adding
+yourself to the [signature list](./cla-signatures.md). You
+keep the copyright in your work. The agreement lets the
+maintainer also offer Vauchi under other terms, such as a
+commercial license for organizations that cannot accept
+the AGPL, while committing that everything stays available
+under an open source license.
