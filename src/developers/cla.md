@@ -3,7 +3,7 @@
 
 # Contributor License Agreement
 
-**Version 1.0 — October 2026**
+**Version 1.1 — October 2026**
 
 Thank you for contributing to Vauchi. Before we can merge your
 first contribution, we ask you to agree to this Contributor
@@ -58,6 +58,11 @@ right to license Your Contributions under any terms, including
 open source licenses other than the one in effect when You
 contributed, and commercial licenses.
 
+This Agreement covers all Contributions You submit, now and in
+future. Except for the licenses granted in this Agreement, You
+reserve all right, title, and interest in and to Your
+Contributions.
+
 ### 3. Patent license
 
 You grant the Licensor and the recipients of software
@@ -87,11 +92,13 @@ addition to that open source license, never instead of it.
 
 You represent that:
 
-- each Contribution is Your original creation, or You have the
-  right to submit it under this Agreement;
-- where a Contribution contains third-party material, You
-  identify it, its source and its license in the submission;
+- each Contribution is Your original creation;
 - You are legally entitled to grant the licenses above.
+
+If You want to submit work that is not Your original creation,
+submit it separately from any Contribution, mark it as
+"Submitted on behalf of a third party: [name]", and state its
+source and any license or other restriction You know of.
 
 ### 6. Contributions for an employer
 
@@ -126,8 +133,10 @@ successor.
 
 ### 10. Governing law
 
-This Agreement is governed by Swiss law. The place of
-jurisdiction is Lausanne, Switzerland.
+This Agreement is governed by Swiss law, excluding the United
+Nations Convention on Contracts for the International Sale of
+Goods (CISG). The place of jurisdiction is Lausanne,
+Switzerland.
 
 ## How to sign
 
@@ -139,12 +148,12 @@ Sign once, before your first contribution is merged:
    contribute with:
 
    ```text
-   | Your Name | @your-gitlab-username | 2026-10-24 | 1.0 |
+   | Your Name | @your-gitlab-username | 2026-10-24 | 1.1 |
    ```
 
 2. In that merge request's description, write:
    "I have read the Vauchi Contributor License Agreement version
-   1.0 and agree to its terms."
+   1.1 and agree to its terms."
 
 The commits in that merge request are your signature. If you
 contribute from more than one account or email address, list
