@@ -100,10 +100,13 @@ or guardian consent.
 
 ## 8. Intellectual Property
 
-Vauchi is free software, licensed under the GNU General
-Public License v3.0 or later (GPL-3.0-or-later). You may
-use, modify, and distribute the source code under the
-terms of this license. The source code is available at
+Vauchi is free software. The core library and the relay
+servers are licensed under the GNU Affero General Public
+License v3.0 or later (AGPL-3.0-or-later); the apps are
+licensed under the GNU General Public License v3.0 or
+later (GPL-3.0-or-later). You may use, modify, and
+distribute the source code under the terms of these
+licenses. The source code is available at
 [gitlab.com/vauchi](https://gitlab.com/vauchi).
 
 The Vauchi name and logo are trademarks of the Vauchi
@@ -135,7 +138,9 @@ INFORMATION.
 ## 11. Self-Hosting
 
 You may self-host the Vauchi relay server under the terms
-of the GPL-3.0-or-later license. Self-hosted instances
+of the AGPL-3.0-or-later license. If you run a modified
+relay as a network service, the license requires you to
+offer its users the source code of your changes. Self-hosted instances
 are your responsibility. We provide no warranty or support
 for self-hosted deployments beyond published documentation.
 

@@ -83,7 +83,9 @@ hard way.
 
 ## Open Source
 
-Vauchi is open source under GPL-3.0-or-later. You can:
+Vauchi is open source. The core library and the relay
+servers are licensed under AGPL-3.0-or-later; the apps
+are licensed under GPL-3.0-or-later. You can:
 
 - Inspect the code
 - Verify security claims
