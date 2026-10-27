@@ -30,6 +30,7 @@ New to the project? Start here:
 | [UX Guidelines](ux-guidelines.md) | Physical-first, local-first, flow design |
 | [Architecture](architecture.md) | System overview, components, data flow |
 | [Cryptography](crypto.md) | Encryption algorithms, key management, protocols |
+| [Security Claims](security-claims.md) | What an attacker cannot do, with the test or proof for each claim |
 | [Tech Stack](tech-stack.md) | Languages, frameworks, libraries |
 | [Diagrams](diagrams/index.md) | Sequence diagrams for core flows |
 

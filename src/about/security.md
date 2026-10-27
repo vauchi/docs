@@ -177,3 +177,5 @@ For cryptographic implementation details, see:
 - [Encryption Feature](../users/features/encryption.md)
   — User-friendly explanation
 - [Cryptography Reference](../developers/crypto.md) — Technical specification
+- [Security Claims](../developers/security-claims.md) — Each claim
+  with its attacker, status and proof
