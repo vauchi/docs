@@ -136,6 +136,118 @@ Both sides:
 Same as Mutual QR — fresh ephemeral keys on both
 sides, HKDF-derived shared secret.
 
+### Link Exchange (Asynchronous, via Relay Escrow)
+
+A link lets two people exchange cards without being in the same
+place. It is weaker than an in-person exchange and the docs say so:
+see claim 9 on the [Security Claims](security-claims.md) page.
+
+**The link.** The sender's device makes a fresh X25519 key pair and a
+random 32-byte nonce, and puts both in the fragment of an https URL,
+so a browser never sends them to any server:
+
+```
+https://vauchi.app/x#pk=<base64url ephemeral public key>&n=<base64url nonce>[&nm=<base64url name>]
+```
+
+The optional name is at most 64 bytes and is unchecked: anyone can put
+any name in a link, so the app shows it only as a claim. The older
+`vauchi://exchange?` form is still parsed.
+
+**Rendezvous.** Both devices meet in the relay's escrow, addressed by
+hashes neither the relay nor a reader of the URL can turn back into
+keys:
+
+```
+handshake gate   ← SHA-256(nonce || "handshake")
+sender's slot    ← SHA-256(nonce || "initiator_presence")
+```
+
+Before the link is shared, the sender deposits its ephemeral public
+key in that slot. Whoever opens the link makes their own ephemeral
+X25519 key pair, deposits it as the second slot of the same gate, and
+both sides compute the Diffie–Hellman shared secret. A small-order
+public key is rejected on both sides (non-contributory DH).
+
+**Escrow keys.** From the shared secret, each side derives the same
+gate and card key, and one slot each, with domain-separated HKDF:
+
+```
+gate_hash ← SHA-256(HKDF(ikm=shared, info="vauchi-escrow-gate-v1"))
+slot      ← HKDF(ikm=shared, info="vauchi-escrow-slot-init-v1" | "vauchi-escrow-slot-resp-v1")
+card_key  ← HKDF(ikm=shared, info="vauchi-escrow-card-key-v1")
+```
+
+Each side encrypts its card payload with `card_key` and deposits it in
+its slot; each retrieves the other's. Deposits expire after seven
+days.
+
+**The signed bootstrap.** The card payload is version 2 only:
+
+```
+[0x02] || JSON { identity_pubkey, x3dh_pubkey, relay_url, signature, card }
+signature ← Ed25519(identity) over "vauchi-link-bootstrap-v2" || x3dh_pubkey || relay_url
+```
+
+The parser verifies the signature against the embedded identity key
+and rejects anything else, so a relay or a link reader cannot
+substitute a key or a relay address.
+
+**Completion.** With the peer's identity and X3DH keys, both sides run
+the full X3DH below (`vauchi-x3dh-key-v2`), derive the same shared
+key, and start the Double Ratchet. The contact id is the hex of the
+peer's identity key. Completing twice keeps the existing contact and
+its ratchet; a link that leads back to our own identity is rejected;
+the per-identity contact limit applies.
+
+**What a link does not do today.** There is no approval step: whoever
+opens the link first completes the exchange, and the sender's name is
+not authenticated. No comparison code is shown. The trust level of a
+link contact is Standard. The user can raise it to Verified by
+comparing key fingerprints over a channel they already trust; that
+step is recorded as its own level and never set by hand. Sender
+approval and an out-of-band code are open work.
+
+### Relay-Mediated Exchange (Short Code + SAS)
+
+Two people on a call can exchange through the relay with a short
+numeric code and confirm it with a spoken verification code.
+
+1. The initiator starts the exchange and gets a short numeric code.
+2. The responder enters the code and claims the exchange. The
+   responder acts as the X3DH initiator and generates the ephemeral
+   key; the offer's owner acts as the X3DH responder.
+3. The initiator completes the exchange once the claim arrives.
+4. Both sides read their verification code aloud and compare.
+
+The verification code (SAS) binds the shared secret to both
+identities and is the same on both sides whoever started:
+
+```
+tag ← HMAC-SHA256(key=shared_x3dh_secret,
+                  "vauchi-relay-exchange-sas-v1" || sort(identity_a, identity_b))
+sas ← first 4 bytes of tag, big-endian, mod 1 000 000, shown as "ddd-ddd"
+```
+
+A mismatch means a party in the relay path substituted keys, and the
+exchange must be discarded. Six digits give an attacker one chance in
+a million per attempt to pass unnoticed.
+
+### Full X3DH (Asymmetric)
+
+Used by link and relay-mediated exchanges, where one side moves first:
+
+```
+DH1 ← our_static × their_static        (identity binding)
+DH2 ← ephemeral × their_static         (initiator)  |  our_static × their_ephemeral (responder)
+shared ← HKDF(ikm=DH1 || DH2, salt=None, info="vauchi-x3dh-key-v2")
+```
+
+The ephemeral key is destroyed after use. Compromising a long-term key
+later does not reveal past sessions, and the shared secret is bound to
+both long-term keys, so a stolen session key cannot be used to
+impersonate either side to the other.
+
 ## Double Ratchet
 
 ```mermaid
@@ -334,6 +446,9 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 | Password KDF | [`vauchi-core/src/crypto/password_kdf.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/password_kdf.rs) |
 | X3DH | [`vauchi-core/src/exchange/x3dh.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/x3dh.rs) |
 | X3DH Session (Symmetric) | [`vauchi-core/src/exchange/session.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/session.rs) |
+| Link Exchange | [`vauchi-core/src/exchange/link_mode.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/link_mode.rs) |
+| Relay Escrow Keys | [`vauchi-core/src/exchange/escrow.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/escrow.rs) |
+| SAS | [`vauchi-core/src/exchange/relay_exchange.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/relay_exchange.rs) |
 | Padding | [`vauchi-core/src/crypto/padding.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/padding.rs) |
 | HKDF Test Vectors (RFC 5869) | [`vauchi-core/tests/it/crypto_kdf_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/crypto_kdf_tests.rs) |
 
@@ -342,6 +457,8 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 - [Glossary](glossary.md) — Terms and acronyms used here
 - [Architecture Overview](architecture.md) — System design
 - [Threat Model](threat-model.md) — STRIDE analysis and mitigations
+- [Security Claims](security-claims.md) — Each claim with its proof
+- [Formal Verification](formal-verification.md) — Models and lemmas
 - [Encryption Feature](../users/features/encryption.md)
   — User-friendly explanation
 - [Security](../about/security.md) — Security model overview

@@ -160,7 +160,9 @@ bootstrap, and the result is a live contact with a shared key.
   relay-mediated video exchange. Sender approval and an out-of-band
   code are tracked as open work. Until then, treat a link as you
   would treat a message to that person: send it over a channel you
-  already trust.
+  already trust, and compare key fingerprints afterwards, which
+  raises the contact to the Verified level. The protocol itself is
+  in [Link Exchange](crypto.md#link-exchange-asynchronous-via-relay-escrow).
 - Proof: test
   `v2_two_party_completes_to_a_live_exchanged_link_contact_with_symmetric_key`
   in `complete_link_exchange_tests.rs`; `derive_sas` in
@@ -168,8 +170,11 @@ bootstrap, and the result is a live contact with a shared key.
 
 ### 10. Trust level follows how you exchanged, and cannot be edited
 
-The trust shown for a contact is derived from the exchange facts.
-There is no control to raise it by hand.
+The trust shown for a contact is derived from the exchange facts:
+the transport, the proximity evidence, and whether the user compared
+key fingerprints out of band. There is no control to set a level by
+hand; the fingerprint comparison is the only user action, and it is
+recorded as its own level.
 
 - Status: **Shipped**
 - Proof: test
