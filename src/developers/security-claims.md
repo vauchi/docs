@@ -305,7 +305,8 @@ threat model keeps the full list.
   test named above. The property-based tests use `proptest`; a
   counterexample that is ever found becomes a permanent regression
   test.
-- **Formal models**: `core/ci/formal-verification.sh` runs the Kani
+- **Formal models**: see [Formal Verification](formal-verification.md).
+  `core/ci/formal-verification.sh` runs the Kani
   parser proofs, the Tamarin models and the Quint model in the
   `test:formal` job on every change to the exchange, recovery and
   padding code, and nightly. Each model also runs a control that must

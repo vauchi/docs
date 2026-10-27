@@ -59,6 +59,7 @@
 - [Cryptography](./developers/crypto.md)
 - [Threat Model](./developers/threat-model.md)
 - [Security Claims](./developers/security-claims.md)
+- [Formal Verification](./developers/formal-verification.md)
 - [Contributing](./developers/contributing.md)
   - [Contributor License Agreement](./developers/cla.md)
   - [CLA Signatures](./developers/cla-signatures.md)
