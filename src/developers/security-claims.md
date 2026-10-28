@@ -309,7 +309,9 @@ threat model keeps the full list.
 - **Tests**: `just test core` runs the Core suites, including every
   test named above. The property-based tests use `proptest`; a
   counterexample that is ever found becomes a permanent regression
-  test.
+  test. The [test vectors](test-vectors.md) are part of the suite: an
+  independent implementation can check its key derivations, X3DH,
+  ratchet, mailbox tokens and backup format against them.
 - **Formal models**: see [Formal Verification](formal-verification.md).
   `core/ci/formal-verification.sh` runs the Kani
   parser proofs, the Tamarin models and the Quint model in the

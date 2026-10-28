@@ -60,6 +60,7 @@
 - [Threat Model](./developers/threat-model.md)
 - [Security Claims](./developers/security-claims.md)
 - [Formal Verification](./developers/formal-verification.md)
+- [Test Vectors](./developers/test-vectors.md)
 - [Contributing](./developers/contributing.md)
   - [Contributor License Agreement](./developers/cla.md)
   - [CLA Signatures](./developers/cla-signatures.md)

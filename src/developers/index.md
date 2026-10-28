@@ -32,6 +32,7 @@ New to the project? Start here:
 | [Cryptography](crypto.md) | Encryption algorithms, key management, protocols |
 | [Security Claims](security-claims.md) | What an attacker cannot do, with the test or proof for each claim |
 | [Formal Verification](formal-verification.md) | The Tamarin, Quint and Kani models, their lemmas and failing controls |
+| [Test Vectors](test-vectors.md) | Known-answer vectors for the key derivations, X3DH, ratchet, mailbox tokens and backup |
 | [Tech Stack](tech-stack.md) | Languages, frameworks, libraries |
 | [Diagrams](diagrams/index.md) | Sequence diagrams for core flows |
 

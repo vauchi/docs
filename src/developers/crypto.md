@@ -451,6 +451,7 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 | SAS | [`vauchi-core/src/exchange/relay_exchange.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/relay_exchange.rs) |
 | Padding | [`vauchi-core/src/crypto/padding.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/padding.rs) |
 | HKDF Test Vectors (RFC 5869) | [`vauchi-core/tests/it/crypto_kdf_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/crypto_kdf_tests.rs) |
+| Vauchi Test Vectors | [`vauchi-core/tests/it/protocol_test_vectors_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/protocol_test_vectors_tests.rs) |
 
 ## Related Documentation
 
@@ -459,6 +460,8 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 - [Threat Model](threat-model.md) — STRIDE analysis and mitigations
 - [Security Claims](security-claims.md) — Each claim with its proof
 - [Formal Verification](formal-verification.md) — Models and lemmas
+- [Test Vectors](test-vectors.md) — Known-answer values for the
+  derivations on this page
 - [Encryption Feature](../users/features/encryption.md)
   — User-friendly explanation
 - [Security](../about/security.md) — Security model overview
