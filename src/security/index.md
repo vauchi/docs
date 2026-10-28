@@ -51,14 +51,43 @@ Everything is open source. The Core crate is
 [gitlab.com/vauchi/core](https://gitlab.com/vauchi/core); the relay is
 [gitlab.com/vauchi/relay](https://gitlab.com/vauchi/relay).
 
-## Where the specification is going
+## The specification
 
-The protocol pages above live on this site today. A standalone,
-versioned specification is being set up in its own repository, with
-numbered claims, a chapter per protocol, machine-checked vectors and a
-disclosure policy. Until it is published, the pages linked here are the
-reference, and this page will point to the specification when it
-exists.
+The normative text is the
+[Vauchi Protocol Specification](https://gitlab.com/vauchi/spec): a
+chapter per protocol extracted from the code with every operation
+naming its source function, the claims S1 to S17 with their attacker,
+statement and proof, the test vectors compared with Core's on every
+pipeline, and the disclosure policy. It is a draft, published because
+reviewers prefer breaking drafts to admiring monuments; each chapter
+names the Core commit it was extracted from and says where the code
+is weaker than a claim. The pages on this site are the plain-language
+companion; where they differ from the specification, the
+specification is right.
+
+The claims, in the specification's numbering:
+
+- **S1 to S5**, the relay: cannot read a card or an update; an
+  update is from its sender, applied once, never rolled back; the
+  relay does not learn the user's address (partial, one operator runs
+  both hops today); public keys do not route mailboxes (partial, with
+  the fetcher's cross-day linkability stated); sizes are padded
+  (partial, not measured against a traffic analyst).
+- **S6 to S10**, an exchange watched: the QR exchange gives a
+  bystander no key; a confirmation means the peer confirmed (partial,
+  signed on one of three paths); over Bluetooth the scanner connects
+  to the device it scanned; a link exchange is weaker and says so
+  (partial); trust level follows the exchange and cannot be edited.
+- **S11 to S15**, a device taken: old updates stay secret after a
+  compromise (partial, not for sync between a person's own devices);
+  destroying the storage key makes the data unrecoverable (partial on
+  the phones); a backup without its password reveals nothing; a
+  duress unlock shows a decoy and sends cover (partial); a linked
+  device is a full copy of the identity, stated as a limit.
+- **S16 and S17**, a recovery claimed: accepting a recovery needs the
+  real one (partial, the rekey after acceptance is not built); social
+  recovery needs the guardians and only the real ones (partial, the
+  rekey of old contacts is a design).
 
 ## How to report
 
