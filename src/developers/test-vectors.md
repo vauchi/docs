@@ -193,16 +193,63 @@ and checks that a changed header is refused, the other imports it
 through the apps' own function in builds with production parameters
 and checks that a wrong password is refused.
 
+### `qr_symmetric`: the mutual QR exchange
+
+Two people scan each other's QR codes. Each side holds a fresh X25519
+key; the shared key binds both identity keys and both fresh keys:
+
+```text
+dh         = X25519(eph_a, eph_b)
+info       = "vauchi-x3dh-symmetric-v2" || min(id_a, id_b) || max(id_a, id_b)
+                                        || min(eph_a, eph_b) || max(eph_a, eph_b)
+shared_key = HKDF(salt = none, ikm = dh, info)
+token_a    = HKDF(dh, "vauchi-reciprocity-confirm-v1" || id_a)   (token_b alike)
+gate       = hex(SHA-256(HKDF(dh, "vauchi-confirm-escrow-gate-v1")))
+```
+
+The vector records the two master seeds, both identity keys, both
+ephemeral key pairs, the DH, the full `info`, the shared key, both
+reciprocity tokens and the confirmation escrow gate and slots, and
+names which side is the initiator (the smaller identity key). The
+test drives two shipped exchange sessions with these keys and checks
+every value against the session and against the formula. The QR
+bytes are not recorded: the token and audio challenge in a QR are
+random and do not enter the key.
+
+### `link_exchange`: one link exchange end to end
+
+A link `https://vauchi.app/x#pk=<ephemeral key>&n=<nonce>` leads to
+three nonce-derived relay slots, an escrow gate under a shared secret,
+a signed card payload and a shared key:
+
+```text
+handshake_gate = hex(SHA-256(nonce || "handshake"))      presence and epk slots alike
+dh             = X25519(responder ephemeral, initiator ephemeral)
+escrow gate    = hex(SHA-256(HKDF(dh, "vauchi-escrow-gate-v1")))   slots alike
+card_key       = HKDF(dh, "vauchi-escrow-card-key-v1")
+payload        = 0x02 || JSON { identity key, x3dh key, relay_url, signature, card }
+signature      = Ed25519(identity, "vauchi-link-bootstrap-v2" || x3dh key || relay_url)
+link_shared_key = HKDF(X25519(x3dh_i, x3dh_r), "vauchi-link-shared-key-v1")
+```
+
+The vector records every input, including a card with a fixed id so
+the payload is reproducible byte for byte. The test parses the link,
+checks the slot formula against the shipped link generator, derives
+the escrow under both roles, opens a card sealed by the shipped
+escrow keys with the recorded card key, reproduces the payload,
+verifies its signature and refuses it with one flipped bit, and
+derives the shared key from both sides.
+
 ## What is not in this file
 
 These derivations exist in Core but have no vector yet. They are the
 natural next additions:
 
-- the symmetric QR exchange key and its confirmation tokens;
-- the link exchange: handshake gate, presence slot and escrow keys;
 - the relay-mediated short code and its SAS;
-- the BLE handshake and advertisement tokens;
-- device-link confirmation codes and the social-recovery shares.
+- the BLE handshake and advertisement tokens, and the NFC key;
+- device-link confirmation codes;
+- the social-recovery shares and sealed boxes;
+- the signed OHTTP key record.
 
 A vector that would help you and is missing from this list is a good
 reason to [open an issue](https://gitlab.com/vauchi/core/-/issues).
