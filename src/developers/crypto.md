@@ -299,7 +299,38 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 
 ## Backup Format
 
-### v3 — Full Backup (Current)
+### v6 — Full Backup (Current)
+
+```
+header = [0x06] || salt(16)
+header || ciphertext
+```
+
+- Key derivation: Argon2id (m=64MB, t=3, p=4),
+  followed by HKDF-SHA256 with domain separation
+  `b"vauchi-backup-v6-state"`
+- Cipher: XChaCha20-Poly1305 with the 17-byte
+  header as associated data (tag `0x03`), so a
+  changed version byte or salt fails the tag
+  instead of deriving a wrong key
+- Plaintext: zlib-compressed JSON snapshot:
+  `{ version: 6, created_at, identity, own_card,
+  contacts, groups, overrides }` — the v3 sections
+  plus each contact's hidden, blocked, favourite,
+  archived and ignored state, its relationship
+  state (transport, proximity, trust metrics,
+  reciprocity), the groups, and per-contact field
+  overrides
+- Limits: 32 MiB file, 64 MiB decompressed; the
+  whole snapshot is validated before any write and
+  the restore is one transaction on a fresh
+  installation. Source:
+  `core/vauchi-core/src/backup/snapshot/`.
+
+The exporter writes v6; the importer accepts v6 and
+v3. A reader from before v6 rejects a v6 file.
+
+### v3 — Full Backup (Legacy, still imported)
 
 ```
 [0x03] || salt(16) || ciphertext
@@ -340,8 +371,8 @@ the next sync after restore. Source:
 - Cipher: XChaCha20-Poly1305
 - Plaintext:
   `display_name_len(4) || display_name || master_seed(32) || device_index(4) || device_name_len(4) || device_name`
-- **Status:** Superseded by v3. Read path retained
-  for migration; new backups are written as v3.
+- **Status:** Superseded. Read path retained for
+  migration; new backups are written as v6.
 
 ### v1 (Removed)
 
