@@ -170,6 +170,29 @@ runs in every build. The other starts from the password and runs only
 in builds with production Argon2id parameters, where it also imports
 the backup through the same function the apps use.
 
+### `backup_v6`: the backup the app writes today
+
+A v3 file is still imported, but a new backup is written as v6, whose
+header is in the clear and authenticated:
+
+```text
+header = 0x06 || salt (16 bytes)
+file   = header || XChaCha20-Poly1305(key, zlib(JSON snapshot); AD = header)
+key    = HKDF-expand(HKDF-extract(salt = none, Argon2id(password, salt)),
+                     "vauchi-backup-v6-state", 32 bytes)
+```
+
+Because the header is the associated data, a file whose version byte
+or salt was changed fails the tag instead of decrypting to garbage.
+The vector records the password, the salt, the header, the Argon2id
+output, the final key and the complete file, and names the display
+name, master seed, device and creation time the snapshot must contain;
+the snapshot holds no contacts. The same two tests as for v3 cover it:
+one opens the file from the recorded Argon2id output in every build
+and checks that a changed header is refused, the other imports it
+through the apps' own function in builds with production parameters
+and checks that a wrong password is refused.
+
 ## What is not in this file
 
 These derivations exist in Core but have no vector yet. They are the
