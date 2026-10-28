@@ -84,6 +84,18 @@ domain string as info. All derivations use
 | Chain Key | 32 bytes | Advances with each message |
 | Message Key | 32 bytes | Single-use, deleted after |
 
+**One ratchet per contact, or per device pair.** A contact's updates
+run through one Double Ratchet per `(contact, device pair)` once both
+sides hold each other's signed device registry and have completed
+the registry activation handshake; until then, and for contacts that
+never complete it, one ratchet per contact carries the updates and
+every device of the contact receives the same copy. Device-to-device
+sync between a person's own devices does not use a ratchet at all:
+it is encrypted under a static agreement between the two devices'
+exchange keys, so it has no forward secrecy. The
+[Security Claims](security-claims.md) page scopes the forward-secrecy
+claim accordingly.
+
 ## Ciphertext Format
 
 ```
