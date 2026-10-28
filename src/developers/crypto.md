@@ -243,9 +243,16 @@ DH2 ← ephemeral × their_static         (initiator)  |  our_static × their_ep
 shared ← HKDF(ikm=DH1 || DH2, salt=None, info="vauchi-x3dh-key-v2")
 ```
 
-The ephemeral key is destroyed after use. Compromising a long-term key
-later does not reveal past sessions, and the shared secret is bound to
-both long-term keys, so a stolen session key cannot be used to
+The name follows the code; the construction is two Diffie-Hellman
+operations, not Signal's three or four. The responder contributes only
+its long-term key: there is no signed prekey and no one-time prekey, and
+the one ephemeral is the initiator's. So at this layer a responder's
+long-term key, if it leaks together with the transcript, yields both
+DH outputs. What keeps past messages secret is the Double Ratchet
+below: both sides seed it with fresh keys (`bootstrap_exchange_ratchet`
+in `exchange/ratchet_bootstrap.rs`), so every message key also depends
+on key pairs that were destroyed after use. The shared secret is bound
+to both long-term keys, so a stolen session key cannot be used to
 impersonate either side to the other.
 
 ## Double Ratchet

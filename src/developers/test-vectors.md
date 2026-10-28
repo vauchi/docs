@@ -74,7 +74,9 @@ Everything an identity owns comes from one 32-byte master seed.
 
 In a one-directional exchange (NFC, BLE and the link exchange) the
 initiator holds a static key and makes an ephemeral one; the responder
-holds a static key. Both sides compute:
+holds a static key and contributes nothing fresh. The code calls this
+X3DH; it is two Diffie-Hellman operations, with no signed or one-time
+prekey on the responder's side. Both sides compute:
 
 ```text
 DH1 = X25519(initiator static, responder static)

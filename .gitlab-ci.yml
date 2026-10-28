@@ -54,6 +54,23 @@ lint:markdown:
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
 
+# The Test Vectors page mirrors Core's canonical file; a copy that drifts
+# from core main fails here (vauchi/private#119).
+check:test-vectors:
+  stage: lint
+  tags: [docker]
+  image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:3.21
+  needs: []
+  script:
+    - wget -qO /tmp/core-vectors.json "https://gitlab.com/vauchi/core/-/raw/main/vauchi-core/tests/fixtures/test-vectors/vauchi-protocol-vectors-v1.json"
+    - cmp /tmp/core-vectors.json src/developers/test-vectors/vauchi-protocol-vectors-v1.json
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - "src/developers/test-vectors/**/*"
+        - .gitlab-ci.yml
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
 # Deploy-pin contract: only push/web pipelines move :latest, package:docker
 # records its digest and deploy:trigger forwards it (see the test header).
 test:ci-contract:
