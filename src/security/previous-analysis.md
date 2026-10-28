@@ -61,17 +61,6 @@ of a non-repudiation mode is deliberate; a design in which the first
 device shares the whole identity seed with linked devices is a known
 limit, with per-device subkeys planned.
 
-## Automated review, October 2026
-
-A cryptography-focused automated review of the public code was
-submitted to the maintainer. Each of its items was checked against the
-code on `main`. One named a real gap: the test vectors covered a
-legacy backup format but not the one the app writes, which is now
-covered. The items it presented as breaks restated limits that were
-already published on the claims page (no post-quantum key agreement,
-a single relay operator for both hops, the seed shared with linked
-devices) and are listed there, not here.
-
 ## What runs on every change
 
 - **Formal models.** The Tamarin, Quint and Kani models and their
