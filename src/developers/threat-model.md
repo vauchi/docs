@@ -223,9 +223,11 @@ If an attacker gains full control of a relay:
   to 5 min in the foreground and 1 to 60 min in the
   background; the relay's own delivery jitter is
   configured but not applied)
-- **Can** chain one fetcher's token sets across days,
-  since consecutive days' fetch requests overlap in
-  yesterday's tokens (tracked)
+- **Can** chain one fetcher's token sets across days
+  on the code as released, since consecutive days'
+  fetch requests overlapped in yesterday's tokens; a
+  fix in review groups requests per day, after which
+  only the timing of a day's requests remains
 
 ### Device Theft
 
@@ -313,7 +315,7 @@ page and in the [Cryptography Reference](crypto.md).
 
 | Limitation | Impact | Mitigation |
 |-----------|--------|------------|
-| Relay sees metadata | Graph inference; a fetcher's token set is linkable across days | Padding, daily tokens, OHTTP; per-day fetch requests (tracked) |
+| Relay sees metadata | Graph inference; timing and volume per mailbox | Padding, daily tokens, OHTTP, per-day fetch requests (fix in review) |
 | Device compromise | Full seed exposed | Subkeys (planned), passwords |
 | Linked device = full seed | Full identity | Subkeys (planned) |
 | Single relay SPOF | No sync if down | Federation (planned) |
@@ -381,7 +383,7 @@ which names the source for each row.
 |-------|-----------|-------|
 | Sender | None on a send | A send carries a mailbox token and ciphertext; the optional origin hint is an opaque AEAD blob only the recipient can open |
 | Recipient (mailbox) | Daily-rotating token | HKDF of the channel's shared key, the recipient's key and the day; opaque to the relay |
-| Fetch set | Up to 100 tokens per request | Groups one user's contacts for the day; today's and yesterday's tokens travel together, so consecutive days' sets overlap and one fetcher is linkable across days (tracked) |
+| Fetch set | Up to 100 tokens per request | Groups one user's contacts for the day. On the code as released today's and yesterday's tokens travelled together, so consecutive days' sets overlapped and one fetcher was linkable across days; a fix in review sends each day's tokens in requests of their own |
 | Message size | Padding bucket | 256 B, 512 B, 1 KB, 4 KB, then 256-byte steps; replies are padded to a size ladder on the way out |
 | Message timing | Arrival and acknowledgement times | The relay's delivery jitter is configured but not applied; the delayed path (below) moves a fetch away from the client's connection |
 | Ratchet header | In the clear inside the blob | DH public key, generation and message index |
