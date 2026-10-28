@@ -107,11 +107,13 @@ same mailbox the next day.
 
 - Status: **Partial**. The token rules are tested; linkability of a
   mailbox across days is a design argument in the crypto reference
-  without a dedicated experiment. The fetcher is linkable across
-  days: each sync fetches today's and yesterday's token of every
-  contact in one request set, so consecutive days' sets overlap and
-  the relay can chain one anonymous fetcher and count its contacts
-  (tracked). Token unlinkability is not forward secure: whoever later
+  without a dedicated experiment. On the code as released, the
+  fetcher is linkable across days: each sync fetched today's and
+  yesterday's token of every contact in one request set, so
+  consecutive days' sets overlapped and the relay could chain one
+  anonymous fetcher and count its contacts; a fix in review groups
+  requests per day, after which only timing correlation remains.
+  Token unlinkability is not forward secure: whoever later
   obtains a contact's shared key can recompute every past token of
   that channel. Guardian sets, recovery proofs and purge requests are
   addressed by the identity key or its hash, by design.
