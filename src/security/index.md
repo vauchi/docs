@@ -43,6 +43,9 @@ The limits are published next to the guarantees.
   suite. Recompute them and compare.
 - **Read the limits.** The [Threat Model](../developers/threat-model.md)
   says who the attacker is, what is defended against and what is not.
+- **Read what has been reviewed.** [Previous Analysis](previous-analysis.md)
+  lists the reviews so far, what changed because of them, what runs
+  on every change, and what has never been done.
 
 Everything is open source. The Core crate is
 [gitlab.com/vauchi/core](https://gitlab.com/vauchi/core); the relay is

@@ -55,6 +55,7 @@
 # For Security Researchers
 
 - [For Security Researchers](./security/index.md)
+  - [Previous Analysis](./security/previous-analysis.md)
 
 ---
 
