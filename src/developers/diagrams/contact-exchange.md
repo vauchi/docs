@@ -132,6 +132,19 @@ signature (64 bytes, Ed25519 over all preceding fields)
 Minimum size (empty name, no relay fields):
 192 bytes.
 
+#### Format history
+
+| Version | Change |
+|---------|--------|
+| v1 | Identity signing key only |
+| v2 | Added the X25519 exchange key for the key agreement |
+| v3 | Added the flags byte and the optional relay URL, both under the signature; a transport public key that earlier drafts carried was removed before launch |
+
+A scanner accepts version 3 only; v1 and v2 payloads are refused
+with a version error. The payload rides in the URL fragment of
+`https://vauchi.app/x#q=...` (base64url, no padding); the older raw
+standard-base64 form is still accepted on scan.
+
 ### Contact Card (Encrypted)
 
 ```json
