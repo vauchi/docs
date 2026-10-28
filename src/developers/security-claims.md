@@ -7,13 +7,22 @@ This page is written for people who break things. Each entry says
 what Vauchi claims, who the attacker is, what they are assumed to
 have, and where the claim is proven: a test, a formal model, or a
 release certification lane. If you find a claim that does not hold,
-write to **security@vauchi.app**. We answer within 48 hours and credit
-reporters. Good-faith research will not be met with legal action.
+write to **security@vauchi.app**. The maintainer replies and credits
+reporters; the terms are in the specification's
+[disclosure policy](https://gitlab.com/vauchi/spec/-/blob/main/src/disclosure.md).
 
 The [Cryptography Reference](crypto.md) describes the mechanisms. The
 [Threat Model](threat-model.md) describes the adversaries. This page
 connects the two: it is the list of things we believe an attacker
 cannot do, in plain words, with the evidence next to each one.
+
+The numbered claims here are the claims S1 to S17 of the
+[protocol specification](https://gitlab.com/vauchi/spec), whose
+[claims chapter](https://gitlab.com/vauchi/spec/-/blob/main/src/claims.md)
+is the normative list: it names the attacker, the exact statement,
+the test or lemma, and where the code is weaker than the sentence.
+When this page and that chapter differ, the chapter is right and this
+page is behind.
 
 ## How to read this page
 
@@ -61,11 +70,16 @@ stale version cannot change what the recipient ends up with.
 
 - Status: **Shipped**
 - Proof: Tamarin `card_update.spthy`, lemmas
-  `update_comes_from_the_sender_for_this_recipient`,
-  `each_update_is_applied_once`, `no_rollback`; ratchet tests
+  `update_comes_from_the_sender_for_this_recipient` and
+  `each_update_is_applied_once`; ratchet tests
   `test_crypto_hardening_ratchet_same_chain_auth_failure_rolls_back_state`
   and `test_crypto_hardening_ratchet_new_dh_auth_failure_rolls_back_state`
-  in `crypto_ratchet_tests.rs`
+  in `crypto_ratchet_tests.rs`. "Never rolled back" rests on the
+  version floor in code, tested by
+  `stale_version_delta_rejected_by_device_receiver` and
+  `delta_version_floor_is_tracked_per_peer_device`; the model's
+  `no_rollback` lemma reaches no verdict with the floor and is stated,
+  not proved.
 
 ### 3. The relay does not learn the user's network address
 
@@ -91,9 +105,16 @@ Mailboxes are addressed by tokens that rotate daily. A relay log holds
 tokens, not identities, and a token from one day does not name the
 same mailbox the next day.
 
-- Status: **Partial**. The token rules are tested; linkability across
-  days is a design argument in the crypto reference without a
-  dedicated experiment.
+- Status: **Partial**. The token rules are tested; linkability of a
+  mailbox across days is a design argument in the crypto reference
+  without a dedicated experiment. The fetcher is linkable across
+  days: each sync fetches today's and yesterday's token of every
+  contact in one request set, so consecutive days' sets overlap and
+  the relay can chain one anonymous fetcher and count its contacts
+  (tracked). Token unlinkability is not forward secure: whoever later
+  obtains a contact's shared key can recompute every past token of
+  that channel. Guardian sets, recovery proofs and purge requests are
+  addressed by the identity key or its hash, by design.
 - Proof: tests `unsolicited_tokens_are_rejected_for_immediate_fetches`,
   `unsolicited_tokens_are_rejected_for_delayed_fetches` and
   `unattributed_blobs_are_not_delivered_or_acknowledged` in
@@ -125,9 +146,12 @@ the wrong identity fails.
 - Status: **Shipped**
 - Proof: Tamarin `qr_exchange.spthy`, lemmas `session_key_secrecy`
   and `no_misbinding`; tests
-  `test_x3dh_identity_binding_wrong_key_fails`,
-  `test_x3dh_zero_identity_rejected` and
-  `test_x3dh_full_bidirectional_agreement` in `exchange_x3dh_tests.rs`
+  `test_transcript_binding_includes_identity_keys` and
+  `test_transcript_binding_includes_ephemeral_keys` in
+  `exchange_ceremony_tests.rs`, which exercise the symmetric
+  derivation the QR exchange uses. The `exchange_x3dh_tests.rs` tests
+  cover the two-DH agreement of the relay-mediated exchange, not this
+  one.
 
 ### 7. A confirmation means the other side really confirmed
 
@@ -135,10 +159,16 @@ Reciprocity tokens prove the peer completed the exchange. A leaked
 shared key is not enough to forge one; the identity key is also
 needed.
 
-- Status: **Shipped**
+- Status: **Partial**. The identity signature exists on the
+  relay-sync confirmation only. The Bluetooth confirmation is
+  authenticated by the session key alone, and the escrow confirmation
+  by a token derived from the exchange's DH output; on those two paths
+  the confirmation is as strong as the exchange's own secrecy (claim
+  6), not stronger.
 - Proof: Tamarin `reciprocity.spthy`, lemmas
   `confirmed_means_the_peer_confirmed` and
-  `a_leaked_shared_key_also_needs_the_identity_key`
+  `a_leaked_shared_key_also_needs_the_identity_key`, for the
+  relay-sync path
 
 ### 8. Over Bluetooth, the scanner connects to the device it scanned
 
@@ -188,11 +218,17 @@ point in time.
 
 ### 11. Old messages stay secret after a compromise
 
-Each message uses a key that is deleted after use. Taking the current
-ratchet state does not open earlier messages, and the channel heals
-once a fresh exchange of ephemeral keys happens.
+Each update between contacts uses a key that is deleted after use.
+Someone who recorded the traffic and later takes the current ratchet
+state does not open earlier updates, and the channel heals once a
+fresh exchange of ephemeral keys happens.
 
-- Status: **Shipped**
+- Status: **Partial**. Two paths have no forward secrecy and the
+  claim does not cover them: the first message of a session opened
+  without a prior exchange (it resumes at the first reply), and all
+  sync between a person's own devices, which is encrypted under a
+  static agreement between the devices' exchange keys and carries
+  contacts, cards and ratchet states.
 - Proof: tests `test_dr_forward_secrecy`,
   `test_forward_secrecy_compromised_state` and
   `test_dr_skipped_message_limit` in `crypto_ratchet_tests.rs`
@@ -218,11 +254,20 @@ Backups are encrypted with a key derived from the password. The file
 never contains key material in the clear, and a wrong password fails
 rather than yielding garbage.
 
-- Status: **Shipped**
+- Status: **Shipped**. The claim is about the file. Its strength
+  against guessing is the password through Argon2id, and today only
+  the identity-only backup checks the password's strength: the full
+  backup, which is the default and holds every contact's shared key,
+  accepts any password (tracked).
 - Proof: tests `v2_backup_encrypts_the_seed_and_leaks_no_key_material`,
   `test_v2_wrong_password` and
   `backup_debug_output_carries_no_secrets_or_contact_data` in
-  `backup_format_versioning_tests.rs` and `backup_boundary_tests.rs`
+  `backup_format_versioning_tests.rs` and `backup_boundary_tests.rs`;
+  for the current format,
+  `backup_v6_vector_decrypts_under_its_header_and_not_under_a_changed_one`
+  and
+  `backup_v6_vector_imports_with_production_argon2id_and_refuses_a_wrong_password`
+  in `protocol_test_vectors_tests.rs`
 
 ### 14. A duress unlock shows a decoy and sends nothing that reveals it
 
@@ -279,11 +324,15 @@ Restoring from guardians needs both guardians' shares. A member of the
 same recovery group can stand in for an absent guardian. Each side
 rekeys only with the real counterpart.
 
-- Status: **Shipped**
+- Status: **Partial**. The share split, the sealing of shares to
+  guardians and the restore are in Core with tests. The rekey of each
+  contact after a recovery, which the last two lemmas describe, is a
+  design that is not in the code yet, and the app does not yet hand
+  shares to guardians automatically.
 - Proof: Tamarin `social_recovery.spthy`, lemmas
-  `backup_needs_both_guardians`, `a_group_mate_can_stand_in`,
-  `john_rekeys_only_with_the_real_alice` and
-  `alice_rekeys_only_with_the_real_john`
+  `backup_needs_both_guardians` and `a_group_mate_can_stand_in`; the
+  rekey lemmas `john_rekeys_only_with_the_real_alice` and
+  `alice_rekeys_only_with_the_real_john` model the planned design
 
 ## What we do not claim
 
@@ -325,12 +374,8 @@ threat model keeps the full list.
 
 ## Previous analysis
 
-- **July 2026**: an external reviewer went through the public docs and
-  the crypto reference. The one correctness finding, that the docs
-  said new fields default to visible, was corrected. The remaining
-  items became the plan this page comes from.
-- **Every Core pipeline** runs static analysis (semgrep and GitLab
-  SAST) and dependency checks (`cargo deny`, `cargo vet`).
-
-If you have reviewed Vauchi and want your analysis listed here, write
-to security@vauchi.app.
+What has been reviewed before, what changed because of it, and what
+runs on every change is on the
+[Previous Analysis](../security/previous-analysis.md) page. If you
+have reviewed Vauchi and want your analysis listed, write to
+security@vauchi.app.
