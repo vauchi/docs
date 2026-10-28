@@ -90,8 +90,10 @@ flowchart TB
 - Ed25519 identity keys bound to each user
 - Full-trust contact exchange requires **physical
   presence** (QR, NFC, or BLE with proximity check)
-- Opt-in remote discovery establishes reduced-trust
-  contacts (Tier 0/1) with restricted visibility
+- A contact made over a shared link is weaker and
+  shown as such: whoever opens the link first becomes
+  a contact, with no sender approval yet (see the
+  link exchange entry on the Security Claims page)
 - No trust-on-first-use for contact verification:
   you verify who you connect with in person
 - Device registry is cryptographically signed;
@@ -277,63 +279,21 @@ subkeys). A compromised linked device gains full
 identity control. Per-device subkey isolation is
 planned for 1.0 release.
 
-## Remote Discovery (Opt-In)
+## Remote Contact Paths
 
-When remote discovery is enabled, users can generate
-discovery tokens that allow contacts to be
-established without physical proximity. This
-introduces a new attack surface that is mitigated
-by graduated trust tiers.
-
-### Trust Tiers
-
-| Tier | Name | Established Via | Capabilities |
-|------|------|----------------|--------------|
-| 0 | Pending | Token-based contact request | View-only, expires after 30 days |
-| 1 | Accepted | Recipient accepts request | `Everyone`-visibility fields only |
-| 2 | VideoVerified | SAS + liveness (video) | Label-based visibility |
-| 3 | InPerson | Physical QR/NFC/BLE | Full access, recovery |
-
-Recovery and facilitated introductions remain gated to Tier 3 (InPerson) only.
-
-### Attack Surface
-
-| Threat | Mitigation |
-|--------|------------|
-| **Token spam** | Expiry, one-time use, rate limit |
-| **Phishing token** | Tier 0 only, no sensitive fields |
-| **Social eng. to T1** | `Everyone` fields only |
-| **Video MITM** | SAS 6-digit code mismatch |
-| **Deepfake/replay** | Finger-count liveness challenge |
-| **Sender leak** | Sealed sender, ephemeral IDs |
-| **Recipient leak** | Daily-rotating mailbox tokens |
-| **Token replay** | Ed25519 sig + expiry + one-time |
-| **Mailbox correlation** | Daily rotation per-contact pair |
-
-### Sealed Sender Properties
-
-Sealed sender is **always enabled** — it improves
-metadata protection for all users, not just remote
-contacts. With sealed sender delivery, the relay
-sees:
-
-- **Session ID**: Ephemeral, per-connection (no identity key)
-- **Mailbox token**: Opaque, daily rotation, derived from shared key
-- **Encrypted blob**: AEAD ciphertext, padded to fixed buckets
-
-The relay **cannot** determine: who sent a message,
-who the real recipient is (beyond the opaque token),
-or whether two sessions belong to the same user
-across reconnections.
-
-### Residual Risks
-
-| Risk | Sev. | Notes |
-|------|------|-------|
-| Weak remote trust | Low | Tier gating limits to `Everyone` |
-| Untrusted token channels | Med | User responsibility |
-| Compromised video platform | Low | SAS binding is independent |
-| Mailbox token correlation | Low | Brief overlap, mitigated by OHTTP |
+There is no remote discovery: nothing lets a stranger
+find or request a contact without the person's
+cooperation, and none is planned, because a
+mechanism that reaches people one has not met weakens
+the privacy the in-person anchor protects. The two
+remote paths that exist both start with something
+the sender hands over: a link, or a six-digit code
+spoken aloud. The link path is the weaker one, since
+whoever opens the link first becomes a contact; the
+code path shows both people a short authentication
+string to compare. Both are described, with their
+limits, on the [Security Claims](security-claims.md)
+page and in the [Cryptography Reference](crypto.md).
 
 ## Known Limitations
 
@@ -347,7 +307,7 @@ across reconnections.
 | Recovery leaks voucher PKs | Partial graph | Accepted tradeoff |
 | No guardian diversity | Same circle | UX warnings (planned) |
 | No key transparency | Not auditable | Signed key log (future) |
-| Remote trust weaker | No in-person | Tier gating; upgrade path |
+| Link exchange weaker | Whoever opens the link first becomes a contact | Sender approval and an out-of-band code (planned) |
 | Push leaks metadata | Delivery timing | Empty push + fetch |
 | Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
 

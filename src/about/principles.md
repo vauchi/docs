@@ -29,8 +29,7 @@ concern?"*
 Human recognition is the security anchor, not passwords or platforms.
 
 - QR exchange with physical proximity verification
-  for full trust; opt-in remote discovery at
-  reduced trust
+  for full trust; no remote discovery
 - No accounts or registration (device IS the identity)
 - Social vouching for recovery (people you've actually met)
 - No trust-on-first-use for contact
