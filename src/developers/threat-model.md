@@ -33,29 +33,31 @@ flowchart TB
         KC["Platform Keychain"]
     end
 
-    Socks["Optional: SOCKS5 proxy<br/>(Tor, VPN, etc.)"]
+    Socks["Optional: SOCKS5 or HTTP CONNECT proxy<br/>(Tor, VPN, etc.)"]
 
-    Proxy["SELF-HOSTED REVERSE PROXY (nginx/caddy)<br/>• Strips all client-identifying headers<br/>• Relay never sees client IP addresses"]
+    Outer["OUTER RELAY (OHTTP relay, RFC 9458)<br/>• Terminates the client's TLS<br/>• Sees the client's address, request times and sizes<br/>• Cannot open requests or answers<br/>• Delayed path: forwards after a random delay of up to 900 s"]
 
-    OHTTP["OHTTP LAYER (RFC 9458) — optional path<br/>• OHTTP relay: sees client IP, cannot decapsulate request<br/>• Gateway: sees request, only OHTTP relay IP<br/>• E2E protects card contents; distinct operators mean no single one links IP to request (not collusion-proof)"]
+    Gateway["APPLICATION RELAY (OHTTP gateway + blob store)<br/>• Sees requests from the outer relay only, never the client's address<br/>• Sees mailbox tokens, padded sizes, timing, ratchet headers<br/>• Stores encrypted blobs for up to 120 days<br/>• No accounts, no decryption keys"]
 
-    Relay["RELAY SERVER<br/>• Assumed compromised (oblivious design)<br/>• Sees only encrypted blobs, never client IPs<br/>• No user accounts, no decryption keys<br/>• Store-and-forward with TTL<br/>• Timing obfuscation: sync jitter, payload padding"]
-
-    Core -- "TLS + E2E encrypted" --> Proxy
+    Core -- "TLS; inside it, HPKE to the gateway's signed key" --> Outer
     Core -. "optional" .-> Socks
-    Socks -. "via" .-> Proxy
-    Proxy -- "Internal network" --> OHTTP
-    OHTTP --> Relay
+    Socks -. "via" .-> Outer
+    Outer -- "encapsulated request, no client headers" --> Gateway
 ```
 
-| Boundary | Protection | Trust Level |
-|----------|-----------|-------------|
-| Client ↔ Rev. Proxy | TLS | **Trusted** (self-hosted) |
-| Rev. Proxy ↔ Relay | Internal net | **Untrusted** (no client IPs) |
-| Client ↔ OHTTP ↔ GW | OHTTP (9458) | No single server sees both IP and request; distinct operators raise the cost of correlation but do not prevent timing/network correlation |
-| Client ↔ Client | E2E (X3DH + DR) | Verified in person |
-| Device ↔ Device | HKDF device keys | Trusted (same seed) |
+| Boundary | Protection | What that party sees |
+|----------|-----------|----------------------|
+| Client ↔ Outer relay | TLS (WebPKI, optional SPKI pin) + OHTTP encapsulation | The address, not the content |
+| Outer relay ↔ Application relay | TLS; the request stays encapsulated | Content-shaped bytes, not the address |
+| Both relays together | Nothing cryptographic; one operator runs both hops today | Can join address and content by timing; the delayed path is the mitigation, host separation the release gate |
+| Client ↔ Client | E2E (key agreement + Double Ratchet) | Verified in person |
+| Device ↔ Device | Static agreement between the devices' exchange keys | Trusted (same seed); no forward secrecy |
 | Contact ↔ Contact | Per-contact CEK | Verified at exchange |
+
+A client in production refuses to talk to the application relay
+directly: every data request goes through the outer hop, and the
+gateway's key is accepted only under a signed chain from an anchor
+compiled into the client.
 
 ## Assets
 
@@ -142,12 +144,12 @@ information without permanent proof of past states.
   (256 B, 512 B, 1 KB, 4 KB) prevents
   size-based inference
 
-**Residual risk**: Metadata (connection timing,
-recipient pseudonyms) visible to relay. Mitigated
-by the four-layer privacy architecture: reverse
-proxy (strips client IPs), OHTTP (cryptographic
-content protection), timing obfuscation (sync
-jitter + padding), and optional SOCKS5 proxy
+**Residual risk**: Metadata (request timing, padded
+sizes, mailbox tokens) visible to the application
+relay. Reduced by Oblivious HTTP (two hops, one
+operator today), padding of requests and replies,
+random client-side delays, and an optional SOCKS5
+or HTTP CONNECT proxy in front of the outer relay
 support.
 
 ### Denial of Service
@@ -192,8 +194,8 @@ revocation broadcast.
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Oblivious relay** | Encrypted blobs only, no keys |
 | **Physical verification** | QR + audio / NFC / BLE (full); SAS (video) |
-| **Traffic analysis resist.** | Bucket padding + routing tokens + jitter |
-| **IP privacy** | Reverse proxy + OHTTP (RFC 9458) |
+| **Traffic analysis resist.** | Bucket padding + daily tokens + client-side delays; not measured against a traffic analyst |
+| **IP privacy** | OHTTP (RFC 9458): the application relay sees the outer relay's address only |
 | **Memory safety** | Rust (no unsafe in crypto paths) + `zeroize` on drop |
 | **Replay prevention** | Double Ratchet counters + version numbers |
 
@@ -205,14 +207,25 @@ If an attacker gains full control of a relay:
 
 - **Cannot** read contact card data (E2E encrypted)
 - **Cannot** forge messages (AEAD + signatures)
-- **Can** see pseudonymous recipient IDs and message timing
-- **Can** drop or delay messages (detected by delivery acknowledgments)
-- **Cannot** see client IP addresses (reverse proxy
-  strips headers; OHTTP encrypts requests to
-  gateway)
-- **Can** observe connection timing patterns
-  (mitigated by timing obfuscation: 30s-5min
-  post-exchange jitter, ±15% sync interval jitter)
+- **Can** see mailbox tokens, padded sizes, arrival
+  and acknowledgement times, and the ratchet header
+  of every blob
+- **Can** drop or delay messages: the sender sees
+  the relay's acknowledgement of storage, and a blob
+  dropped afterwards is noticed only at the contact's
+  next update or a resync request
+- **Cannot** see client IP addresses (it is reached
+  through the OHTTP outer relay only; a single
+  operator of both hops is the alpha's stated limit)
+- **Can** observe request timing patterns (reduced by
+  client-side delays: 30 s to 5 min after an
+  exchange, and a randomised sync interval of 10 s
+  to 5 min in the foreground and 1 to 60 min in the
+  background; the relay's own delivery jitter is
+  configured but not applied)
+- **Can** chain one fetcher's token sets across days,
+  since consecutive days' fetch requests overlap in
+  yesterday's tokens (tracked)
 
 ### Device Theft
 
@@ -253,7 +266,8 @@ for redundancy), additional trust boundaries apply.
 - Sender identity (not included in federation protocol)
 - Real identity behind routing IDs
 - Client IP addresses (federation is relay-to-relay;
-  clients are behind reverse proxy + OHTTP)
+  clients reach a relay only through the OHTTP outer
+  hop)
 
 **Guarantees**:
 
@@ -299,7 +313,7 @@ page and in the [Cryptography Reference](crypto.md).
 
 | Limitation | Impact | Mitigation |
 |-----------|--------|------------|
-| Relay sees metadata | Graph inference | Sealed sender, 4-layer arch |
+| Relay sees metadata | Graph inference; a fetcher's token set is linkable across days | Padding, daily tokens, OHTTP; per-day fetch requests (tracked) |
 | Device compromise | Full seed exposed | Subkeys (planned), passwords |
 | Linked device = full seed | Full identity | Subkeys (planned) |
 | Single relay SPOF | No sync if down | Federation (planned) |
@@ -355,84 +369,94 @@ accidental rapid-fire calls.
 
 ## Relay Metadata Exposure Analysis
 
-While the relay sees only encrypted blobs, it
-observes metadata that can reveal the social graph:
+The application relay sees only encrypted blobs,
+but it observes metadata that can reveal the social
+graph. This section follows the Relay chapter of
+the [protocol specification](https://gitlab.com/vauchi/spec),
+which names the source for each row.
 
-**What the relay sees**:
+**What the application relay sees**:
 
-| Datum | Visibility | Example |
-|-------|-----------|---------|
-| Sender (session ID) | Per-connection | Ephemeral, no identity key |
-| Recipient (mailbox) | Daily rotation | HKDF-derived, opaque |
-| Message timing | Obfuscated | Jittered 30s-5min / ±15% |
-| Message size | Approximate | Padded to buckets |
-| Connection freq. | Approximate | Jittered intervals |
+| Datum | Visibility | Notes |
+|-------|-----------|-------|
+| Sender | None on a send | A send carries a mailbox token and ciphertext; the optional origin hint is an opaque AEAD blob only the recipient can open |
+| Recipient (mailbox) | Daily-rotating token | HKDF of the channel's shared key, the recipient's key and the day; opaque to the relay |
+| Fetch set | Up to 100 tokens per request | Groups one user's contacts for the day; today's and yesterday's tokens travel together, so consecutive days' sets overlap and one fetcher is linkable across days (tracked) |
+| Message size | Padding bucket | 256 B, 512 B, 1 KB, 4 KB, then 256-byte steps; replies are padded to a size ladder on the way out |
+| Message timing | Arrival and acknowledgement times | The relay's delivery jitter is configured but not applied; the delayed path (below) moves a fetch away from the client's connection |
+| Ratchet header | In the clear inside the blob | DH public key, generation and message index |
+| Identity key | On a purge, by design | And a hash of it on guardian sets and recovery proofs, so that contacts can find a recovery |
 
-**What the relay CANNOT see**:
+**What the outer relay sees**: the client's address,
+the times and sizes of its encapsulated requests,
+and which delayed tickets it collects. It cannot
+open a request or an answer, and it cannot
+substitute the gateway's key.
 
-- Client IP addresses (stripped by self-hosted
-  reverse proxy; OHTTP provides additional
-  cryptographic separation)
+**What neither sees**:
+
 - Message content (E2E encrypted, AEAD)
 - Contact card fields (encrypted under per-contact CEK)
-- Sender identity beyond pseudonymous routing ID
 - Which specific contact fields changed
+- The sender's identity on an update
+- The client's address together with the content,
+  while the two hops are separate parties
 
 **Risk assessment for Vauchi**:
 
 The social graph inference risk is, *by design*, **lower than for
-messaging apps** because of the factors below — though this is a design
-expectation, not yet an empirically measured guarantee, and a network
-observer correlating connection timing across hops can still infer
-relationship structure:
+messaging apps** because of the factors below. This is a design
+expectation, not yet an empirically measured guarantee; a network
+observer correlating timing across hops can still infer relationship
+structure, and today one operator runs both hops.
 
 1. Updates are infrequent (users rarely change contact info)
 2. Updates are small and padded to fixed buckets
-   (256 B, 512 B, 1 KB, 4 KB)
-3. All locale files are downloaded in bulk to
-   prevent language inference
-4. Routing IDs are pseudonymous and session-scoped
-5. Relay never sees client IPs (reverse proxy strips
-   headers; OHTTP provides cryptographic separation)
-6. Timing obfuscation (sync jitter, post-exchange
-   delay) prevents correlation of connection patterns
+3. Mailbox tokens are pseudonymous and rotate daily
+4. The application relay never sees the client's address
+5. Client-side delays spread requests: 30 s to 5 min
+   after an exchange, and a randomised sync interval
+   of 10 s to 5 min in the foreground and 1 to 60 min
+   in the background
 
-**Current mitigations** (four-layer privacy architecture):
+**Current mitigations**:
 
-1. **Self-hosted reverse proxy** (nginx/caddy) —
-   strips all client-identifying headers before
-   forwarding to relay. The relay provably never
-   touches client IP addresses.
-2. **OHTTP** (RFC 9458) — the OHTTP relay sees the
-   client IP but cannot decapsulate the request. The
-   gateway sees the decapsulated request but only the
-   OHTTP relay's IP. End-to-end encryption protects
-   card contents from both. No single server sees
-   both client identity and the decapsulated request.
-   Vauchi currently operates both hops, so it could
-   still correlate cross-hop metadata; independent
-   operation remains the target.
-3. **Timing obfuscation** — post-exchange sync
-   jitter (30s-5min random delay), sync interval
-   jitter (+-15%), payload padding to bucket sizes.
-   Applied to all users by default.
-4. **Generic SOCKS5 proxy support** — optional,
-   user-configured. Route through Tor, VPN, or any
-   SOCKS5 proxy for ISP-level hiding.
-
-Additional mitigations: routing token rotation,
-`suppress_presence` flag, standardized bucket-size
-message padding.
+1. **Oblivious HTTP** (RFC 9458) — the outer relay
+   sees the client's address but cannot open the
+   request; the application relay opens the request
+   but sees only the outer relay's address. Vauchi
+   operates both hops today, so it could correlate
+   across them; separate operation is the gate for
+   the first release.
+2. **Delayed path** — a client may post a request
+   under a ticket; the outer relay forwards it after
+   a random delay of up to 900 s and holds the answer
+   until the client collects it later, so the
+   application relay sees the request long after the
+   client's connection.
+3. **Padding** — requests to the client's buckets,
+   replies to the relay's size ladder, and the token
+   registration list padded to a multiple of 256 and
+   shuffled.
+4. **Client-side timing** — the post-exchange delay
+   and the randomised sync interval above. The
+   relay's own delivery jitter is configured and
+   tested but no request path calls it.
+5. **Optional proxy** — a user-configured SOCKS5 or
+   HTTP CONNECT proxy (Tor, a VPN) in front of the
+   outer relay, for whoever does not want even the
+   outer relay to see their address.
 
 **Why OHTTP over Tor**: Tor's 90-120s mobile
 bootstrap latency is fatal for adoption. Tor
 traffic is banned or flagged in countries that
 need privacy most (China, Iran, Russia). OHTTP
-traffic is indistinguishable from normal HTTPS —
-no special protocol signatures. The four-layer
-architecture provides equivalent metadata
-protection for Vauchi's threat model without the
-usability and censorship-resistance penalties.
+traffic is indistinguishable from normal HTTPS;
+no special protocol signatures. Two hops give
+Vauchi's low-frequency traffic the metadata
+protection its threat model asks for without the
+usability and censorship-resistance penalties, and
+Tor remains available as the optional proxy.
 
 **Future considerations**: Private Information
 Retrieval (PIR) could eliminate recipient pseudonym
@@ -562,10 +586,10 @@ For the full cryptographic specification, see the
 | Aspect | Vauchi | Messaging Apps |
 |--------|--------|----------------|
 | Traffic volume | Very low | High (continuous) |
-| Timing analysis | Low (jittered) | High |
-| Social graph | Low (no IPs) | High |
-| Metadata | Recipient ID only | Sender + recip + IPs |
-| IP privacy | Proxy + OHTTP | Often server sees IPs |
+| Timing analysis | Medium (client-side delays; no relay-side jitter) | High |
+| Social graph | Low (no IPs at the application relay; fetch sets linkable across days) | High |
+| Metadata | Mailbox tokens, padded sizes, timing | Sender + recip + IPs |
+| IP privacy | OHTTP + optional proxy | Often server sees IPs |
 | Forward secrecy | Yes (DR) | Varies |
 | Relay knowledge | Encrypted blobs | Often plaintext |
 | Recovery | Social vouching | Phone/cloud backup |
