@@ -283,6 +283,37 @@ just run cli           # Run CLI
 just git sync          # Fetch all + pull where on main
 ```
 
+## How AI Agents Take Part
+
+Vauchi is written by one maintainer with AI coding agents, and the
+history says so: every commit an agent helped write carries a
+`Co-Authored-By` trailer naming the agent, and a commit-message hook
+refuses a commit without a valid one. There is no map of "which
+module an agent wrote", because that is not how the work is divided;
+an agent may draft, test, review or document any part, and a human
+reads and approves every change before it reaches `main`.
+
+What stands between an agent's draft and `main` is the same for a
+human draft:
+
+- **Tests first.** A behaviour change needs a failing test before the
+  code, and the test-quality rules are checked by hooks and in CI.
+- **Deterministic gates.** Shell, git, documentation and release
+  conventions are enforced by lint rules with stable identifiers,
+  so a review argues about substance, not style.
+- **No AI-written dependency audits.** `cargo vet` audits of third
+  party crates are written by people; an agent may not file one.
+- **A versioned log of reasoning errors.** When an agent's wrong
+  claim or wrong fix is caught, in review or by a test, the mistake
+  is written down under version control so the next session does not
+  repeat it. Recurring patterns become rules.
+- **Human merge.** Merge requests are reviewed and merged by the
+  maintainer; agents cannot push to `main` or merge.
+
+Security research against the code does not need to know which lines
+an agent typed; it needs to know that nothing reaches `main` without
+a test, a lint pass and a human read, which is the case.
+
 ## Getting Help
 
 - Review existing issues
