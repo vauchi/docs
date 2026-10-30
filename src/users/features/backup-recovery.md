@@ -188,8 +188,9 @@ last resort.
 
 **A voucher was rejected.** Usually it's for the wrong identity,
 corrupted, or tied to an expired recovery claim (contacts vouch for a
-claim for up to 8 days, and the vouchers in one recovery must be
-given within 4 days of each other). Ask the contact to issue a fresh
+claim for up to 8 days, the vouchers in one recovery must be given
+within 4 days of each other, and a contact accepts the assembled proof
+for 8 days from its first voucher). Ask the contact to issue a fresh
 one.
 
 ## Related

@@ -245,7 +245,7 @@ A backup you make today is a favour to a future, locked-out version of yourself.
 
 - Social recovery requires in-person verification — presence is the proof
 - Needing several independent vouchers prevents any single person from impersonating you
-- Recovery material ages out: contacts vouch for the claim you show them for up to 8 days, all vouchers in one recovery must be given within 4 days of each other, and the relay deletes a recovery proof after 90 days
+- Recovery material ages out: contacts vouch for the claim you show them for up to 8 days, all vouchers in one recovery must be given within 4 days of each other, a contact refuses a proof whose first voucher is older than 8 days, and the relay deletes stored proofs after 90 days
 - A backup is yours alone: Argon2id + XChaCha20-Poly1305, no escrow, no back door
 - The relay only ever forwards encrypted blobs, routed by daily-rotating mailbox tokens — it never sees your identity, your IP, or your data
 
