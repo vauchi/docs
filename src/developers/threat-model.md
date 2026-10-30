@@ -247,8 +247,11 @@ If an attacker tries to abuse social recovery:
 - Must meet K contacts in person (default threshold: 3)
 - Each voucher signs with their identity key
 - Vouchers validated against victim's known contact list
-- Conflicting claims detected and flagged by relay
-- Voucher timestamps prevent replay (48-hour window)
+- Conflicting recovery claims are not detected yet: the relay keeps
+  one proof per old key, so contacts see only the first one uploaded
+- Each helper signs its voucher's timestamp: helpers refuse claims
+  older than 192 hours, and a proof whose vouchers span more than 96
+  hours is refused
 
 ## Federation Security
 
