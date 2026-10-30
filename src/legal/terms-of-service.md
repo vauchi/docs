@@ -51,7 +51,7 @@ contact card updates between devices. The relay:
 - Cannot decrypt any content
 - If you use social recovery, holds an encrypted list of
   your trusted contacts (up to 365 days) and recovery
-  proofs (up to 90 days)
+  proofs (up to 9 days)
 - Logs connection metadata (cryptographic identity hash,
   connection timestamps) for rate limiting — IP addresses
   are not stored or logged, and connection metadata is

@@ -35,7 +35,7 @@ control.**
 - If you set up social recovery: an encrypted list of
   the contacts you trust for recovery (kept up to 365
   days), and, after a recovery, the signed proof your
-  contacts check (kept up to 90 days). The relay
+  contacts check (kept up to 9 days). The relay
   cannot read who is on the list.
 - No envelope content is ever readable by the server
 

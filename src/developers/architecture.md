@@ -31,7 +31,7 @@ flowchart TB
     subgraph Relay["RELAY SERVER<br/>• Store-and-forward encrypted messages<br/>• No access to plaintext (oblivious)<br/>• Rate limiting, quotas, GDPR purge"]
         Blob["Blob Storage<br/>(encrypted)"]
         Sync["Device Sync<br/>(per-device)"]
-        Recovery["Recovery Store<br/>(90-day TTL)"]
+        Recovery["Recovery Store<br/>(9-day TTL)"]
     end
 
     Gateway["OHTTP Gateway<br/>(strips client IP)"]

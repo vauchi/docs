@@ -158,7 +158,7 @@ sequenceDiagram
     R->>R: Store under key: hash(pk_old)
     R-->>AN: Stored
 
-    Note over R: Proof stored for 90 days
+    Note over R: Proof stored for 9 days
 
     %% John discovers proof
     JD->>R: Batch query for contact recovery proofs
@@ -242,7 +242,7 @@ sequenceDiagram
 | **Threshold Security** | Requires N vouchers (configurable, default 3) |
 | **Mutual Contact Verification** | Recipients verify via contacts they trust |
 | **Relay Privacy** | Relay stores proof under hash, learns nothing |
-| **Replay Prevention** | Timestamps, signatures, 90-day expiry |
+| **Replay Prevention** | Timestamps, signatures, 9-day expiry |
 | **Attack Detection** | Conflicting claims trigger warnings |
 
 ## Related Features
