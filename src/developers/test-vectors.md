@@ -227,8 +227,9 @@ handshake_gate = hex(SHA-256(nonce || "handshake"))      presence and epk slots 
 dh             = X25519(responder ephemeral, initiator ephemeral)
 escrow gate    = hex(SHA-256(HKDF(dh, "vauchi-escrow-gate-v1")))   slots alike
 card_key       = HKDF(dh, "vauchi-escrow-card-key-v1")
-payload        = 0x02 || JSON { identity key, x3dh key, relay_url, signature, card }
-signature      = Ed25519(identity, "vauchi-link-bootstrap-v2" || x3dh key || relay_url)
+payload        = 0x03 || signature || JSON { identity key, x3dh key, relay_url, card }
+signature      = Ed25519(identity, "vauchi-link-bootstrap-v3" || nonce
+                         || initiator ephemeral || responder ephemeral || JSON)
 link_shared_key = HKDF(X25519(x3dh_i, x3dh_r), "vauchi-link-shared-key-v1")
 ```
 

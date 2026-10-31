@@ -194,16 +194,21 @@ Each side encrypts its card payload with `card_key` and deposits it in
 its slot; each retrieves the other's. Deposits expire after seven
 days.
 
-**The signed bootstrap.** The card payload is version 2 only:
+**The signed bootstrap.** The card payload is version 3 only:
 
 ```
-[0x02] || JSON { identity_pubkey, x3dh_pubkey, relay_url, signature, card }
-signature ← Ed25519(identity) over "vauchi-link-bootstrap-v2" || x3dh_pubkey || relay_url
+[0x03] || signature[64] || JSON { identity_pubkey, x3dh_pubkey, relay_url, card }
+signature ← Ed25519(identity) over "vauchi-link-bootstrap-v3" || nonce || pk_i || pk_r || JSON
 ```
 
-The parser verifies the signature against the embedded identity key
-and rejects anything else, so a relay or a link reader cannot
-substitute a key or a relay address.
+The signature covers the whole payload, the card included, and the
+exchange it was made for: the link's nonce and both ephemeral keys.
+The responder signs once its ephemeral key exists; the initiator signs
+after it has read the responder's key. The parser verifies the
+signature against the embedded identity key and its own side's nonce
+and keys, and rejects anything else, so a relay or a link reader cannot
+rewrite the card, substitute a key or a relay address, or replay a
+payload into another exchange.
 
 **Completion.** With the peer's identity and X3DH keys, both sides run
 the full X3DH below (`vauchi-x3dh-key-v2`), derive the same shared
@@ -214,7 +219,8 @@ the per-identity contact limit applies.
 
 **What a link does not do today.** There is no approval step: whoever
 opens the link first completes the exchange, and the sender's name is
-not authenticated. No comparison code is shown. The trust level of a
+not authenticated. Anyone who opens the link after that is told it was
+already used, and their card is not deposited. No comparison code is shown. The trust level of a
 link contact is Standard. The user can raise it to Verified by
 comparing key fingerprints over a channel they already trust; that
 step is recorded as its own level and never set by hand. Sender
