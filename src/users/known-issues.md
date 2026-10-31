@@ -41,6 +41,21 @@ after updating to see if it's gone.
 - **Windows: device link dialog not yet available** — Device linking
   on Windows works via QR code but lacks the confirmation dialog.
 
+## Privacy and Security
+
+- <a id="post-quantum"></a>**Encryption is not yet quantum-resistant**
+  — The key agreement used today is classical. Someone who records
+  encrypted traffic now could read it if a large quantum computer is
+  ever built. A hybrid post-quantum scheme is planned; the
+  [cryptography page](../developers/crypto.md) has the details.
+- <a id="one-operator"></a>**Vauchi runs both relay hops for now** —
+  Your requests pass through two hops so that neither one alone sees
+  both who you are and what you send. Until an independent operator
+  runs one of them, Vauchi operates both, so the two halves are not yet
+  held by different parties. The
+  [security claims](../developers/security-claims.md) mark this as
+  partial.
+
 ---
 
 ## Reporting Issues
