@@ -253,6 +253,54 @@ If an attacker tries to abuse social recovery:
   older than 192 hours, and a proof whose vouchers span more than 96
   hours is refused
 
+### In-Person Exchange
+
+Meeting in person is Vauchi's trust anchor, so the
+exchange itself deserves its own threat model. The
+attacker is after three things, in ascending order of
+value:
+
+1. **The shared fields.** Whatever the card or group the
+   person selected exposes. They already chose to share
+   these with someone at that moment.
+2. **A durable update channel.** The attacker keeps
+   receiving updates until revoked. This is more than a
+   paper card gives away.
+3. **Recovery eligibility.** High trust is defined as
+   proximity plus a close-range transport, and only
+   High or Verified contacts can be chosen as recovery
+   vouchers. Proximity makes a contact *eligible*; the
+   person still has to pick them explicitly.
+
+Four candidate attacks, ranked by cost, cheapest first:
+
+| # | Attack | What it needs | Defence |
+|---|--------|---------------|---------|
+| 1 | **Honest-but-malicious proximity.** Mallory performs a legitimate exchange with Alice at a conference and gets all three assets. | Being in the same room | None cryptographic. Alice chose what to share, and High trust is shown as "met in person", never as "trusted"; vouching for recovery is a separate explicit choice |
+| 2 | **Opportunistic capture of a displayed code.** Alice shows a code to Bob; Mallory, behind Bob, scans it too. A displayed code is a broadcast | A phone, no timing, no accomplice | A displayed code answers only the first handshake; a second scanner gets nothing. The success screen names the peer, by the peer's self-asserted name |
+| 3 | **Wrong-peer pairing in a crowd.** Two pairs exchange at the same moment and Alice pairs with Carol instead of Bob | A busy venue, no malice | Both sides see the peer's name before the contact is kept |
+| 4 | **Relay or man-in-the-middle.** Mallory relays between a device near Alice and an accomplice near Bob | Two devices, an accomplice, live relaying | Audio proximity raises the cost of relaying; a substituted identity shows up as the wrong name on the success screen |
+
+Attack 4 is the one the microphone defends, and it is
+the least realistic of the four when both people are
+genuinely face to face: they can see each other. It
+becomes meaningful only when one of them is not facing
+the person they believe they are. Attack 1 is the
+cheapest and is not a protocol problem; it is why the
+trust level records a fact about the encounter, not a
+judgement about the person.
+
+Audio proximity is **not** distance bounding. Research
+classes short-range audio as a location-limited
+out-of-band channel: its security comes from short range
+and attenuation through walls, not from a cryptographic
+distance proof, and acoustic schemes are documented as
+vulnerable to relay. The microphone therefore buys
+defence in depth against attack 4, not proof of
+presence, which is why no screen in Vauchi claims
+"verified in person". How hard relaying this codec over
+a real network actually is remains an open experiment.
+
 ## Federation Security
 
 When relays federate (forward blobs to peer relays
@@ -326,6 +374,7 @@ page and in the [Cryptography Reference](crypto.md).
 | Recovery leaks voucher PKs | Partial graph | Accepted tradeoff |
 | No guardian diversity | Same circle | UX warnings (planned) |
 | No key transparency | Not auditable | Signed key log (future) |
+| Meeting someone is cheap | A legitimate in-person exchange grants High trust | Shown as "met in person", never "trusted"; recovery vouching is a separate explicit choice |
 | Link exchange weaker | Whoever opens the link first becomes a contact | Sender approval and an out-of-band code (planned) |
 | Push leaks metadata | Delivery timing | Empty push + fetch |
 | Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
