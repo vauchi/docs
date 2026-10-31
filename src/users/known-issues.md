@@ -19,6 +19,13 @@ after updating to see if it's gone.
   ultrasonic proximity check can fail in noisy environments. This does
   not affect the security of the exchange, only the automatic proximity
   confirmation.
+- <a id="audio-proximity-relay"></a>**The audio proximity check does not
+  prove distance** — The ultrasonic check makes it harder to relay an
+  exchange through a third device, but it is not proof that the other
+  phone is next to yours: someone relaying the sound live could pass it.
+  Exchange face to face and check the name shown before you keep the
+  contact. The [threat model](../developers/threat-model.md) explains
+  why.
 
 ## Sync
 
