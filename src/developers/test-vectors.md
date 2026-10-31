@@ -240,6 +240,26 @@ escrow keys with the recorded card key, reproduces the payload,
 verifies its signature and refuses it with one flipped bit, and
 derives the shared key from both sides.
 
+### `recovery_proof`: the stored recovery proof
+
+When a person recovers after losing every device, the proof that their
+contacts vouched for the new key is stored on the relay under
+`SHA-256(old_pk)`. The relay sees only a 33-byte header; the rest is
+sealed to the old key, so a contact who holds it opens the proof and
+the relay learns nothing of who vouched:
+
+```text
+header      = 0x03 || new_pk
+sealing_key = HKDF(old_pk, "Vauchi_RecoveryProof_v3")
+sealed      = header || encrypt_with_ad(sealing_key, postcard(proof), ad = header)
+```
+
+The vector records the old, new and helper seeds and keys, a one-voucher
+proof as plain postcard, the sealing key and the sealed bytes. The test
+opens the sealed bytes under the old key, decrypts them by hand from the
+recorded key, checks every field of the proof, and refuses to open them
+under the new key.
+
 ## What is not in this file
 
 These derivations exist in Core but have no vector yet. They are the

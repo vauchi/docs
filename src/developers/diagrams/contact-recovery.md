@@ -241,7 +241,7 @@ sequenceDiagram
 | **In-Person Vouching** | Vouchers must physically verify the person |
 | **Threshold Security** | Requires N vouchers (configurable, default 3) |
 | **Mutual Contact Verification** | Recipients verify via contacts they trust |
-| **Relay Privacy** | Relay stores proof under hash, learns nothing |
+| **Relay Privacy** | Relay stores the proof under a hash, sealed to the old key; it sees only the new key |
 | **Replay Prevention** | Timestamps, signatures, 9-day expiry |
 | **Attack Detection** | Conflicting claims trigger warnings |
 
