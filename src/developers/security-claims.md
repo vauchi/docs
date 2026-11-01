@@ -105,23 +105,30 @@ Mailboxes are addressed by tokens that rotate daily. A relay log holds
 tokens, not identities, and a token from one day does not name the
 same mailbox the next day.
 
-- Status: **Partial**. The token rules are tested; linkability of a
-  mailbox across days is a design argument in the crypto reference
-  without a dedicated experiment. On the code as released, the
-  fetcher is linkable across days: each sync fetched today's and
-  yesterday's token of every contact in one request set, so
-  consecutive days' sets overlapped and the relay could chain one
-  anonymous fetcher and count its contacts; a fix in review groups
-  requests per day, after which only timing correlation remains.
-  Token unlinkability is not forward secure: whoever later
-  obtains a contact's shared key can recompute every past token of
-  that channel. Guardian sets, recovery proofs and purge requests are
-  addressed by the identity key or its hash, by design.
+- Status: **Partial**. The token rules are tested, and the symbolic
+  model shows the relay cannot tell one mailbox's tokens on two days
+  from two mailboxes' tokens; there is no experiment against a relay.
+  On the code as released, the fetcher was linkable across days: each
+  sync fetched today's and yesterday's token of every contact in one
+  request set, so consecutive days' sets overlapped and the relay
+  could chain one anonymous fetcher and count its contacts. Since the
+  2026-10-28 fix no request carries two days' tokens; what remains is
+  the timing of a day's requests on the immediate path, which the
+  delayed path spreads. Token unlinkability is not forward secure:
+  whoever later obtains a contact's shared key can recompute every
+  past token of that channel. Guardian sets, recovery proofs and purge
+  requests are addressed by the identity key or its hash, by design.
 - Proof: tests `unsolicited_tokens_are_rejected_for_immediate_fetches`,
   `unsolicited_tokens_are_rejected_for_delayed_fetches` and
   `unattributed_blobs_are_not_delivered_or_acknowledged` in
-  `delayed_mailbox_routing_tests.rs`; design in
-  [Mailbox Routing](crypto.md#mailbox-routing-daily-rotating-tokens)
+  `delayed_mailbox_routing_tests.rs`; test
+  `test_contact_mailbox_token_rotates_daily` in
+  `mailbox_token_tests.rs`; Tamarin `mailbox_token.spthy`, the diff
+  model on the [Formal Verification](formal-verification.md) page,
+  verified and falsified under `-DSTABLE_TOKEN`; the per-day request
+  grouping in `registration_batches_hold_the_tokens_of_one_day_each`
+  and `a_fetch_request_never_spans_two_registration_batches`; design
+  in [Mailbox Routing](crypto.md#mailbox-routing-daily-rotating-tokens)
 
 ### 5. Message sizes are padded
 
@@ -174,12 +181,22 @@ needed.
 
 ### 8. Over Bluetooth, the scanner connects to the device it scanned
 
-The advertisement binds the radio session to the QR the user scanned,
-so a nearby device cannot step into the exchange.
+The advertisement binds the radio session to the QR the user scanned
+and the handshake pins the displayer's identity, so a nearby device
+cannot step into the exchange in the displayer's place.
 
-- Status: **Shipped**
+- Status: **Partial**. The scanner pins the displayer; the displayer
+  does not pin the scanner. It accepts whoever echoes its nonce, under
+  any identity, and shows that connector's card for the person to
+  confirm. The card's identity is checked against the wire identity,
+  but an unpinned peer is not proven to own it; closing that is open
+  work.
 - Proof: Tamarin `ble_advertisement.spthy`, lemma
-  `scanner_connects_to_the_displayer_it_scanned`
+  `scanner_connects_to_the_displayer_it_scanned`, which says which
+  displayer an honest advertiser is; Tamarin `ble_handshake.spthy`,
+  lemma `scanner_binds_the_displayer`, verified and falsified under
+  `-DRADIO_ONLY`, and lemma `displayer_binds_the_scanner`, which CI
+  asserts falsified, as written and under `-DQR_PRIVATE`
 
 ### 9. A remote exchange over a link is weaker, and says so
 
@@ -197,8 +214,16 @@ bootstrap, and the result is a live contact with a shared key.
   in [Link Exchange](crypto.md#link-exchange-asynchronous-via-relay-escrow).
 - Proof: test
   `v2_two_party_completes_to_a_live_exchanged_link_contact_with_symmetric_key`
-  in `complete_link_exchange_tests.rs`; `derive_sas` in
-  `relay_exchange_tests.rs`
+  in `complete_link_exchange_tests.rs`; the bootstrap signature covers
+  the card and the exchange (`link_bootstrap_signature_covers_the_card`,
+  `link_bootstrap_signature_is_bound_to_its_exchange`); a second opener
+  is told the link was used
+  (`a_second_person_opening_a_used_link_is_told_it_was_used` in
+  `link_exchange_api_tests.rs`); `derive_sas` in
+  `relay_exchange_tests.rs`; Tamarin `link_exchange.spthy`, lemma
+  `contact_only_after_approval`, falsified on the protocol as shipped
+  and verified in the `-DPIN_CONFIRMED` variant the approval work
+  targets
 
 ### 10. Trust level follows how you exchanged, and cannot be edited
 
@@ -365,7 +390,7 @@ threat model keeps the full list.
   ratchet, mailbox tokens and backup format against them.
 - **Formal models**: see [Formal Verification](formal-verification.md).
   `core/ci/formal-verification.sh` runs the Kani
-  parser proofs, the Tamarin models and the Quint model in the
+  parser proofs, the Tamarin models and the Quint models in the
   `test:formal` job on every change to the exchange, recovery and
   padding code, and nightly. Each model also runs a control that must
   fail, so a weakened lemma cannot pass unnoticed.
