@@ -25,7 +25,7 @@ All models live in the
 [core repository](https://gitlab.com/vauchi/core): the Tamarin models
 in
 [`vauchi-core/verification/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-core/verification),
-the Quint model in
+the Quint models in
 [`vauchi-app/verification/`](https://gitlab.com/vauchi/core/-/tree/main/vauchi-app/verification),
 and the Kani proofs next to the code they prove, in files named
 `*_proofs.rs` or `proofs.rs`.
@@ -47,9 +47,20 @@ instances in Quint. Examples:
   `-DNO_PROOF_CHECK` and `-DNO_ANSWER_SIGNATURE`.
 - `recovery_acceptance.spthy` is verified as written and with
   `-DIN_PERSON`, and falsified with `-DNO_LOST_KEY_CHECK`.
+- `mailbox_token.spthy` is verified as written and falsified with
+  `-DSTABLE_TOKEN`, the stable per-pair token the daily rotation
+  replaced.
+- `link_exchange.spthy` runs the other way round: its lemma must be
+  falsified on the protocol as shipped, and verified with
+  `-DPIN_CONFIRMED`, the fix it is written to specify.
+- `ble_handshake.spthy`'s scanner lemma is verified as written and
+  falsified with `-DRADIO_ONLY`; its displayer lemma must stay
+  falsified, as written and with `-DQR_PRIVATE`.
 - The Quint device-link model must hold its invariant on a reliable
   relay and must violate it both on a lossy relay and in the
-  pre-fix instance it was written to expose.
+  pre-fix instance it was written to expose. The Bluetooth and
+  multi-stage machines each carry a pre-fix or sentinel instance that
+  must violate the invariant the shipped instance holds.
 
 If a change to a model makes a control pass, the CI job fails.
 
@@ -137,7 +148,60 @@ prefix of a fresh role-tiebreak token.
 - `scanner_connects_to_the_displayer_it_scanned`
 - `sightings_happen`
 
-## Quint model
+### `ble_handshake.spthy` — the Bluetooth handshake
+
+The key offer and acknowledgement the two devices exchange over the
+radio once connected, and the session key derived from two
+Diffie-Hellman terms. In the default variant the scanner has pinned
+the displayer's identity and exchange key from the signed QR and
+echoes its nonce.
+
+- `session_key_secrecy`: a key both honest sides accepted stays
+  secret even when every static key leaks; the ephemeral keys carry
+  it.
+- `scanner_binds_the_displayer`: when the scanner accepts a key
+  someone else knows, that someone is the displayer it scanned.
+  Falsified with `-DRADIO_ONLY`, the variants with no QR to pin from
+  (Magic, Bump and Shake), where the proximity gates and the
+  in-person confirmation carry the binding instead.
+- `displayer_binds_the_scanner` is **falsified**, and CI asserts that
+  it stays so: the displayer accepts whoever echoes its nonce, under
+  any identity. The displayer's screen shows the connector's card for
+  the person to confirm; the protocol itself does not pin the
+  connector. `-DQR_PRIVATE` shows that a QR nobody can photograph does
+  not change this.
+
+Each lemma is proved in its own prover run under a heap cap, because
+the file proved as a whole exhausts memory. These runs are part of the
+extended set below.
+
+### `link_exchange.spthy` — the link exchange
+
+The sender shares a link carrying an ephemeral key and a nonce;
+whoever opens it deposits their own key in the relay's two-slot
+handshake gate, both sides derive the escrow keys and swap cards. The
+attacker owns the network and the channel that carried the link.
+
+- `contact_only_after_approval` is **falsified** on the protocol as
+  shipped: the first opener, here the attacker, becomes the sender's
+  contact. CI asserts the falsification.
+- With `-DPIN_CONFIRMED` the sender gives the intended person a PIN
+  over another channel and finalizes only on proof of it, and the
+  lemma is verified. That variant is the target of the open approval
+  work named on the [Security Claims](security-claims.md) page.
+
+### `mailbox_token.spthy` — daily mailbox tokens
+
+A contact pair's token for a day is derived from the shared key, the
+recipient's key and the day. The relay is the attacker: it sees every
+token, knows every public key and the calendar.
+
+- Observational equivalence (Tamarin's `--diff` mode): one pair's
+  tokens on two days cannot be told apart from two pairs' tokens, one
+  each day. Falsified with `-DSTABLE_TOKEN`, where the left side
+  repeats a token and the right side does not.
+
+## Quint models
 
 ### `device_link_machines.qnt` — the two device-link machines
 
@@ -160,6 +224,37 @@ quint run --main=reliable_relay \
 quint run --main=reliable_relay \
   --invariant=joiner_seed_implies_registered
 ```
+
+### `ble_exchange_machine.qnt` — the Bluetooth screen and its machine
+
+The Bluetooth exchange screen and the handshake machine behind it,
+driven together in ten-second ticks: the screen fails a step after a
+minute without progress, while a peer's writes keep reaching the
+machine over the open link. Crypto is left to `ble_handshake.spthy`;
+this covers where the pair can end up.
+
+- `no_live_machine_behind_a_failed_screen`
+- `a_retry_starts_from_no_machine`
+- `a_contact_is_persisted_only_on_a_live_screen`
+
+The `before_843` instance, the code before a step failure and a Retry
+tore the machine down, must violate all three; the
+`failure_cancels_the_machine` instance, the code as shipped, must hold
+them under `quint verify`.
+
+### `multi_stage_machine.qnt` — the multi-stage exchange machine
+
+The machine that drives Glance, Hover and Tap-Hover-Shake, and whether
+it can wait forever. A phase fails after its budget without a
+transition; the final phase completes on the next tick with nothing
+left to display.
+
+- `no_phase_outlives_its_budget`
+
+Verified under Apalache with a fifteen-step bound in `main_today` and
+violated in `no_step_timeout`, the sentinel with the per-step deadline
+switched off: random simulation never draws the thirteen silent ticks
+the violation needs, so both run as proofs rather than simulations.
 
 ## Kani proofs
 
@@ -186,10 +281,16 @@ sh ci/formal-verification.sh
 ```
 
 The script installs Tamarin, Quint and Kani under `.formal/` on first
-run, then runs every model with its controls. In CI it is the
-`test:formal` job, which runs on every merge request that touches the
+run, then runs every model with its controls. `FORMAL_SET=gate` runs
+the merge-request set: Kani, the wipe tests, the Tamarin models that
+answer in minutes and the device-link Quint checks, about
+forty-five minutes together. `FORMAL_SET=extended` runs the rest: the
+six capped prover runs of the Bluetooth handshake and the Apalache
+checks of the Bluetooth and multi-stage machines. In CI the gate set is
+the `test:formal` job, on every merge request that touches the
 exchange, recovery or padding code or the models, and nightly on
-`main`.
+`main`; the extended set is `test:formal-extended`, nightly on `main`
+and available to start by hand on such a merge request.
 
 ## What is not modelled
 
@@ -197,8 +298,11 @@ exchange, recovery or padding code or the models, and nightly on
   by the primitives' own analyses, not by a Vauchi model.
 - The relay's HTTP API and the Oblivious HTTP path are covered by the
   end-to-end certification lanes, not by a symbolic model.
-- The link exchange has no model yet; its approval step is still open
-  work.
+- The link exchange's approval step exists only as the model's
+  `-DPIN_CONFIRMED` variant; the code does not have it yet.
+- The escrow encryption and the cards exchanged over a link are out
+  of the link-exchange model's scope; it decides who ends up as whose
+  contact.
 
 If you want to extend a model or add one, the controls are the
 contract: a new lemma ships with the weakening that falsifies it.
