@@ -64,7 +64,8 @@ limit, with per-device subkeys planned.
 ## What runs on every change
 
 - **Formal models.** The Tamarin, Quint and Kani models and their
-  failing controls run in Core's `test:formal` job; the
+  failing controls run in Core's `test:formal-code` and
+  `test:formal-models` jobs; the
   [Formal Verification](../developers/formal-verification.md) page
   lists them.
 - **Release certification lanes** in the end-to-end repository, on

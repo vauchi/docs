@@ -390,9 +390,10 @@ threat model keeps the full list.
   ratchet, mailbox tokens and backup format against them.
 - **Formal models**: see [Formal Verification](formal-verification.md).
   `core/ci/formal-verification.sh` runs the Kani
-  parser proofs, the Tamarin models and the Quint models in the
-  `test:formal` job on every change to the exchange, recovery and
-  padding code, and nightly. Each model also runs a control that must
+  parser proofs in the `test:formal-code` job on every change to the
+  code they prove, and the Tamarin and Quint models in the
+  `test:formal-models` job on every change to the models; both run
+  nightly. Each model also runs a control that must
   fail, so a weakened lemma cannot pass unnoticed.
 - **Release certification**: seven blocking end-to-end lanes run the
   six-device topology against real relays and collect one

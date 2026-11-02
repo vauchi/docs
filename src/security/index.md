@@ -36,8 +36,9 @@ The limits are published next to the guarantees.
   implements it, with links to the source file for each.
 - **Run the proofs.** The [Formal Verification](../developers/formal-verification.md)
   page lists the Tamarin, Quint and Kani models, their lemmas, and the
-  controls that must fail. One script runs them all; it is the
-  `test:formal` job of every Core pipeline.
+  controls that must fail. One script runs them all; CI runs it as
+  the `test:formal-code` and `test:formal-models` jobs, on the merge
+  requests that touch what each checks, and nightly.
 - **Check your own implementation.** The [Test Vectors](../developers/test-vectors.md)
   are produced by the shipped functions and verified by the Core test
   suite. Recompute them and compare.

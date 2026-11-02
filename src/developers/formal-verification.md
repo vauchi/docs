@@ -281,16 +281,22 @@ sh ci/formal-verification.sh
 ```
 
 The script installs Tamarin, Quint and Kani under `.formal/` on first
-run, then runs every model with its controls. `FORMAL_SET=gate` runs
-the merge-request set: Kani, the wipe tests, the Tamarin models that
-answer in minutes and the device-link Quint checks, about
-forty-five minutes together. `FORMAL_SET=extended` runs the rest: the
-six capped prover runs of the Bluetooth handshake and the Apalache
-checks of the Bluetooth and multi-stage machines. In CI the gate set is
-the `test:formal` job, on every merge request that touches the
-exchange, recovery or padding code or the models, and nightly on
-`main`; the extended set is `test:formal-extended`, nightly on `main`
-and available to start by hand on such a merge request.
+run, then runs every model with its controls. `FORMAL_SET=code` runs
+the checks that read Rust: Kani and the wipe tests, about sixteen
+minutes. `FORMAL_SET=models` runs the hand-written models, which read
+no Rust: the Tamarin models that answer in minutes and the device-link
+Quint checks, about twenty minutes. `FORMAL_SET=gate` runs both.
+`FORMAL_SET=extended` runs the rest: the six capped prover runs of the
+Bluetooth handshake and the Apalache checks of the Bluetooth and
+multi-stage machines. In CI the code set is the `test:formal-code`
+job, on every merge request that touches the crypto, exchange, recovery
+or delta code, the wipe tests or the lockfile; the model set is
+`test:formal-models`, on every merge request that touches the models.
+Both run nightly on `main` and on release tags, and
+`check:formal-triggers` fails a merge request whose harness or model
+sits outside its job's trigger paths. The extended set is
+`test:formal-extended`, nightly on `main` and available to start by
+hand on a merge request that touches the models.
 
 ## What is not modelled
 
