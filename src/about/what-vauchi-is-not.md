@@ -68,7 +68,9 @@ expectation rather than a measured guarantee, as the
 [threat model](../developers/threat-model.md) says in those words.
 
 You can run your own relay if you would rather not take our word for
-any of it.
+any of it. For now, the people you exchange with must use the same
+relay, or you stop syncing with them
+([known issue](../users/known-issues.md#own-relay)).
 
 ## It is not stronger than your device
 

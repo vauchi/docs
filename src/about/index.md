@@ -90,7 +90,8 @@ are licensed under GPL-3.0-or-later. You can:
 - Inspect the code
 - Verify security claims
 - Contribute improvements
-- Run your own relay server
+- Run your own relay server (for now, your contacts must use the same
+  one: [known issue](../users/known-issues.md#own-relay))
 
 **GitLab:** [https://gitlab.com/vauchi](https://gitlab.com/vauchi)
 **GitHub Mirror:** [https://github.com/vauchi](https://github.com/vauchi)

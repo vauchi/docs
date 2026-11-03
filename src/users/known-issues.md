@@ -32,6 +32,10 @@ after updating to see if it's gone.
 - **iOS background sync not yet available** — On iOS, sync only runs
   when the app is in the foreground. Open the app periodically to
   receive contact updates. Android background sync works automatically.
+- <a id="own-relay"></a>**Your contacts must use the same relay as
+  you** — Vauchi cannot yet pass updates from one relay to another. If
+  you move to your own relay, contacts who stay on ours stop receiving
+  your changes, and you stop receiving theirs.
 
 ## Desktop
 

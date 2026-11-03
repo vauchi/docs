@@ -98,7 +98,10 @@ messages are sent and received, and message
 frequency. The relay cannot read message content.
 Delivery jitter reduces timing correlation between
 senders and recipients. Running your own relay
-server eliminates third-party metadata exposure.
+server keeps the record of who talks to whom away from
+us, as long as the people you exchange with use the same
+relay: Vauchi cannot yet pass updates between relays
+([known issue](../users/known-issues.md#own-relay)).
 
 ## Best Practices
 

@@ -297,6 +297,8 @@ Yes — every line:
 [gitlab.com/vauchi](https://gitlab.com/vauchi). You can read how your
 data is handled, check the security claims yourself, contribute, or run
 your own relay. "Trust us" is a weaker promise than "go and look."
+For now, your contacts must use the same relay as you
+([known issue](known-issues.md#own-relay)).
 
 ---
 
