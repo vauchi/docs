@@ -160,36 +160,33 @@ sequenceDiagram
 
     Note over R: Proof stored for 9 days
 
-    %% John discovers proof
-    JD->>R: Batch query for contact recovery proofs
-    Note right of JD: Query: [hash(pk1), hash(pk2), hash(pk_old), ...]
-    R-->>JD: Found proof for hash(pk_old)
+    %% Alice's new phone asks each contact for the rekey
+    AN->>R: Rekey offer to John's mailbox for the old relationship
+    Note right of AN: Offer: new key, fresh exchange key,<br/>recovery proof, signed by the new key
+    JD->>R: Fetch from the mailboxes John already polls
+    R-->>JD: Rekey offer
 
     activate JD
-    JD->>JD: Decode recovery proof
-    JD->>JD: Verify: pk_old is contact "Alice"
-    JD->>JD: Check vouchers for mutual contacts
+    JD->>JD: Proof opens for contact "Alice", names the offer's key
+    JD->>JD: Vouchers carry tokens Alice's old key signed,<br/>or come from John's own contacts
 
-    alt Has Mutual Contacts (Bob, Charlie)
-        JD->>JD: Bob is my contact
-        JD->>JD: Charlie is my contact
-        JD->>JD: 2 mutual vouchers ≥ threshold
-        JD->>JD: "High confidence recovery"
-    else No Mutual Contacts
-        JD->>JD: No vouchers are my contacts
-        JD->>JD: "Cannot verify - meet Alice in person"
+    alt Provably Alice's
+        JD->>JD: Accept without asking: move "Alice" to the new key
+        JD->>R: Signed answer with John's exchange key
+        R-->>AN: Answer
+        AN->>AN: Check it against John's key from the backup
+        Note over AN,JD: Both derive one new shared key; the old one plays no part
+    else Not provable
+        JD->>JD: Drop the offer silently
     end
     deactivate JD
 
-    %% David (isolated contact) case
-    DD->>R: Query for recovery proofs
-    R-->>DD: Found proof for Alice
-
+    %% David is offline, or the offer could not be proven
+    Note over AN,DD: IN PERSON: Alice and David meet and exchange
+    AN->>DD: Over the new ratchet: continuation signed with Alice's old key
     activate DD
-    DD->>DD: Check vouchers: Bob, Charlie, Betty
-    DD->>DD: None are David's contacts
-    DD->>DD: "Warning: Unknown vouchers"
-    DD->>DD: Options: Meet in person / Verify another way / Accept anyway
+    DD->>DD: Old key signed it and it names the new key
+    DD->>DD: Fold the old contact "Alice" into the new one
     deactivate DD
 ```
 

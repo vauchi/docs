@@ -85,10 +85,14 @@ backup *today* is what turns a lost phone from a tragedy into an errand.
 It borrows the oldest security system humans have: people who know you.
 
 1. On a new device, you create a "recovery claim"
-2. You share it with contacts you previously marked as trusted
-3. Each one issues a "voucher" confirming they recognise you
-4. Once enough vouchers arrive (a handful by default), your contacts
-   migrate to your new identity
+2. You meet the contacts you previously chose as guardians; each one
+   issues a "voucher" confirming they recognise you, and hands back the
+   encrypted backup they were keeping for you
+3. With one guardian from every group, your new device restores your
+   contacts from that backup
+4. Your new device then asks each contact to move to your new identity;
+   their app agrees by itself when your guardians' vouchers prove it is
+   really you, and otherwise you settle it by meeting them in person
 
 It guards both doors at once: you can't be locked out (your friends can
 let you in), and you can't be impersonated (a stranger would have to

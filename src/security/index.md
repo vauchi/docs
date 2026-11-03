@@ -87,9 +87,9 @@ The claims, in the specification's numbering:
   duress unlock shows a decoy and sends cover (partial); a linked
   device is a full copy of the identity, stated as a limit.
 - **S16 and S17**, a recovery claimed: accepting a recovery needs the
-  real one (partial, the rekey after acceptance is not built); social
-  recovery needs the guardians and only the real ones (partial, the
-  rekey of old contacts is a design).
+  real one; social recovery needs the guardians and only the real ones
+  (both partial: the rekey of old contacts is built, and the formal
+  models do not yet follow every step of it).
 
 ## How to report
 
