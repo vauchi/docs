@@ -95,9 +95,12 @@ phone, and your phone opens the backup. This version is planned, not in
 the app yet: today's has your new phone make a new identity, and your
 contacts don't move to it automatically.
 
-It guards both doors at once: you can't be locked out (your guardians
-can let you in), and you can't be impersonated (a stranger would have to
-fool a guardian from every group, in person).
+It guards two doors, with limits. You're not locked out as long as a
+guardian from every group is reachable and you remember your recovery
+passphrase, if you set one (guardians can't bypass it). And a stranger
+would have to fool a guardian from every group, in person, to get your
+backup — though a phone of yours stolen while unlocked can pose as you
+without fooling anyone.
 
 A phone **stolen while unlocked** still holds your keys, whichever way
 you got back in; moving your contacts to a new identity the thief

@@ -93,7 +93,9 @@ and your contacts don't move to it automatically.
 When you set it up you choose **guardians** — people you trust and see
 often, in a few groups. Each quietly keeps a piece of your encrypted
 backup, without knowing whose until you need them. One guardian from
-every group can hand the backup back; none can open it alone.
+every group can hand the backup back; none can open it alone. If you set
+a recovery passphrase, the backup also needs it: guardians can't bypass
+it, and a forgotten one keeps the backup closed.
 
 ### How it works
 
@@ -115,9 +117,12 @@ sequenceDiagram
     Note over Y: Backup opened: same identity, new device
 ```
 
-It guards both doors at once: you can't be locked out (your guardians
-can let you in), and an impostor can't walk in (they'd have to fool a
-guardian from every group, in person). Nothing goes through the internet
+It guards two doors. It keeps you from being locked out as long as a
+guardian from every group is reachable and you remember your recovery
+passphrase, if you set one. And an impostor would have to fool a
+guardian from every group, in person, to get your backup. It doesn't
+stop someone holding a phone of yours they stole unlocked: see the note
+at the top of this page. Nothing goes through the internet
 during the hand-back.
 
 ### Recover
@@ -126,7 +131,8 @@ during the hand-back.
 2. Enter your old public ID (a contact can read it from your card)
 3. Meet a guardian from each group; each checks it's you and hands back
    a piece
-4. Your phone opens the backup: your identity, contacts and labels are
+4. Your phone opens the backup (with your recovery passphrase, if you set
+   one): your identity, contacts and labels are
    back, on this phone as a new device of yours, and conversations with
    each contact restart on their own
 

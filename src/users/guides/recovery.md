@@ -106,7 +106,7 @@ them again and exchange as a new contact.
 
 ### Overview
 
-Long before passwords, identity was vouched for by people who knew you — and that older system never forgot a face. Social recovery makes it cryptographic. When you set it up, you choose **guardians**: people you trust and see often. Each one quietly holds a piece of your encrypted backup; they don't learn that they do until you need them. One guardian from each of your groups together can hand the backup back; none of them can open it alone.
+Long before passwords, identity was vouched for by people who knew you — and that older system never forgot a face. Social recovery makes it cryptographic. When you set it up, you choose **guardians**: people you trust and see often. Each one quietly holds a piece of your encrypted backup; they don't learn that they do until you need them. One guardian from each of your groups together can hand the backup back; none of them can open it alone. If you also set a recovery passphrase, the backup opens only with it too: your guardians can't bypass it, and without it your backup stays closed.
 
 Social recovery brings back **the same identity**: your keys, contacts and
 labels come back, on your new phone as a new device of yours.
@@ -137,7 +137,8 @@ the pieces back, and nothing travels through the internet while they do.
 
 ### Step 3: Restore
 
-1. With enough pieces, your phone opens the backup
+1. With enough pieces, your phone opens the backup — after asking for your
+   recovery passphrase, if you set one
 2. You're back as yourself, with your contacts and labels
 3. Conversations with each contact restart on their own
 
@@ -159,8 +160,11 @@ Moving your contacts to a new identity the thief doesn't hold is being
 built. You'll set up, in advance, a few people who approve such a move,
 and a next identity registered with them; after a theft your contacts
 move to it, online with those people's approval, or when you meet a
-contact in person. Until that ships, tell the contacts who matter in
-person, and meet them to exchange again.
+contact in person. Until that ships, the identity the thief holds can't
+be made safe again. Start a genuinely new identity, tell the contacts who
+matter in person, exchange the new one with them, and ask them to delete
+your old contact entry: exchanging again with the restored, old identity
+leaves the thief's keys working.
 ```
 
 ---
