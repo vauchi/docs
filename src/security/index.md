@@ -88,8 +88,11 @@ The claims, in the specification's numbering:
   device is a full copy of the identity, stated as a limit.
 - **S16 and S17**, a recovery claimed: accepting a recovery needs the
   real one; social recovery needs the guardians and only the real ones
-  (both partial: the rekey of old contacts is built, and the formal
-  models do not yet follow every step of it).
+  (both partial). No contact accepts a rekey today: until the policy
+  guardians' certificate exists, every offer is dropped, and an old-key
+  signature authorizes nothing. The older Tamarin models allow a single
+  recovery, so they say nothing about two attempts competing; the
+  guardians' decision is modelled separately, and none of it is built.
 
 ## How to report
 

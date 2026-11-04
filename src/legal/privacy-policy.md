@@ -227,8 +227,7 @@ at any time from Settings > Backup.
   recovery, you choose first:
   - **Keep recovery:** the relay keeps your encrypted
     list of trusted contacts for up to 365 days, so
-    they can still help you move your contacts to a
-    new identity.
+    they can still help you recover.
   - **Erase everything:** the list goes too, and
     recovery is no longer possible.
 
@@ -265,15 +264,19 @@ mechanism. Recovery depends on your situation:
   accessible, your identity and all data are
   already synchronized. No recovery process is
   needed.
-- **Social recovery (all devices lost):** If all
-  your devices are lost, trusted contacts you
-  previously designated can vouch for your
-  identity, allowing you to migrate your contacts
-  to a new cryptographic identity on a new device.
-  Note: social recovery creates a new identity —
-  your old signing keys cannot be recovered.
-  Trusted contact designations and per-contact
-  visibility labels may need to be reconfigured.
+- **Encrypted backup:** a backup file you made,
+  sealed with your password, restores your
+  identity and data on a new device.
+- **Social recovery (all devices lost, no
+  backup):** guardians you designated each keep a
+  piece of an encrypted backup of your data. Met in
+  person, a guardian from each of your groups hands
+  their piece back to your new device, which
+  restores your identity from it. The pieces pass
+  directly between the two phones; nothing goes to
+  a server. In the version shipped today, recovery
+  instead creates a new identity, and contacts are
+  not moved to it automatically.
 
 ## Children's Privacy
 

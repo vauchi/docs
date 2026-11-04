@@ -1,249 +1,98 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
-# Contact Recovery Sequence
+# Recovery and Compromise Rotation
 
-**Interaction Type:** 🤝 + ☁️ **MIXED (In-Person Vouching + Remote Distribution)**
+Two separate problems, two separate flows:
 
-When a user loses all devices, they can recover their contact relationships through social vouching. Existing contacts vouch for the user in-person, and the recovery proof is distributed remotely via relay.
+- **Getting back in** restores the **same identity**, by the first path
+  that works: linking from a working device, the password backup, or,
+  when both fail, social recovery. None of them rekeys contacts.
+- **Compromise rotation** moves contacts to a new identity after a
+  device holding the identity's keys was stolen unlocked. Linked devices
+  share the master seed and derive their device keys from it, so revoking
+  the stolen device in the signed registry stops its sync but takes
+  nothing from it; only new keys do.
 
-## Participants
-
-- **Alice** - User who lost their device
-- **Alice's New Device** - Fresh install, new identity
-- **Bob, Charlie, Betty** - Alice's contacts who will vouch
-- **John, David** - Alice's contacts who will receive recovery proof
-- **Relay** - HTTP v2 relay server
-
-## Overview
-
-```mermaid
-flowchart TB
-    subgraph P1["PHASE 1: Vouching (In-Person)"]
-        Bob["Bob<br/>Vouch"]
-        Charlie["Charlie<br/>Vouch"]
-        Betty["Betty<br/>Vouch"]
-        Alice["Alice (new)<br/>Threshold: 3 vouchers"]
-        Bob --> Alice
-        Charlie --> Alice
-        Betty --> Alice
-    end
-
-    subgraph P2["PHASE 2: Distribution (Remote)"]
-        Gateway["OHTTP Gateway<br/>(strips client IP)"]
-        Relay["Relay<br/>Stores proof under hash(pk_old)"]
-        John["John<br/>Accept"]
-        David["David<br/>Verify"]
-        Others["Others<br/>Discover via relay query"]
-        Gateway <--> Relay
-        Gateway --> John
-        Gateway --> David
-        Gateway --> Others
-    end
-
-    Alice --> Gateway
+```admonish info title="Planned"
+Both flows below describe the protocol being built
+(vauchi/private#796). In Core today, social recovery still has the new
+phone create a new identity, and no contact accepts a rekey offer: until
+the policy guardians' certificate exists, every offer is dropped, and an
+old-key continuation merges nothing.
 ```
 
-> **Note:** All client↔relay traffic in Phase 2 is routed through an
-> OHTTP gateway per ADR-037. The detailed sequence diagrams below omit
-> the gateway hop for clarity — they describe the protocol layer, not
-> the transport. Operationally, the relay never sees client IP
-> addresses; the gateway never sees request content.
+## Social recovery: same identity, in person
 
-## Phase 1: In-Person Vouching
+**Interaction type:** 🤝 in person only; no relay.
+
+The owner chose guardians in groups; each guardian device keeps a share
+of the owner's encrypted guardian backup, sealed to it. One guardian of
+every group opens the backup.
 
 ```mermaid
-    accTitle: Contact Recovery Sequence
-    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
+    accTitle: Social recovery restoring the same identity
+    accDescr: A new phone in recovery mode collects re-sealed shares from guardians in person and restores the same identity
 sequenceDiagram
     autonumber
-    participant A as Alice (Lost Device)
-    participant AN as Alice New Device
-    participant BB as Bob's Device
-    participant B as Bob
+    participant N as New phone (no identity)
+    participant G as Guardian's device
+    participant P as Guardian
 
-    Note over A,B: IN-PERSON: Alice meets Bob physically
-
-    %% Alice creates new identity
-    A->>AN: Install Vauchi on new device
-    AN->>AN: Create new identity (pk_new)
-    A->>AN: "I had identity pk_old"
-    AN->>AN: Store recovery claim: pk_old → pk_new
-
-    %% Generate recovery QR
-    A->>AN: Generate recovery QR
-    activate AN
-    AN->>AN: Create recovery claim QR
-    Note right of AN: QR contains:<br/>- type: recovery_claim<br/>- old_pk: pk_old<br/>- new_pk: pk_new<br/>- timestamp
-    AN->>A: Display recovery QR
-    deactivate AN
-
-    %% Bob scans and vouches
-    B->>BB: Scan Alice's recovery QR
-    activate BB
-    BB->>BB: Decode recovery claim
-    BB->>BB: Lookup pk_old in contacts
-    BB->>BB: Found: "Alice" with pk_old
-    BB->>B: "Alice claims device loss"
-    BB->>B: Show Alice's stored name & photo
-    deactivate BB
-
-    Note over BB,B: Bob verifies Alice is physically present
-
-    B->>BB: "Yes, this is Alice, I confirm"
-    activate BB
-    BB->>BB: Create voucher
-    Note right of BB: Voucher:<br/>- old_pk<br/>- new_pk<br/>- voucher_pk (Bob)<br/>- timestamp<br/>- Ed25519 signature
-    BB->>AN: Send voucher to Alice
-    deactivate BB
-
-    AN->>AN: Store Bob's voucher (1 of 3)
-    AN->>A: "Bob vouched for you (1/3)"
-
-    Note over A,B: Alice now has 1 voucher, needs 2 more
+    N->>N: Recovery mode: temporary recovery key r
+    N->>N: Claim: old identity key, pk(r)
+    Note over N,P: IN PERSON
+    N->>G: Show the claim (QR)
+    G->>G: Keeps a backup for the old key?
+    G->>P: Reveal the role, show the owner's name
+    P->>G: "Yes, this is them"
+    G->>G: Re-seal its share to pk(r)
+    G->>N: Share and backup, over the meeting's channel
+    Note over N: Repeat with one guardian of every group
+    N->>N: Open the backup with r
+    N->>N: Become the old identity, new device index
+    N->>N: Discard r
+    Note over N: Contacts keep their shared keys;<br/>sessions restart via the registry handshake
 ```
 
-## Collecting Multiple Vouchers
+## Compromise rotation: the registered next identity
+
+The owner registered a next identity N in advance: every contact's pin
+holds its hash, and its seed is split among the policy guardians (more
+than (n + 1) / 2 of them, one per group). The stolen phone holds only N's
+hash.
 
 ```mermaid
-    accTitle: Contact Recovery Sequence (2)
-    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
-sequenceDiagram
-    participant AN as Alice New Device
-    participant CB as Charlie's Device
-    participant BB as Betty's Device
-
-    Note over AN,BB: IN-PERSON: Alice meets more contacts
-
-    %% Charlie vouches
-    rect rgb(240, 248, 255)
-        Note over AN,CB: Alice meets Charlie
-        AN->>CB: Show recovery QR
-        CB->>CB: Verify pk_old is contact "Alice"
-        CB->>AN: Send voucher
-        AN->>AN: Store Charlie's voucher (2 of 3)
-    end
-
-    %% Betty vouches
-    rect rgb(240, 255, 240)
-        Note over AN,BB: Alice meets Betty
-        AN->>BB: Show recovery QR
-        BB->>BB: Verify pk_old is contact "Alice"
-        BB->>AN: Send voucher
-        AN->>AN: Store Betty's voucher (3 of 3)
-    end
-
-    Note over AN: THRESHOLD MET: 3 vouchers collected
-
-    AN->>AN: Create recovery proof
-    Note right of AN: Recovery Proof:<br/>- old_pk<br/>- new_pk<br/>- threshold: 3<br/>- vouchers: [Bob, Charlie, Betty]
-```
-
-## Phase 2: Remote Distribution
-
-```mermaid
-    accTitle: Contact Recovery Sequence (3)
-    accDescr: Shows how a user recovers contacts through social vouching after losing all devices
+    accTitle: Compromise rotation to the registered next identity
+    accDescr: The owner rebuilds the registered next identity from the policy guardians and contacts move to it online with a certificate or in person by recognition
 sequenceDiagram
     autonumber
-    participant AN as Alice New Device
-    participant R as Relay
-    participant JD as John's Device
-    participant DD as David's Device
+    participant O as Owner's phone
+    participant PG as Policy guardians
+    participant C as Contact online
+    participant M as Contact met in person
 
-    Note over AN,DD: REMOTE: Distribution via relay
-
-    %% Upload proof
-    AN->>R: Upload recovery proof
-    R->>R: Store under key: hash(pk_old)
-    R-->>AN: Stored
-
-    Note over R: Proof stored for 9 days
-
-    %% Alice's new phone asks each contact for the rekey
-    AN->>R: Rekey offer to John's mailbox for the old relationship
-    Note right of AN: Offer: new key, fresh exchange key,<br/>recovery proof, signed by the new key
-    JD->>R: Fetch from the mailboxes John already polls
-    R-->>JD: Rekey offer
-
-    activate JD
-    JD->>JD: Proof opens for contact "Alice", names the offer's key
-    JD->>JD: Vouchers carry tokens Alice's old key signed,<br/>or come from John's own contacts
-
-    alt Provably Alice's
-        JD->>JD: Accept without asking: move "Alice" to the new key
-        JD->>R: Signed answer with John's exchange key
-        R-->>AN: Answer
-        AN->>AN: Check it against John's key from the backup
-        Note over AN,JD: Both derive one new shared key; the old one plays no part
-    else Not provable
-        JD->>JD: Drop the offer silently
-    end
-    deactivate JD
-
-    %% David is offline, or the offer could not be proven
-    Note over AN,DD: IN PERSON: Alice and David meet and exchange
-    AN->>DD: Over the new ratchet: continuation signed with Alice's old key
-    activate DD
-    DD->>DD: Old key signed it and it names the new key
-    DD->>DD: Fold the old contact "Alice" into the new one
-    deactivate DD
+    Note over O,PG: IN PERSON, a quorum
+    PG->>O: Pieces of N's seed
+    O->>O: Rebuild N
+    PG->>O: Certificate: rotate to N (one decision per version)
+    O->>C: Rekey offer signed by N, with the certificate
+    C->>C: N matches the pinned hash, certificate valid
+    C->>O: Answer, fresh shared key
+    Note over O,M: IN PERSON
+    M->>M: Recognizes the owner, N matches the pinned hash
+    M->>M: Rotate to N; old identity marked compromised
 ```
 
-## Data Structures
+A rotation and a policy change that replaces N compete in one decision
+per identity and policy version, so contacts never follow two
+successors. The decision is modelled in
+`vauchi-app/verification/guardian_voting.qnt` (an inductive proof for
+five guardians, three ballots, two values, one forgetful device) and
+`guardian_history.qnt`; N's secrecy in
+`vauchi-core/verification/next_identity.spthy`.
 
-### Recovery Claim QR
+## Related
 
-```json
-{
-  "type": "recovery_claim",
-  "old_pk": "Ed25519 public key (lost)",
-  "new_pk": "Ed25519 public key (new)",
-  "timestamp": "2026-01-21T10:00:00Z"
-}
-```
-
-### Voucher
-
-```json
-{
-  "old_pk": "Alice's old public key",
-  "new_pk": "Alice's new public key",
-  "voucher_pk": "Bob's public key",
-  "timestamp": "2026-01-21T10:05:00Z",
-  "signature": "Ed25519 signature of above fields"
-}
-```
-
-### Recovery Proof
-
-```json
-{
-  "old_pk": "Alice's old public key",
-  "new_pk": "Alice's new public key",
-  "threshold": 3,
-  "vouchers": [
-    { /* Bob's voucher */ },
-    { /* Charlie's voucher */ },
-    { /* Betty's voucher */ }
-  ],
-  "expires": "2026-04-21T10:00:00Z"
-}
-```
-
-## Security Properties
-
-| Property | Mechanism |
-|----------|-----------|
-| **In-Person Vouching** | Vouchers must physically verify the person |
-| **Threshold Security** | Requires N vouchers (configurable, default 3) |
-| **Mutual Contact Verification** | Recipients verify via contacts they trust |
-| **Relay Privacy** | Relay stores the proof under a hash, sealed to the old key; it sees only the new key |
-| **Replay Prevention** | Timestamps, signatures, 9-day expiry |
-| **Attack Detection** | Conflicting claims trigger warnings |
-
-## Related Features
-
-- [Contact Exchange](contact-exchange.md) - Original key exchange
-- [Device Linking](device-linking.md) - Recovery not needed if devices linked
-- [Sync Updates](sync-updates.md) - How reconnected contacts sync
+- [Social Recovery](https://spec.vauchi.app/protocols/social-recovery.html) in the protocol spec
+- [How to Recover Your Account](../../users/guides/recovery.md)

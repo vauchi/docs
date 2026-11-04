@@ -190,16 +190,18 @@ flowchart LR
 
 Device linking uses QR code scan with time-limited token.
 
-### 4. Recovery (Social Vouching)
+### 4. Recovery and Compromise Rotation
 
-When all devices are lost:
+Getting back in restores the **same identity**, by the first path that
+works: link from a working device, restore the password backup, or, when
+both fail, social recovery, where a guardian of every group hands back
+its share of the backup in person (planned; see
+[Recovery and Compromise Rotation](diagrams/contact-recovery.md)).
 
-1. Create new identity
-2. Generate recovery claim (old_pk → new_pk)
-3. Meet contacts in person, collect signed vouchers
-4. When threshold (3) met, upload proof to relay
-5. Other contacts discover proof, verify via mutual contacts
-6. Accept/reject identity transition
+Revoking a device stops its sync but takes nothing from it: devices share
+the master seed above. A device stolen unlocked calls for compromise
+rotation to a next identity registered in advance with policy guardians
+(planned). Until then, Core accepts no rekey offer.
 
 ## Security Model
 

@@ -73,7 +73,8 @@ You have several ways back in, in rough order of painlessness:
 1. **Another linked device** — if you have one, you've already lost
    nothing. Carry on.
 2. **A backup** — restore from your encrypted backup file.
-3. **Social recovery** — trusted contacts vouch that you are you.
+3. **Social recovery** — your guardians, met in person, hand back the
+   pieces of your backup.
 4. **Start fresh** — mint a new identity and re-exchange. Always
    available, never necessary if you planned ahead.
 
@@ -82,24 +83,26 @@ backup *today* is what turns a lost phone from a tragedy into an errand.
 
 ### How does social recovery work?
 
+It's the last of three ways back in, after linking from another device
+and restoring your backup — and like them, it brings back the same
+identity.
+
 It borrows the oldest security system humans have: people who know you.
+You choose guardians you trust and see often; each quietly keeps a piece
+of your encrypted backup. On a new phone you meet a guardian from each of
+your groups, each recognizes you and hands their piece back, phone to
+phone, and your phone opens the backup. This version is planned, not in
+the app yet: today's has your new phone make a new identity, and your
+contacts don't move to it automatically.
 
-1. On a new device, you create a "recovery claim"
-2. You meet the contacts you previously chose as guardians; each one
-   issues a "voucher" confirming they recognise you, and hands back the
-   encrypted backup they were keeping for you
-3. With one guardian from every group, your new device restores your
-   contacts from that backup
-4. Your new device then asks each contact to move to your new identity;
-   their app agrees by itself when your guardians' vouchers prove it is
-   really you, and otherwise you settle it by meeting them in person
+It guards both doors at once: you can't be locked out (your guardians
+can let you in), and you can't be impersonated (a stranger would have to
+fool a guardian from every group, in person).
 
-It guards both doors at once: you can't be locked out (your friends can
-let you in), and you can't be impersonated (a stranger would have to
-fool several of your friends at the same time). Note that social
-recovery mints a *new* cryptographic identity — your old signing keys
-stay lost, and a few settings like per-contact visibility may need
-re-tuning. You keep your people; you replace the lock.
+A phone **stolen while unlocked** still holds your keys, whichever way
+you got back in; moving your contacts to a new identity the thief
+doesn't hold is planned. See
+[If a device was stolen unlocked](guides/recovery.md#if-a-device-was-stolen-unlocked).
 
 ### Can I change my display name?
 

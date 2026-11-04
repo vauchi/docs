@@ -4,16 +4,22 @@
 # Backup & Recovery
 
 Because your device is your account, losing it would matter — so Vauchi
-gives you two quite different safety nets, and they're at their best when
-you set them up *before* you need them. A backup is the five-minute
-insurance policy you'll be grateful for on a bad day. Social recovery is
-the same trick humans have always used when documents fail: people who
-know you, vouching that you're you.
+gives you three ways back, and they're at their best when you set them
+up *before* you need them. Use the first one that works; each brings you
+back as **the same identity**. A second device is the quickest. A backup
+is the five-minute insurance policy you'll be grateful for on a bad day.
+Social recovery, the last resort, is the trick humans have always used
+when documents fail: people who know you, recognizing you.
 
 | Method | When it's for | What it needs |
 |--------|---------------|---------------|
+| **[Linked device](multi-device.md)** | Another device still works | That device |
 | **Encrypted backup** | A planned safety net | Your backup file + password |
-| **Social recovery** | Every device lost, no backup | A few trusted contacts to vouch |
+| **Social recovery** | Every device lost, no backup | Your guardians, in person |
+
+A phone **stolen while unlocked** is a separate problem: getting back in
+doesn't take your keys away from the thief. See
+[If a device was stolen unlocked](../guides/recovery.md#if-a-device-was-stolen-unlocked).
 
 ---
 
@@ -77,103 +83,79 @@ clever tangle of symbols you'll have forgotten by Tuesday.
 ## Social recovery
 
 Lost every device *and* have no backup? This is the net beneath the net.
-Trusted contacts confirm your identity and migrate your contacts to a
-fresh one.
+
+```admonish info title="Planned"
+What follows is how social recovery is being changed to work; it isn't
+in the app yet. Today's version has your new phone make a new identity,
+and your contacts don't move to it automatically.
+```
+
+When you set it up you choose **guardians** — people you trust and see
+often, in a few groups. Each quietly keeps a piece of your encrypted
+backup, without knowing whose until you need them. One guardian from
+every group can hand the backup back; none can open it alone.
 
 ### How it works
 
 ```mermaid
 sequenceDiagram
     participant Y as You (New Device)
-    participant C1 as Contact 1
-    participant C2 as Contact 2
-    participant C3 as Contact 3
-    participant R as Relay
+    participant G1 as Guardian, group 1
+    participant G2 as Guardian, group 2
+    participant G3 as Guardian, group 3
 
-    Y->>Y: Create recovery claim
-    Y->>C1: Meet in person, share claim
-    C1->>C1: Verify it's really you
-    C1->>Y: Create voucher
+    Note over Y: Start "Recover my identity"
+    Y->>G1: Meet in person, show the request
+    G1->>Y: Hand back a piece, phone to phone
+    Y->>G2: Meet in person, show the request
+    G2->>Y: Hand back a piece
+    Y->>G3: Meet in person, show the request
+    G3->>Y: Hand back a piece
 
-    Y->>C2: Meet in person, share claim
-    C2->>Y: Create voucher
-
-    Y->>C3: Meet in person, share claim
-    C3->>Y: Create voucher
-
-    Y->>R: Submit recovery proof (vouchers)
-    R->>R: Verify vouchers
-
-    Note over Y: Contacts migrated to new identity!
+    Note over Y: Backup opened: same identity, new device
 ```
 
-It guards both doors at once: you can't be locked out (your friends can
-let you in), and an impostor can't walk in (they'd have to fool several
-of your friends, in person, at once).
+It guards both doors at once: you can't be locked out (your guardians
+can let you in), and an impostor can't walk in (they'd have to fool a
+guardian from every group, in person). Nothing goes through the internet
+during the hand-back.
 
-### Start recovery
+### Recover
 
-1. Install Vauchi on the new device
-2. Create a new identity
-3. Go to **Settings > Recovery**
-4. Tap **Recover Old Identity**
-5. Enter your old public ID
-6. A recovery claim is generated
+1. Install Vauchi on the new device and choose **Recover my identity**
+2. Enter your old public ID (a contact can read it from your card)
+3. Meet a guardian from each group; each checks it's you and hands back
+   a piece
+4. Your phone opens the backup: your identity, contacts and labels are
+   back, on this phone as a new device of yours, and conversations with
+   each contact restart on their own
 
-### Collect vouchers
+## Being a guardian
 
-For each one:
+If someone you guard asks for their backup:
 
-1. Meet the contact in person
-2. Share your recovery claim
-3. They confirm it's really you (they're looking right at you)
-4. They create a voucher
-5. They send it to you
-
-### What it takes
-
-- Vouchers from a small threshold of contacts (a handful, by default)
-- Each must have previously exchanged with your old identity
-- Together they prove your real social network recognises the request
-
-### Finish
-
-1. Import the vouchers
-2. Vauchi submits the recovery proof
-3. The network verifies through mutual connections
-4. Your identity settles onto the new device
-
-Social recovery mints a *new* cryptographic identity — your old signing
-keys stay lost, and a few settings (like per-contact visibility) may
-need re-tuning. You keep your people; you replace the lock.
-
-## Vouching for someone else
-
-If a contact asks you to vouch:
-
-1. Go to **Settings > Recovery**
-2. Tap **Help Someone Recover**
-3. Paste their recovery claim
-4. **Verify it's really them** — call them, or meet in person
-5. Create a voucher
-6. Send it over
+1. Meet them **in person** — the hand-back only works face to face
+2. Open the recovery request they show you
+3. **Verify it's really them** before you go on
+4. Hand back; your phone passes the piece to theirs directly
 
 ```admonish warning
-Only vouch when you are **certain** who you're vouching for. The whole
-defence against identity theft is that you check. A careless voucher is
-the one an attacker is counting on.
+Only hand back when you are **certain** who is in front of you. The
+whole defence against identity theft is that you check. A careless
+guardian is the one an attacker is counting on.
 ```
 
 ## Good habits
 
-**Before you ever need it:** make a backup the day you set up; store it
-somewhere safe; use a memorable passphrase; and keep enough trusted
-contacts (five or so) that a couple being unreachable won't sink you.
+**Before you ever need it:** link a second device; make a backup the day
+you set up; store it somewhere safe; use a memorable passphrase; and
+choose guardians you see often, at least two in each group, so one being
+away won't sink you.
 
-**When the day comes:** try backup restore first — it's faster and
-simpler. Fall back to social recovery only if you must, do the vouching
-in person, and don't rush. Verifying carefully is the point, not the
-obstacle.
+**When the day comes:** link from a working device if you have one, else
+restore the backup. Fall back to social recovery only if you must, meet
+your guardians in person, and don't rush. Verifying carefully is the
+point, not the obstacle.
 
 ## Troubleshooting
 
@@ -182,16 +164,12 @@ guarantee working as designed. Fall back to social recovery, or to
 another linked device if you still have one; failing both, start a new
 identity and re-exchange.
 
-**Can't reach enough contacts.** See who's still reachable, give it a
-little time if some are temporarily away, and treat a new identity as the
-last resort.
+**Can't reach a guardian from every group.** See who's still reachable,
+give it a little time if some are temporarily away, and treat a new
+identity as the last resort.
 
-**A voucher was rejected.** Usually it's for the wrong identity,
-corrupted, or tied to an expired recovery claim (contacts vouch for a
-claim for up to 8 days, the vouchers in one recovery must be given
-within 4 days of each other, and a contact accepts the assembled proof
-for 8 days from its first voucher). Ask the contact to issue a fresh
-one.
+**A request expired.** A recovery request lasts 8 days; start a fresh
+one and show it to the guardians you haven't met yet.
 
 ## Related
 
