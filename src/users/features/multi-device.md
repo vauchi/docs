@@ -96,8 +96,13 @@ to cut off a lost one. (Which is itself a quiet argument for having a
 second device.)
 ```
 
-A revoked device loses access instantly, can no longer send or receive
-updates, and can't be re-linked without starting fresh.
+A revoked device stops syncing with your other devices and can't be
+re-linked without starting fresh. Revoking doesn't wipe it, though. Your
+linked devices share your identity's keys, so a phone stolen while
+unlocked still holds them, and with them it can still read what your
+contacts send you and pose as you to them. Moving your contacts to new
+keys the thief doesn't have is planned; see
+[Recovery](../guides/recovery.md).
 
 ## What syncs, and how
 

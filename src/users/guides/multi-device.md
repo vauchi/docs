@@ -204,8 +204,12 @@ it. Revoke from another linked device.
 ```
 
 ```admonish danger
-Revocation is immediate and permanent.
-The revoked device loses all access.
+Revocation is permanent: the revoked device stops
+syncing with your other devices. It doesn't erase
+what the device holds. A phone stolen while unlocked
+keeps your identity's keys and can still pose as you
+to your contacts; moving them to new keys is planned
+(see [Recovery](recovery.md)).
 ```
 
 ---
