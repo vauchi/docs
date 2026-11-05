@@ -40,3 +40,4 @@ command = "node mdbook-beautiful-mermaid.mjs"
 
 [output.html.playground]
 editable = false
+runnable = false

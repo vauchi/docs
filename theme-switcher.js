@@ -8,7 +8,7 @@
 // Works WITH mdBook's theme system by setting localStorage['mdbook-theme']
 // and re-applying CSS vars after mdBook's dynamic page navigation.
 (function () {
-  var THEME_KEY = "vauchi-docs-theme";
+  var THEME_KEY = "vauchi-theme";
   var MDBOOK_KEY = "mdbook-theme";
   var THEMES_URL = "https://cdn.vauchi.app/v1/themes/themes.json";
   var themes = [];
@@ -80,6 +80,10 @@
     // 4. Update mdBook's class (for code highlighting CSS)
     root.className = root.className.replace(/\b(coal|light|rust|navy|ayu)\b/g, "").trim();
     root.classList.add(mdTheme);
+    var night = document.querySelector("[href$='tomorrow-night.css']");
+    var ayu = document.querySelector("[href$='ayu-highlight.css']");
+    if (night) night.disabled = theme.mode !== "dark";
+    if (ayu) ayu.disabled = true;
 
     updateUI(theme);
   }
@@ -100,8 +104,8 @@
     }
   }
 
-  function save(id) { try { localStorage.setItem(THEME_KEY, id); } catch (e) {} }
-  function load() { try { return localStorage.getItem(THEME_KEY); } catch (e) { return null; } }
+  function save(id) { try { localStorage.setItem(THEME_KEY, id); localStorage.setItem("vauchi-docs-theme", id); } catch (e) {} }
+  function load() { try { return localStorage.getItem(THEME_KEY) || localStorage.getItem("vauchi-docs-theme"); } catch (e) { return null; } }
   function prefersDark() { return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches; }
 
   function findById(id) {
@@ -197,6 +201,23 @@
 
     // Replace paint-brush with palette emoji
     var themeToggle = document.getElementById("theme-toggle");
+    // mdBook's handler targets menu entries replaced by this picker (#1079).
+    if (themeToggle && !themeToggle.dataset.vauchiPicker) {
+      var replacement = themeToggle.cloneNode(true);
+      replacement.dataset.vauchiPicker = "true";
+      replacement.addEventListener("click", function (event) {
+        event.stopPropagation();
+        togglePopup();
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && popupOpen) {
+          togglePopup(false);
+          replacement.focus();
+        }
+      });
+      themeToggle.replaceWith(replacement);
+      themeToggle = replacement;
+    }
     if (themeToggle) {
       var icon = themeToggle.querySelector("i");
       if (icon) { icon.className = ""; icon.style.fontStyle = "normal"; icon.textContent = "\uD83C\uDFA8"; }
@@ -225,7 +246,8 @@
         if (gitLink && gitLink.parentElement) {
           var gl = document.createElement("a");
           gl.id = "vauchi-gitlab-link";
-          gl.href = "https://gitlab.com/vauchi/docs";
+          var repository = document.querySelector('a[href^="https://gitlab.com/vauchi/"]');
+          gl.href = repository ? repository.href : "https://gitlab.com/vauchi";
           gl.target = "_blank"; gl.rel = "noopener";
           gl.className = "icon-button";
           gl.title = "GitLab"; gl.setAttribute("aria-label", "GitLab");
