@@ -266,7 +266,7 @@ under the new key.
 These derivations exist in Core but have no vector yet. They are the
 natural next additions:
 
-- the relay-mediated short code and its SAS;
+- the relay-mediated short code and its authentication fingerprint;
 - the BLE handshake and advertisement tokens, and the NFC key;
 - device-link confirmation codes;
 - the social-recovery shares and sealed boxes;

@@ -49,7 +49,7 @@ flowchart TB
 |----------|-----------|----------------------|
 | Client ↔ Outer relay | TLS (WebPKI, optional SPKI pin) + OHTTP encapsulation | The address, not the content |
 | Outer relay ↔ Application relay | TLS; the request stays encapsulated | Content-shaped bytes, not the address |
-| Both relays together | Nothing cryptographic; one operator runs both hops today | Can join address and content by timing; the delayed path is the mitigation, host separation the release gate |
+| Both relays together | Nothing cryptographic; one operator runs both hops today | Can join address and content by timing; the delayed path is the mitigation. Separate hosts are in place for the alpha; a second operator is the gate for the first release |
 | Client ↔ Client | E2E (key agreement + Double Ratchet) | Verified in person |
 | Device ↔ Device | Static agreement between the devices' exchange keys | Trusted (same seed); no forward secrecy |
 | Contact ↔ Contact | Per-contact CEK | Verified at exchange |
@@ -198,7 +198,7 @@ revocation broadcast.
 | **Forward secrecy** | Double Ratchet with ephemeral DH keys, between contacts. Not device-to-device sync, and not the first message of a session opened without a prior exchange |
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Oblivious relay** | Encrypted blobs only, no keys |
-| **Physical verification** | QR + audio / NFC (High trust); Bluetooth handshake (Standard trust); SAS (video) |
+| **Physical verification** | QR + audio / NFC (High trust); Bluetooth handshake (Standard trust); full fingerprint (video) |
 | **Traffic analysis resist.** | Bucket padding + daily tokens + client-side delays; not measured against a traffic analyst |
 | **IP privacy** | OHTTP (RFC 9458): the application relay sees the outer relay's address only |
 | **Memory safety** | Rust (no unsafe in crypto paths) + `zeroize` on drop |
@@ -380,6 +380,7 @@ page and in the [Cryptography Reference](crypto.md).
 | Tokens not forward secure | A later shared-key compromise links that channel's past tokens, across the relay's 120-day retention | None today |
 | Identity-key-addressed routes | The relay sees a long-lived identifier on guardian sets, recovery proofs and purge, the flows that map a recovery circle | By design |
 | Device sync has no forward secrecy | A later compromise of a device's exchange key opens every recorded batch, which carries contacts, cards and shared contact keys | None today; live pairwise ratchet states are not copied |
+| Duress PIN is six digits | With a device image and the storage master key: learns whether a PIN exists and guesses it offline in about a million tries, and already holds the data | Protects against a coercer who watches the unlock, not a forensic image |
 | Device compromise | Full seed exposed | Subkeys (planned), passwords |
 | Linked device = full seed | Full identity | Subkeys (planned) |
 | Single relay SPOF | No sync if down | Federation (planned) |

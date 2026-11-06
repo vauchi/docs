@@ -509,7 +509,7 @@ Paths are in the [core repository](https://gitlab.com/vauchi/core).
 | X3DH Session (Symmetric) | [`vauchi-core/src/exchange/session.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/session.rs) |
 | Link Exchange | [`vauchi-core/src/exchange/link_mode.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/link_mode.rs) |
 | Relay Escrow Keys | [`vauchi-core/src/exchange/escrow.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/escrow.rs) |
-| SAS | [`vauchi-core/src/exchange/relay_exchange.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/relay_exchange.rs) |
+| Relay exchange fingerprint | [`vauchi-core/src/exchange/relay_exchange.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/exchange/relay_exchange.rs) |
 | Padding | [`vauchi-core/src/crypto/padding.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/src/crypto/padding.rs) |
 | HKDF Test Vectors (RFC 5869) | [`vauchi-core/tests/it/crypto_kdf_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/crypto_kdf_tests.rs) |
 | Vauchi Test Vectors | [`vauchi-core/tests/it/protocol_test_vectors_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/protocol_test_vectors_tests.rs) |

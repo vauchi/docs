@@ -314,12 +314,17 @@ afterwards has the shape of normal traffic: cover items carry the
 length and timestamp of the real item they stand for, and applying
 one changes nothing on a linked device.
 
-- Status: **Partial**. The cover traffic is tested in Core. The
-  Tamarin model for duress cover is scaffolded but states no lemma
-  yet.
-- Proof: tests `applying_a_cover_item_changes_nothing` and
+- Status: **Partial**. Lengths and timing are outside the symbolic
+  model, and no model covers what a linked device does with a cover
+  item. A coercer who also extracts the ratchet keys can tell the
+  difference; that is the design's limit. The PIN has its own limit,
+  listed under [What we do not claim](#what-we-do-not-claim).
+- Proof: tests `applying_a_cover_item_changes_nothing`,
   `a_cover_item_has_the_length_and_timestamp_of_the_item_it_stands_for`
-  in `duress_cover_tests.rs`
+  and `a_duress_session_never_journals_a_non_cover_item` in
+  `duress_cover_device_sync_tests.rs`; Tamarin `duress_cover.spthy`, a
+  diff model that CI asserts verified, and falsified under
+  `-DCOERCER_HOLDS_RATCHET`
 
 ### 15. A linked device is a full copy of the identity
 
@@ -383,6 +388,11 @@ threat model keeps the full list.
 
 - The relay sees metadata: which mailbox tokens receive how much, and
   when. Sealed sender and padding reduce it; they do not remove it.
+- A duress PIN is six digits. Someone who images the device and also
+  holds the storage master key learns whether a duress PIN exists and
+  can guess it offline in about a million tries. That attacker already
+  holds the data. Duress protects against a coercer who watches the
+  unlock, not one who extracts the storage and the keychain.
 - A compromised device exposes the whole identity seed. Subkeys are
   planned.
 - There is no key transparency log yet. A relay that hands out a wrong
