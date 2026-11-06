@@ -68,18 +68,23 @@ recipient. The relay stores and forwards bytes it cannot open.
 A relay that replays an old update, swaps the sender, or serves a
 stale version cannot change what the recipient ends up with.
 
-- Status: **Shipped**
+- Status: **Partial**. "Never rolled back" rests on code, not on a
+  proof. The ordering trusts signed source clocks, cannot reconstruct
+  deletion history from before the upgrade, and does not yet survive a
+  backup restore. A relay that withholds an update can still hide the
+  newer state.
 - Proof: Tamarin `card_update.spthy`, lemmas
   `update_comes_from_the_sender_for_this_recipient` and
   `each_update_is_applied_once`; ratchet tests
   `test_crypto_hardening_ratchet_same_chain_auth_failure_rolls_back_state`
   and `test_crypto_hardening_ratchet_new_dh_auth_failure_rolls_back_state`
-  in `crypto_ratchet_tests.rs`. "Never rolled back" rests on the
-  version floor in code, tested by
-  `stale_version_delta_rejected_by_device_receiver` and
-  `delta_version_floor_is_tracked_per_peer_device`; the model's
-  `no_rollback` lemma reaches no verdict with the floor and is stated,
-  not proved.
+  in `crypto_ratchet_tests.rs`. The version floor and per-field ordering
+  are tested by `stale_version_delta_rejected_by_device_receiver`,
+  `delta_version_floor_is_tracked_per_peer_device`,
+  `peer_card_ordering_blocks_held_add_on_both_receive_paths` and
+  `peer_card_ordering_blocks_held_removal_and_name_on_both_receive_paths`;
+  the model's `no_rollback` lemma reaches no verdict with the floor and
+  is stated, not proved.
 
 ### 3. The relay does not learn the user's network address
 
@@ -267,14 +272,15 @@ Everything at rest is encrypted under a hierarchy rooted in one
 storage master key kept in the platform's secure storage. Wiping that
 key wipes the data, and one identity's keys never open another's.
 
-- Status: **Partial**. Proven for the Core storage layer. On Android
-  and iOS the key destruction step is incomplete; the fix is in
-  testing.
+- Status: **Shipped**
 - Proof: tests `test_smk_destruction_makes_data_irrecoverable`,
   `test_shredding_isolation_across_identities` and
   `test_fkek_protects_file_keys` in
   `crypto_shredding_integration_tests.rs`; lane `test:release-rg8`,
-  case `hard_shred_after_grace_fanout_over_outer_hop_only`
+  case `hard_shred_after_grace_fanout_over_outer_hop_only`; on Android
+  and iOS, the shells' `ShredDestroysTheStorageKeyTest` and
+  `ShredDestroysTheStorageKeyTests`: a copy of the data taken before a
+  shred no longer opens afterwards
 
 ### 13. A backup without its password reveals nothing
 
@@ -316,20 +322,23 @@ one changes nothing on a linked device.
 
 ### 15. A linked device is a full copy of the identity
 
-Linking a device transfers the identity seed. A photograph of the
-link QR alone does not give it away. A leaked link QR does, and lets
-the attacker choose which device identity joins. The QR expires after
-five minutes.
+Linking a device transfers the identity seed. Against an honest relay,
+a photograph of the link QR alone does not give it away. With access to
+the relay, a photographed or leaked link QR does, and lets the attacker
+choose which device identity joins. The QR expires after five minutes.
 
-- Status: **Shipped**, with the limit stated. Per-device subkeys that
-  would contain a leak are planned.
+- Status: **Partial**. Under a lossy relay, a device whose joiner gave
+  up can still be registered; CI asserts that violation. Per-device
+  subkeys that would contain a leak are planned.
 - Proof: Tamarin `device_link.spthy`, lemmas `seed_secrecy`,
-  `photographed_qr_alone_keeps_the_seed`, `initiator_agreement`,
-  `joiner_agreement`, and the attack lemmas `qr_leak_exposes_seed` and
+  `initiator_agreement`, `joiner_agreement`,
+  `photographed_qr_alone_keeps_the_seed` (only under `-DHONEST_RELAY`),
+  and the attack lemmas `qr_leak_exposes_seed` and
   `qr_leak_lets_attacker_choose_joiner_identity`; Quint
   `device_link_machines.qnt`, invariants
   `joiner_seed_implies_registered` and
-  `no_device_registered_for_a_failed_joiner`
+  `no_device_registered_for_a_failed_joiner`, both under a reliable
+  relay
 
 ## What a recovery cannot be used for
 

@@ -70,7 +70,8 @@ specification is right.
 The claims, in the specification's numbering:
 
 - **S1 to S5**, the relay: cannot read a card or an update; an
-  update is from its sender, applied once, never rolled back; the
+  update is from its sender, applied once, never rolled back (partial,
+  no rollback is stated, not proved); the
   relay does not learn the user's address (partial, one operator runs
   both hops today); public keys do not route mailboxes (partial, with
   the fetcher's cross-day linkability stated); sizes are padded
@@ -82,10 +83,9 @@ The claims, in the specification's numbering:
   (partial); trust level follows the exchange and cannot be edited.
 - **S11 to S15**, a device taken: old updates stay secret after a
   compromise (partial, not for sync between a person's own devices);
-  destroying the storage key makes the data unrecoverable (partial on
-  the phones); a backup without its password reveals nothing; a
+  destroying the storage key makes the data unrecoverable; a backup without its password reveals nothing; a
   duress unlock shows a decoy and sends cover (partial); a linked
-  device is a full copy of the identity, stated as a limit.
+  device is a full copy of the identity (partial, stated as a limit).
 - **S16 and S17**, a recovery claimed: accepting a recovery needs the
   real one; social recovery needs the guardians and only the real ones
   (both partial). No contact accepts a rekey today: until the policy
