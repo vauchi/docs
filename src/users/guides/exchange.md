@@ -68,7 +68,7 @@ QR is the default because it works on every platform and needs nothing but a cam
 | **QR** (default) | Show and scan codes | Anywhere, any device |
 | **Tap** | Hold phones together (NFC) | Quick face-to-face swaps |
 | **Bump** | Bump or shake the devices (BLE + motion) | Crowded rooms, no line of sight |
-| **Link** | Share a one-off `vauchi://exchange?…` URL | People who aren't in the room |
+| **Link** | Share a one-off link, and a code sent separately | People who aren't in the room |
 
 The first three all prove you were in the same place at the same time, which is the strongest defence against a stranger quietly inserting themselves into the middle of your exchange. **Link mode** relaxes that proof in return for reach: you send a single-use URL, and the exchange finishes asynchronously through the relay over the following days. It's the difference between a handshake and a sealed letter — both work, one knows the room was empty.
 

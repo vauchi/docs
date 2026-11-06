@@ -177,18 +177,21 @@ extended set below.
 
 ### `link_exchange.spthy` — the link exchange
 
-The sender shares a link carrying an ephemeral key and a nonce;
-whoever opens it deposits their own key in the relay's two-slot
-handshake gate, both sides derive the escrow keys and swap cards. The
-attacker owns the network and the channel that carried the link.
+The sender shares a link carrying an ephemeral key and a nonce, and gives
+the person it is for a short code another way; whoever opens it runs SPAKE2
+over that code in the relay's two-slot handshake gate, and both sides derive
+the escrow keys and swap cards. The attacker owns the network and the channel
+that carried the link.
 
-- `contact_only_after_approval` is **falsified** on the protocol as
-  shipped: the first opener, here the attacker, becomes the sender's
-  contact. CI asserts the falsification.
-- With `-DPIN_CONFIRMED` the sender gives the intended person a PIN
-  over another channel and finalizes only on proof of it, and the
-  lemma is verified. That variant is the target of the open approval
-  work named on the [Security Claims](security-claims.md) page.
+- `contact_only_after_approval` is **verified** on the protocol as shipped,
+  except for the one online guess per link the design accepts, which the
+  model states as its own rule. The model assumes SPAKE2's messages offer no
+  offline test; it does not prove that.
+- CI keeps three variants that must be **falsified**, so the lemma is shown
+  to be able to fail: `-DFIRST_OPENER` (no code: the first opener, here the
+  attacker, becomes the sender's contact), `-DPIN_CONFIRMED` (a hash of a
+  code in the deposit, which a short code cannot survive, as it can be tested
+  offline) and `-DCODE_IN_LINK` (the code travels with the link).
 
 ### `mailbox_token.spthy` — daily mailbox tokens
 

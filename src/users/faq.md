@@ -144,14 +144,15 @@ a handshake mean more than a friend request.
 ### Can I exchange contacts remotely?
 
 Yes — there's a **Link mode** for when you can't be in the same room.
-You share a one-off `vauchi://exchange?…` link (by message, email,
-however you like) and the other person opens it; the exchange completes
-through the relay, asynchronously, within a few days.
+You share a one-off link and a six-digit code, and the other person opens
+the link and types the code. Send them **separately**: the link by message or
+email, say, and the code in a call or a different app. You both need to stay
+on the exchange for up to five minutes while it completes through the relay.
 
-Whoever opens the link first becomes your contact. You don't approve
-them, and nothing checks that they are the person you meant. So send it
-only to that person, over a channel you already trust, and compare key
-fingerprints afterwards.
+The code is what stops a stranger who gets hold of the link. They get one
+guess, and a wrong one uses the link up, so you'd need to start again. It only
+works if the code doesn't travel with the link. It also shows that someone has
+the code, not who they are, so compare key fingerprints afterwards to be sure.
 
 The in-person methods are still the default, and for good reason — they
 give the strongest guarantee against a man-in-the-middle, because

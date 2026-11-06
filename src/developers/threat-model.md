@@ -95,9 +95,10 @@ compiled into the client.
   over the Bluetooth handshake stays at Standard,
   because the displayer does not pin the scanner
 - A contact made over a shared link is weaker and
-  shown as such: whoever opens the link first becomes
-  a contact, with no sender approval yet (see the
-  link exchange entry on the Security Claims page)
+  shown as such: it needs the link and a code sent
+  another way, which proves someone holds the code,
+  not who they are (see the link exchange entry on
+  the Security Claims page)
 - No trust-on-first-use for contact verification:
   you verify who you connect with in person
 - Device registry is cryptographically signed;
@@ -364,11 +365,12 @@ cooperation, and none is planned, because a
 mechanism that reaches people one has not met weakens
 the privacy the in-person anchor protects. The two
 remote paths that exist both start with something
-the sender hands over: a link, or a six-digit code
-spoken aloud. The link path is the weaker one, since
-whoever opens the link first becomes a contact; the
-code path shows both people a short authentication
-string to compare. Both are described, with their
+the sender hands over: a link with a code to send
+another way, or a six-digit code spoken aloud. The
+link path is the weaker one, since nothing checks who
+holds the code; the code path shows both people a
+short authentication string to compare. Both are
+described, with their
 limits, on the [Security Claims](security-claims.md)
 page and in the [Cryptography Reference](crypto.md).
 
@@ -389,7 +391,7 @@ page and in the [Cryptography Reference](crypto.md).
 | No guardian diversity | Same circle | UX warnings (planned) |
 | No key transparency | Not auditable | Signed key log (future) |
 | Meeting someone is cheap | A legitimate in-person exchange grants High trust | Shown as "met in person", never "trusted"; recovery vouching is a separate explicit choice |
-| Link exchange weaker | Whoever opens the link first becomes a contact | Sender approval and an out-of-band code (planned) |
+| Link exchange weaker | A code sent with its link protects nothing; whoever holds the link can use it up | Contact stays `Remote` until fingerprints are compared |
 | Push leaks metadata | Delivery timing | Empty push + fetch |
 | Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
 

@@ -69,8 +69,8 @@ introduce yourselves, short enough that a stale screenshot is worthless.
 QR is the dependable default, but it isn't the only door. Depending on
 your devices you may also exchange by **tapping phones together**,
 **bumping** them, or — when you simply can't be in the same room — by
-sharing a one-off **Link** (`vauchi://exchange?…`) that completes
-remotely through the relay over the next few days. The in-person methods
+sharing a one-off **Link** and a code, sent separately, which completes
+remotely through the relay within five minutes. The in-person methods
 give the strongest guarantee; Link mode trades a little of that for
 reach. The full menu lives in the
 [Exchange Contacts guide](../guides/exchange.md).

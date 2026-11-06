@@ -206,16 +206,15 @@ cannot step into the exchange in the displayer's place.
 
 ### 9. A remote exchange over a link is weaker, and says so
 
-A card can be exchanged by sending a link. The link carries a signed
-bootstrap, and the result is a live contact with a shared key.
+A card can be exchanged by sending a link and a six-digit code. The
+result is a live contact with a shared key, marked `Remote`.
 
-- Status: **Partial**. Today whoever opens the link first becomes a
-  contact, with no approval by the sender and no code to compare out
-  of band. A fingerprint to compare exists only for the relay-mediated
-  video exchange. Sender approval and an out-of-band
-  code are tracked as open work. Until then, treat a link as you
-  would treat a message to that person: send it over a channel you
-  already trust, and compare key fingerprints afterwards, which
+- Status: **Partial**. Whoever holds the link and not the code gets one
+  guess per link, one in a million, and cannot test guesses offline. That
+  holds only if the code travels another way than the link, which the app
+  can only ask for, and the SPAKE2 library has not been independently
+  audited. So send the code over a different channel from the link, and
+  compare key fingerprints afterwards, which
   raises the contact to the Verified level. The protocol itself is
   in [Link Exchange](crypto.md#link-exchange-asynchronous-via-relay-escrow).
 - Proof: test

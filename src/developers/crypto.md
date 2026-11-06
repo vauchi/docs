@@ -159,12 +159,18 @@ random 32-byte nonce, and puts both in the fragment of an https URL,
 so a browser never sends them to any server:
 
 ```
-https://vauchi.app/x#pk=<base64url ephemeral public key>&n=<base64url nonce>[&nm=<base64url name>]
+https://vauchi.app/x#pk=<base64url ephemeral public key>&n=<base64url nonce>&v=2[&nm=<base64url name>]
 ```
 
 The optional name is at most 64 bytes and is unchecked: anyone can put
-any name in a link, so the app shows it only as a claim. The older
-`vauchi://exchange?` form is still parsed.
+any name in a link, so the app shows it only as a claim. The landing
+page hands an installed app the same values as `vauchi://exchange?`. A
+link without `v=2` is refused: it has no code behind it.
+
+**The code.** The sender's device also draws a six-digit code and shows
+it next to the link. It is never in the link. The person sends it another
+way, such as a call or a different app, and whoever opens the link has to
+type it before anything reaches the relay.
 
 **Rendezvous.** Both devices meet in the relay's escrow, addressed by
 hashes neither the relay nor a reader of the URL can turn back into
@@ -175,20 +181,33 @@ handshake gate   ← SHA-256(nonce || "handshake")
 sender's slot    ← SHA-256(nonce || "initiator_presence")
 ```
 
-Before the link is shared, the sender deposits its ephemeral public
-key in that slot. Whoever opens the link makes their own ephemeral
-X25519 key pair, deposits it as the second slot of the same gate, and
-both sides compute the Diffie–Hellman shared secret. A small-order
-public key is rejected on both sides (non-contributory DH).
+The sender deposits its ephemeral public key and a SPAKE2 message in
+that slot. Whoever opens the link and types a code makes their own
+ephemeral X25519 key pair, deposits it with their own SPAKE2 message as
+the second slot of the same gate, and reads the sender's. Both sides
+compute the Diffie–Hellman shared secret and finish symmetric SPAKE2
+(`spake2` over Ed25519, with the code as the password and
+`"vauchi-link-pake-v1" || nonce || pk_i` as the identity), which gives a
+key only if both typed the same code. A small-order public key is
+rejected on both sides (non-contributory DH), and so is a side's own
+SPAKE2 message reflected back to it.
 
-**Escrow keys.** From the shared secret, each side derives the same
-gate and card key, and one slot each, with domain-separated HKDF:
+**Escrow keys.** From the shared secret and the PAKE key, each side
+derives the same gate and card key, and one slot each, with
+domain-separated HKDF:
 
 ```
-gate_hash ← SHA-256(HKDF(ikm=shared, info="vauchi-escrow-gate-v1"))
-slot      ← HKDF(ikm=shared, info="vauchi-escrow-slot-init-v1" | "vauchi-escrow-slot-resp-v1")
-card_key  ← HKDF(ikm=shared, info="vauchi-escrow-card-key-v1")
+ikm       ← shared || pake_key
+gate_hash ← SHA-256(HKDF(ikm, info="vauchi-escrow-pake-gate-v1"))
+slot      ← HKDF(ikm, info="vauchi-escrow-pake-slot-init-v1" | "vauchi-escrow-pake-slot-resp-v1")
+card_key  ← HKDF(ikm, info="vauchi-escrow-pake-card-key-v1")
 ```
+
+With a wrong code the two sides derive different values, so they sit in
+different gates, no card reaches anyone, and each session ends at its
+five-minute deadline. There is no separate check that could be forgotten,
+and no answer that would let a guess be tested. The opener's slot in the
+handshake gate is written once, so a link gets one guess.
 
 Each side encrypts its card payload with `card_key` and deposits it in
 its slot; each retrieves the other's. Deposits expire after seven
@@ -217,14 +236,17 @@ peer's identity key. Completing twice keeps the existing contact and
 its ratchet; a link that leads back to our own identity is rejected;
 the per-identity contact limit applies.
 
-**What a link does not do today.** There is no approval step: whoever
-opens the link first completes the exchange, and the sender's name is
-not authenticated. Anyone who opens the link after that is told it was
-already used, and their card is not deposited. No comparison code is shown. The trust level of a
-link contact is Standard. The user can raise it to Verified by
-comparing key fingerprints over a channel they already trust; that
-step is recorded as its own level and never set by hand. Sender
-approval and an out-of-band code are open work.
+**What a link does not do.** The code proves someone holds it, not who
+they are, and it protects nothing if it travels with the link. An attacker
+with only the link gets one guess in a million and cannot test guesses
+offline, but can still use the link up, so the intended person is told it
+was already used and has to ask for a new one. The sender's name is not
+authenticated. `spake2` has not been independently audited; if it were
+broken the exchange would fall back to whoever opens the link first, with
+the card still sealed from the relay. A link contact is `Remote`, below
+Standard. The user can raise it to Verified by comparing key fingerprints
+over a channel they already trust; that step is recorded as its own level
+and never set by hand.
 
 ### Relay-Mediated Exchange (Short Code + Fingerprint)
 
