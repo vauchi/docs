@@ -148,11 +148,16 @@ You share a one-off `vauchi://exchange?…` link (by message, email,
 however you like) and the other person opens it; the exchange completes
 through the relay, asynchronously, within a few days.
 
+Whoever opens the link first becomes your contact. You don't approve
+them, and nothing checks that they are the person you meant. So send it
+only to that person, over a channel you already trust, and compare key
+fingerprints afterwards.
+
 The in-person methods are still the default, and for good reason — they
 give the strongest guarantee against a man-in-the-middle, because
 physical presence is the one thing an attacker on the network can't
-forge. Link mode trades a little of that assurance for reach. Use it
-knowingly, the way you'd post a key versus handing it over.
+forge. Link mode gives that assurance up for reach. Use it knowingly,
+the way you'd post a key versus handing it over.
 
 ### Can I remove a contact?
 
