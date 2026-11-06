@@ -83,7 +83,7 @@ Simplicity and beauty go hand in hand — and beauty is personal.
 
 | Principle | Statement |
 |---|---|
-| **Proximity Full Trust** | QR + BLE/ultrasonic; remote restricted |
+| **Proximity Full Trust** | QR + BLE/ultrasonic; remote restricted. A Bluetooth handshake reaches it only once the displayer pins the scanner; today it gives Standard trust |
 | **Audited Crypto Only** | RustCrypto audited crates; no custom crypto |
 | **Forward Secrecy** | Double Ratchet; past messages safe if keys leak |
 | **Memory Safety** | Rust enforced; no unsafe in crypto paths |
