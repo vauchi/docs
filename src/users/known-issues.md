@@ -47,6 +47,12 @@ after updating to see if it's gone.
 
 ## Privacy and Security
 
+- <a id="linked-device-full-copy"></a>**A linked device is a full copy of
+  your identity** — Every phone you link holds everything needed to act as
+  you. If one is compromised, removing it from your device list does not
+  fully shut it out, so someone holding it could add a new device of their
+  own. Only link devices you control. A design that limits what ordinary
+  devices hold is planned.
 - <a id="post-quantum"></a>**Encryption is not yet quantum-resistant**
   — The key agreement used today is classical. Someone who records
   encrypted traffic now could read it if a large quantum computer is
