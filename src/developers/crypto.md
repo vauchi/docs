@@ -226,30 +226,35 @@ comparing key fingerprints over a channel they already trust; that
 step is recorded as its own level and never set by hand. Sender
 approval and an out-of-band code are open work.
 
-### Relay-Mediated Exchange (Short Code + SAS)
+### Relay-Mediated Exchange (Short Code + Fingerprint)
 
 Two people on a call can exchange through the relay with a short
-numeric code and confirm it with a spoken verification code.
+numeric code and confirm it by comparing an authentication fingerprint.
+The short code only finds the offer; it authenticates nothing.
 
 1. The initiator starts the exchange and gets a short numeric code.
 2. The responder enters the code and claims the exchange. The
    responder acts as the X3DH initiator and generates the ephemeral
    key; the offer's owner acts as the X3DH responder.
 3. The initiator completes the exchange once the claim arrives.
-4. Both sides read their verification code aloud and compare.
+4. Both sides compare the fingerprint their device shows.
 
-The verification code (SAS) binds the shared secret to both
-identities and is the same on both sides whoever started:
+The fingerprint (`derive_sas`, a name kept for its callers) binds the
+shared secret to both identities and is the same on both sides whoever
+started:
 
 ```
 tag ← HMAC-SHA256(key=shared_x3dh_secret,
                   "vauchi-relay-exchange-sas-v1" || sort(identity_a, identity_b))
-sas ← first 4 bytes of tag, big-endian, mod 1 000 000, shown as "ddd-ddd"
+fingerprint ← all 32 tag bytes, lowercase hex, eight groups of eight
+              characters separated by hyphens
 ```
 
 A mismatch means a party in the relay path substituted keys, and the
-exchange must be discarded. Six digits give an attacker one chance in
-a million per attempt to pass unnoticed.
+exchange must be discarded. The fingerprint is not truncated because
+the relay can choose both transcripts adaptively, so a short code would
+fall to a collision search. The protocol does not wait for the
+comparison: the contact exists whether or not anyone compares.
 
 ### Full X3DH (Asymmetric)
 

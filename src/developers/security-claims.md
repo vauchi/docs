@@ -211,8 +211,8 @@ bootstrap, and the result is a live contact with a shared key.
 
 - Status: **Partial**. Today whoever opens the link first becomes a
   contact, with no approval by the sender and no code to compare out
-  of band. The 6-digit comparison code exists only for the
-  relay-mediated video exchange. Sender approval and an out-of-band
+  of band. A fingerprint to compare exists only for the relay-mediated
+  video exchange. Sender approval and an out-of-band
   code are tracked as open work. Until then, treat a link as you
   would treat a message to that person: send it over a channel you
   already trust, and compare key fingerprints afterwards, which
