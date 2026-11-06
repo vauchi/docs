@@ -255,7 +255,8 @@ fresh exchange of ephemeral keys happens.
   without a prior exchange (it resumes at the first reply), and all
   sync between a person's own devices, which is encrypted under a
   static agreement between the devices' exchange keys and carries
-  contacts, cards and ratchet states.
+  contacts, cards and shared contact keys. Live pairwise ratchet
+  states are not copied.
 - Proof: tests `test_dr_forward_secrecy`,
   `test_forward_secrecy_compromised_state` and
   `test_dr_skipped_message_limit` in `crypto_ratchet_tests.rs`
@@ -282,11 +283,14 @@ never contains key material in the clear, and a wrong password fails
 rather than yielding garbage.
 
 - Status: **Shipped**. The claim is about the file. Its strength
-  against guessing is the password through Argon2id, and today only
-  the identity-only backup checks the password's strength: the full
-  backup, which is the default and holds every contact's shared key,
-  accepts any password (tracked).
-- Proof: tests `v2_backup_encrypts_the_seed_and_leaks_no_key_material`,
+  against guessing is the password through Argon2id. The full backup,
+  which is the default and holds every contact's shared key, and the
+  identity-only export both reject weak passwords; that does not make
+  an accepted password immune to guessing.
+- Proof: test
+  `full_backup_export_refuses_the_weak_password_the_identity_export_refuses`
+  in `full_backup_api_tests.rs`; tests
+  `v2_backup_encrypts_the_seed_and_leaks_no_key_material`,
   `test_v2_wrong_password` and
   `backup_debug_output_carries_no_secrets_or_contact_data` in
   `backup_format_versioning_tests.rs` and `backup_boundary_tests.rs`;

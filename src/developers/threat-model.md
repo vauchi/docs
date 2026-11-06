@@ -116,7 +116,10 @@ someone to scan a QR code under false pretenses).
 - Double Ratchet counters and per-message nonces detect replay and reordering
 - Device registry version numbers prevent rollback
 
-**Residual risk**: None. Tampering is cryptographically detected and rejected.
+**Residual risk**: Modification is cryptographically detected and rejected.
+Rollback protection rests on the version floor in code, which is tested; the
+model's `no_rollback` lemma reaches no verdict, so that part is stated, not
+proved.
 
 ### Repudiation
 
@@ -190,7 +193,7 @@ revocation broadcast.
 |----------|-----------|
 | **Confidentiality** | XChaCha20-Poly1305 E2E encryption |
 | **Integrity** | AEAD authentication tag + Ed25519 signatures |
-| **Forward secrecy** | Double Ratchet with ephemeral DH keys |
+| **Forward secrecy** | Double Ratchet with ephemeral DH keys, between contacts. Not device-to-device sync, and not the first message of a session opened without a prior exchange |
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Oblivious relay** | Encrypted blobs only, no keys |
 | **Physical verification** | QR + audio / NFC / BLE (full); SAS (video) |
@@ -223,11 +226,16 @@ If an attacker gains full control of a relay:
   to 5 min in the foreground and 1 to 60 min in the
   background; the relay's own delivery jitter is
   configured but not applied)
-- **Can** chain one fetcher's token sets across days
-  on the code as released, since consecutive days'
-  fetch requests overlapped in yesterday's tokens; a
-  fix in review groups requests per day, after which
-  only the timing of a day's requests remains
+- **Could** chain one fetcher's token sets across days
+  before the 2026-10-28 fix, since consecutive days'
+  fetch requests overlapped in yesterday's tokens. No
+  request now carries two days' tokens, so only the
+  timing of a day's requests remains
+- **Can** link a channel's past tokens if it later
+  obtains that channel's shared key, because a token
+  is a deterministic function of the shared key, the
+  recipient's key and the day. Token unlinkability is
+  not forward secure
 
 ### Device Theft
 
@@ -366,7 +374,10 @@ page and in the [Cryptography Reference](crypto.md).
 
 | Limitation | Impact | Mitigation |
 |-----------|--------|------------|
-| Relay sees metadata | Graph inference; timing and volume per mailbox | Padding, daily tokens, OHTTP, per-day fetch requests (fix in review) |
+| Relay sees metadata | Graph inference; timing and volume per mailbox | Padding, daily tokens, OHTTP, per-day fetch requests |
+| Tokens not forward secure | A later shared-key compromise links that channel's past tokens, across the relay's 120-day retention | None today |
+| Identity-key-addressed routes | The relay sees a long-lived identifier on guardian sets, recovery proofs and purge, the flows that map a recovery circle | By design |
+| Device sync has no forward secrecy | A later compromise of a device's exchange key opens every recorded batch, which carries contacts, cards and shared contact keys | None today; live pairwise ratchet states are not copied |
 | Device compromise | Full seed exposed | Subkeys (planned), passwords |
 | Linked device = full seed | Full identity | Subkeys (planned) |
 | Single relay SPOF | No sync if down | Federation (planned) |
@@ -435,7 +446,7 @@ which names the source for each row.
 |-------|-----------|-------|
 | Sender | None on a send | A send carries a mailbox token and ciphertext; the optional origin hint is an opaque AEAD blob only the recipient can open |
 | Recipient (mailbox) | Daily-rotating token | HKDF of the channel's shared key, the recipient's key and the day; opaque to the relay |
-| Fetch set | Up to 100 tokens per request | Groups one user's contacts for the day. On the code as released today's and yesterday's tokens travelled together, so consecutive days' sets overlapped and one fetcher was linkable across days; a fix in review sends each day's tokens in requests of their own |
+| Fetch set | Up to 100 tokens per request | Groups one user's contacts for the day. Before the 2026-10-28 fix today's and yesterday's tokens travelled together, so consecutive days' sets overlapped and one fetcher was linkable across days; each day's tokens now go in requests of their own |
 | Message size | Padding bucket | 256 B, 512 B, 1 KB, 4 KB, then 256-byte steps; replies are padded to a size ladder on the way out |
 | Message timing | Arrival and acknowledgement times | The relay's delivery jitter is configured but not applied; the delayed path (below) moves a fetch away from the client's connection |
 | Ratchet header | In the clear inside the blob | DH public key, generation and message index |
@@ -493,9 +504,10 @@ structure, and today one operator runs both hops.
    registration list padded to a multiple of 256 and
    shuffled.
 4. **Client-side timing** — the post-exchange delay
-   and the randomised sync interval above. The
-   relay's own delivery jitter is configured and
-   tested but no request path calls it.
+   and the randomised sync interval above. **Not
+   active:** the relay's own delivery jitter is
+   configured and tested, but no request path calls
+   it.
 5. **Optional proxy** — a user-configured SOCKS5 or
    HTTP CONNECT proxy (Tor, a VPN) in front of the
    outer relay, for whoever does not want even the
@@ -641,10 +653,10 @@ For the full cryptographic specification, see the
 |--------|--------|----------------|
 | Traffic volume | Very low | High (continuous) |
 | Timing analysis | Medium (client-side delays; no relay-side jitter) | High |
-| Social graph | Low (no IPs at the application relay; fetch sets linkable across days) | High |
+| Social graph | Medium (no IPs at the application relay and tokens rotate daily, but a day's fetch set groups one user's contacts, and recovery flows are addressed by identity key) | High |
 | Metadata | Mailbox tokens, padded sizes, timing | Sender + recip + IPs |
 | IP privacy | OHTTP + optional proxy | Often server sees IPs |
-| Forward secrecy | Yes (DR) | Varies |
+| Forward secrecy | Yes between contacts (DR); not device-to-device sync | Varies |
 | Relay knowledge | Encrypted blobs | Often plaintext |
 | Recovery | Social vouching | Phone/cloud backup |
 
