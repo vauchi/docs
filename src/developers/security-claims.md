@@ -195,7 +195,8 @@ cannot step into the exchange in the displayer's place.
   any identity, and shows that connector's card for the person to
   confirm. The card's identity is checked against the wire identity,
   but an unpinned peer is not proven to own it; closing that is open
-  work.
+  work. A contact made over this handshake stays at Standard trust on
+  both sides, so no High level rests on it.
 - Proof: Tamarin `ble_advertisement.spthy`, lemma
   `scanner_connects_to_the_displayer_it_scanned`, which says which
   displayer an honest advertiser is; Tamarin `ble_handshake.spthy`,

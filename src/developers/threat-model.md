@@ -90,8 +90,10 @@ compiled into the client.
 **Mitigations**:
 
 - Ed25519 identity keys bound to each user
-- Full-trust contact exchange requires **physical
-  presence** (QR, NFC, or BLE with proximity check)
+- High trust requires **physical presence** (NFC, or
+  QR with a confirmed proximity check). A contact made
+  over the Bluetooth handshake stays at Standard,
+  because the displayer does not pin the scanner
 - A contact made over a shared link is weaker and
   shown as such: whoever opens the link first becomes
   a contact, with no sender approval yet (see the
@@ -196,7 +198,7 @@ revocation broadcast.
 | **Forward secrecy** | Double Ratchet with ephemeral DH keys, between contacts. Not device-to-device sync, and not the first message of a session opened without a prior exchange |
 | **Break-in recovery** | DH ratchet step generates new key material |
 | **Oblivious relay** | Encrypted blobs only, no keys |
-| **Physical verification** | QR + audio / NFC / BLE (full); SAS (video) |
+| **Physical verification** | QR + audio / NFC (High trust); Bluetooth handshake (Standard trust); SAS (video) |
 | **Traffic analysis resist.** | Bucket padding + daily tokens + client-side delays; not measured against a traffic analyst |
 | **IP privacy** | OHTTP (RFC 9458): the application relay sees the outer relay's address only |
 | **Memory safety** | Rust (no unsafe in crypto paths) + `zeroize` on drop |
