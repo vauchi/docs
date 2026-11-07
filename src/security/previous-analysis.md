@@ -25,8 +25,9 @@ counts as our own verification. It asked how partial and full updates
 reconcile, whether ratchets are per device, how skipped message keys
 are evicted, whether mailbox tokens stay unlinkable, how the backup
 seed is protected, why there is no non-repudiation mode, and how keys
-are revoked. It also named what would strengthen the project most: a third-party audit, the full threat model in public, links from
-the documentation to the source, Vauchi-specific test vectors, and a
+are revoked. It also named what would strengthen the project most: a
+third-party audit, the full threat model in public, links from the
+documentation to the source, Vauchi-specific test vectors, and a
 statement of how AI agents take part in development.
 
 Our own first finding was about us: the site the agent read had been
@@ -54,8 +55,8 @@ What changed because of the review:
   code into its own repository,
   [gitlab.com/vauchi/spec](https://gitlab.com/vauchi/spec).
 
-Answers the project gave to the review that still stand: the audit is agreed
-and funding-gated; the threat model on this site is the complete one;
+Answers the project gave to the review that still stand: the audit
+is agreed and funding-gated; the threat model on this site is the complete one;
 contact-update ratchets run per device pair once both sides have
 exchanged their device registries and per contact before that;
 skipped message keys are bounded by hard caps, not by age; the absence
