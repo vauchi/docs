@@ -12,23 +12,25 @@ a glance what has never been done.
 
 There has been **no external cryptographic audit**. One is planned
 and depends on funding; the project says so rather than implying
-otherwise. There is no bug bounty. Everything below is either our own
-verification or a review someone else chose to do.
+otherwise. There is no bug bounty. Everything below is our own
+verification. No person outside the project has reviewed the code or
+the protocol.
 
-## External review, July 2026
+## AI-agent review, July 2026
 
-An independent reviewer read this site and asked written questions
-about the cryptography and the protocol: how partial and full updates
+This was not an external review. An AI agent read this site and wrote
+questions about the cryptography and the protocol, the way an outside
+reviewer would; no person outside the project was involved, so it
+counts as our own verification. It asked how partial and full updates
 reconcile, whether ratchets are per device, how skipped message keys
 are evicted, whether mailbox tokens stay unlinkable, how the backup
 seed is protected, why there is no non-repudiation mode, and how keys
-are revoked. The reviewer also named what would strengthen the project
-most: a third-party audit, the full threat model in public, links from
+are revoked. It also named what would strengthen the project most: a third-party audit, the full threat model in public, links from
 the documentation to the source, Vauchi-specific test vectors, and a
 statement of how AI agents take part in development.
 
-Our own first finding was about us: the site the reviewer read had
-been serving a build from ten weeks earlier, because the deploy step
+Our own first finding was about us: the site the agent read had been
+serving a build from ten weeks earlier, because the deploy step
 was manual and nobody had pressed it. Several premises of the review
 (a transport and a backup format that had already been retired) were
 artefacts of that stale build. The site was redeployed and a staleness
@@ -47,12 +49,12 @@ What changed because of the review:
   [Formal Verification](../developers/formal-verification.md) page,
   the [Test Vectors](../developers/test-vectors.md) and the source
   links in the [Cryptography Reference](../developers/crypto.md)
-  exist because the reviewer asked for them.
+  exist because the review asked for them.
 - A standalone, versioned specification is being extracted from the
   code into its own repository,
   [gitlab.com/vauchi/spec](https://gitlab.com/vauchi/spec).
 
-Positions given to the reviewer that still stand: the audit is agreed
+Answers the project gave to the review that still stand: the audit is agreed
 and funding-gated; the threat model on this site is the complete one;
 contact-update ratchets run per device pair once both sides have
 exchanged their device registries and per contact before that;
