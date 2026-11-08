@@ -3,15 +3,71 @@
 
 # Privacy Policy
 
-**Last Updated:** October 2026
+**Last Updated:** November 8, 2026
+
+This policy distinguishes contact-card exchanges from this website and
+its optional email waitlist. The app's end-to-end encryption does not
+protect the address you give the waitlist.
+
+## Website and Waitlist
+
+### Who is responsible
+
+Mattia Egloff, Switzerland, is responsible for processing personal data
+for this website and its optional waitlist. For questions or requests,
+contact [privacy@vauchi.app](mailto:privacy@vauchi.app).
+
+### Visiting the website
+
+Your browser requests pages and assets from `vauchi.app` and
+`cdn.vauchi.app`. Serving those requests involves connection details,
+including your IP address. The pages do not send behavior-analytics
+events. This is separate from the encrypted contact-card exchanges
+described in the app and relay sections below.
+
+This website does not set cookies. Your browser can still remember theme
+preferences and tab-only language and presentation settings. These are
+display settings, not analytics identifiers. You can clear them in your
+browser's site-data settings.
+
+### The optional waitlist
+
+We use your email for confirmation, removal links you request and one
+launch announcement. We also keep confirmation status, timestamps and
+information needed to verify confirmation and removal links.
+
+The stored address is encrypted with an operator-held key. Vauchi can
+read it to send these messages. This is not end-to-end encryption.
+
+Unconfirmed entries expire after seven days. Confirmed entries expire
+365 days after confirmation. You can leave earlier using the removal
+link in your email, or
+[request a new link](https://vauchi.app/waitlist/manage?lang=en).
+
+Leaving removes the active entry. Expired entries are excluded from new
+launch-mail lists; an outage can delay removal from storage. Leaving
+cannot recall mail already being sent. Earlier exports and backups can
+retain copies after the active entry is removed. The
+[management page](https://vauchi.app/waitlist/manage?lang=en) explains
+expiry and removal limits before you submit a request.
+
+Hosting, email delivery and backup storage involve infrastructure
+providers. Requested messages also reach your email provider. The app's
+contact-card encryption does not hide your waitlist address from the
+people and systems needed to send those messages.
+
+You can ask privacy@vauchi.app about your waitlist information or request
+access, correction or deletion. Other rights depend on the applicable
+law. You can also contact the competent data-protection authority; in
+Switzerland, the
+[Federal Data Protection and Information Commissioner](https://www.edoeb.admin.ch/en).
 
 ## Overview
 
-Vauchi is a privacy-focused contact card exchange
-application. This privacy policy explains how we
-handle your data. The short version: **your data
-stays on your devices, encrypted, and under your
-control.**
+The following app and relay sections describe Vauchi's contact-card
+exchange application. They do not describe the separate website and
+waitlist processing above. Contact-card contents are end-to-end encrypted;
+that protection does not apply to waitlist email.
 
 ## Data Collection
 
@@ -45,7 +101,8 @@ control.**
 - We do not track your location
 - We do not access your device contacts, photos, or other apps
 - We do not use advertising identifiers
-- We do not sell or share your data with third parties
+- Contact-card contents are end-to-end encrypted; website and waitlist
+  infrastructure is described separately above
 
 ## Data Storage
 
@@ -165,18 +222,22 @@ When you exchange contact cards with someone:
 
 ### With Third Parties
 
-We do not share your data with any third parties. Period.
+Contact-card contents remain end-to-end encrypted. The separate website
+and waitlist section describes hosting, mail delivery and backup
+infrastructure; those activities must not be confused with card contents.
 
 ### With Law Enforcement
 
-If required by law, we can only provide:
+For stored contact-card exchanges, the relay holds:
 
-- Connection metadata (timestamps only — IP addresses are not stored or logged)
+- Application-relay connection metadata: a cryptographic identity hash
+  and connection timestamps
 - Encrypted envelopes (which we cannot decrypt)
 
-We cannot provide your contact card content, contact
-list, IP addresses, or any decrypted data because we
-do not have access to it.
+The application relay cannot decrypt contact-card contents. This does
+not mean the operator cannot access a waitlist email address or observe
+connection metadata at an OHTTP hop; those separate limits are described
+in the website and Oblivious HTTP sections.
 
 ## Data Security
 
@@ -194,7 +255,9 @@ do not have access to it.
   single-use encryption key that is deleted after use
 - **Network Privacy:** Oblivious HTTP (RFC 9458)
   separates your IP address from your requests; the
-  relay never sees your network location
+  application relay sees the OHTTP hop's IP address.
+  The OHTTP hop sees your IP; the both-hop correlation
+  limitation above still applies.
 
 ### Platform Security
 
@@ -313,13 +376,14 @@ For privacy-related questions or concerns:
 
 | Question | Answer |
 |----------|--------|
-| Store my contacts on servers? | No, only on your device |
+| Store my contacts on servers? | Plaintext cards stay on devices; relays hold encrypted updates |
 | Can you read my card updates? | No, end-to-end encrypted |
-| Can you see who I talk to? | No, daily-rotating mailbox tokens |
-| Do you log my IP address? | No — Oblivious HTTP hides it from the relay |
+| Can you see who I talk to? | Tokens rotate daily; an operator running both hops can still correlate metadata |
+| Who can see my IP address? | The OHTTP hop sees it; the application relay sees that hop's IP. Website requests are separate |
+| Can you read my waitlist email? | Yes; the optional waitlist is separate from contact-card encryption |
 | Do you sell my data? | No, never |
 | Do you use tracking/analytics? | No |
-| Can I delete my data? | Yes, Settings > Privacy > Delete Identity (7-day grace) |
-| What's in a backup? | Your identity, contacts, card, labels — encrypted with your password |
-| Data backed up automatically? | No, you control backups |
+| Can I delete my data? | App: Settings > Privacy > Delete Identity (7-day grace). Waitlist: use the removal link |
+| What's in an app backup? | Your identity, contacts, card, labels — encrypted with your password |
+| Who controls backups? | You control app backups; operator backups can retain waitlist copies |
 | What if I lose my device? | Linked device or social recovery |
