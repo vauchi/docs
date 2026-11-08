@@ -15,7 +15,7 @@ protect the address you give the waitlist.
 
 Mattia Egloff, Switzerland, is responsible for processing personal data
 for this website and its optional waitlist. For questions or requests,
-contact [privacy@vauchi.app](mailto:privacy@vauchi.app).
+contact [security@vauchi.app](mailto:security@vauchi.app).
 
 ### Visiting the website
 
@@ -56,7 +56,7 @@ providers. Requested messages also reach your email provider. The app's
 contact-card encryption does not hide your waitlist address from the
 people and systems needed to send those messages.
 
-You can ask privacy@vauchi.app about your waitlist information or request
+You can ask security@vauchi.app about your waitlist information or request
 access, correction or deletion. Other rights depend on the applicable
 law. You can also contact the competent data-protection authority; in
 Switzerland, the
@@ -101,8 +101,7 @@ that protection does not apply to waitlist email.
 - We do not track your location
 - We do not access your device contacts, photos, or other apps
 - We do not use advertising identifiers
-- Contact-card contents are end-to-end encrypted; website and waitlist
-  infrastructure is described separately above
+- We do not sell your data
 
 ## Data Storage
 
@@ -222,9 +221,10 @@ When you exchange contact cards with someone:
 
 ### With Third Parties
 
-Contact-card contents remain end-to-end encrypted. The separate website
-and waitlist section describes hosting, mail delivery and backup
-infrastructure; those activities must not be confused with card contents.
+We do not sell your data. Contact-card contents remain end-to-end
+encrypted and are shared with the contacts you choose. The separate
+website and waitlist section describes hosting, mail delivery and backup
+infrastructure involved in operating those services.
 
 ### With Law Enforcement
 
@@ -367,7 +367,7 @@ source code at:
 
 For privacy-related questions or concerns:
 
-- Email: [privacy@vauchi.app](mailto:privacy@vauchi.app)
+- Email: [security@vauchi.app](mailto:security@vauchi.app)
 - GitLab: [gitlab.com/vauchi](https://gitlab.com/vauchi)
 
 ---
@@ -376,7 +376,7 @@ For privacy-related questions or concerns:
 
 | Question | Answer |
 |----------|--------|
-| Store my contacts on servers? | Plaintext cards stay on devices; relays hold encrypted updates |
+| Store my contacts on servers? | Cards are encrypted in device storage; relays hold end-to-end encrypted updates |
 | Can you read my card updates? | No, end-to-end encrypted |
 | Can you see who I talk to? | Tokens rotate daily; an operator running both hops can still correlate metadata |
 | Who can see my IP address? | The OHTTP hop sees it; the application relay sees that hop's IP. Website requests are separate |
