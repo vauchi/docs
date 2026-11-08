@@ -18,6 +18,12 @@ ORIGIN = "https://vauchi.app"
 NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 MARKER = re.compile(r"<!-- vauchi-discovery:start -->.*?<!-- vauchi-discovery:end -->\n?", re.S)
 DESCRIPTION = re.compile(r"<meta\b[^>]*\bname\s*=\s*(['\"])description\1[^>]*>\s*", re.I)
+DATE_PATTERN = r"(?:\d{4}-\d{2}-\d{2}|[A-Za-z]+\s+(?:\d{1,2},?\s+)?\d{4})"
+CHAPTER_METADATA = re.compile(
+    rf"(?:Last\s+Updated:\s*{DATE_PATTERN}|"
+    rf"Version\s+\d+(?:\.\d+)*(?:\s*[—–-]\s*{DATE_PATTERN})?)\.?",
+    re.I,
+)
 
 
 class ChapterDescription(HTMLParser):
@@ -54,7 +60,7 @@ class ChapterDescription(HTMLParser):
             return
         if tag == "p" and self.paragraph is not None:
             text = " ".join("".join(self.paragraph).split())
-            if text and not re.match(r"(?:Last\s+Updated:|Version\s+\d)", text, re.I):
+            if text and not CHAPTER_METADATA.fullmatch(text):
                 self.paragraphs.append(text)
             self.paragraph = None
         elif tag == "main":

@@ -122,3 +122,13 @@ class DescriptionTests(unittest.TestCase):
         page = self.page('<main><div class><p>Échange<br>cards with cafés.</p></div></main>')
         self.build()
         self.assert_descriptions(page, 'Échange cards with cafés.')
+
+    def test_version_prefixed_prose_is_not_a_metadata_only_paragraph(self):
+        page = self.page(
+            '<main><p>Last Updated: November 8, 2026</p>'
+            '<p>Version 1.1 — 2026-11-01</p>'
+            '<p>Version 2 keeps contact notes on your devices.</p>'
+            '<p>Later details.</p></main>'
+        )
+        self.build()
+        self.assert_descriptions(page, 'Version 2 keeps contact notes on your devices.')
