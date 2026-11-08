@@ -8,6 +8,7 @@ import html
 import re
 import sys
 import tomllib
+from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import quote
 from xml.etree import ElementTree as ET
@@ -16,6 +17,50 @@ from xml.etree import ElementTree as ET
 ORIGIN = "https://vauchi.app"
 NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 MARKER = re.compile(r"<!-- vauchi-discovery:start -->.*?<!-- vauchi-discovery:end -->\n?", re.S)
+DESCRIPTION = re.compile(r"<meta\b[^>]*\bname\s*=\s*(['\"])description\1[^>]*>\s*", re.I)
+
+
+class ChapterDescription(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.main = False
+        self.ignored = []
+        self.paragraph = None
+        self.paragraphs = []
+
+    def handle_starttag(self, tag, attrs):
+        if self.ignored:
+            if tag not in {"br", "hr", "img", "input", "source", "wbr"}:
+                self.ignored.append(tag)
+            return
+        if tag == "main":
+            self.main = True
+        if not self.main:
+            return
+        if tag in {"aside", "blockquote", "nav", "pre", "script", "style", "table"} or \
+                "admonition" in dict(attrs).get("class", "").split():
+            self.ignored.append(tag)
+        elif tag == "p":
+            self.paragraph = []
+        elif tag == "br" and self.paragraph is not None:
+            self.paragraph.append(" ")
+
+    def handle_endtag(self, tag):
+        if self.ignored:
+            if tag in self.ignored:
+                del self.ignored[len(self.ignored) - 1 - self.ignored[::-1].index(tag):]
+            return
+        if tag == "p" and self.paragraph is not None:
+            text = " ".join("".join(self.paragraph).split())
+            if text and not re.match(r"(?:Last\s+Updated:|Version\s+\d)", text, re.I):
+                self.paragraphs.append(text)
+            self.paragraph = None
+        elif tag == "main":
+            self.main = False
+
+    def handle_data(self, text):
+        if self.main and not self.ignored and self.paragraph is not None:
+            self.paragraph.append(text)
 
 
 def public_markdown(path, source, depth=0):
@@ -62,9 +107,14 @@ def generate(root):
         markdown_url = ORIGIN + prefix + quote(relative.with_suffix(".md").as_posix())
         title = html.unescape(re.search(r"<title>(.*?)</title>", document, re.S)[1])
         escaped_title = html.escape(title, quote=True)
-        escaped_description = html.escape(description, quote=True)
+        summary = ChapterDescription()
+        summary.feed(document)
+        chapter_description = description if path == "index.html" else next(iter(summary.paragraphs), description)
+        escaped_description = html.escape(chapter_description, quote=True)
+        document = DESCRIPTION.sub("", document)
         tags = [
             '<!-- vauchi-discovery:start -->',
+            f'<meta name="description" content="{escaped_description}">',
             f'<link rel="canonical" href="{canonical}">',
             f'<link rel="alternate" type="text/markdown" href="{markdown_url}">',
             f'<link rel="describedby" href="{ORIGIN}{prefix}llms.txt">',
