@@ -37,8 +37,10 @@ class ChapterDescription(HTMLParser):
             self.main = True
         if not self.main:
             return
-        if tag in {"aside", "blockquote", "nav", "pre", "script", "style", "table"} or \
-                "admonition" in dict(attrs).get("class", "").split():
+        if (
+            tag in {"aside", "blockquote", "nav", "pre", "script", "style", "table"}
+            or "admonition" in (dict(attrs).get("class") or "").split()
+        ):
             self.ignored.append(tag)
         elif tag == "p":
             self.paragraph = []

@@ -117,3 +117,8 @@ class DescriptionTests(unittest.TestCase):
         self.assert_descriptions(
             page, 'A "quoted" <img src=x onerror=alert(1)> & concise guide.',
         )
+
+    def test_boolean_attributes_and_line_breaks_preserve_readable_unicode(self):
+        page = self.page('<main><div class><p>Échange<br>cards with cafés.</p></div></main>')
+        self.build()
+        self.assert_descriptions(page, 'Échange cards with cafés.')
