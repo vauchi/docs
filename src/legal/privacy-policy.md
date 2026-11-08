@@ -101,7 +101,7 @@ that protection does not apply to waitlist email.
 - We do not track your location
 - We do not access your device contacts, photos, or other apps
 - We do not use advertising identifiers
-- We do not sell your data
+- We do not sell or share your data with third parties
 
 ## Data Storage
 
