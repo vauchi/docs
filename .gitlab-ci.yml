@@ -137,7 +137,7 @@ build:docs:
     # Generate sitemap.xml from the actual book/ output (replaces the old
     # hand-maintained src/sitemap.xml that drifted and emitted 404 URLs).
     - python3 scripts/build-discovery.py
-    - python3 -m unittest discover -s scripts/tests -p test_discovery.py
+    - python3 -m unittest discover -s scripts/tests -p 'test_*.py'
     # .well-known/ now lives under src/ and is copied by mdBook automatically.
     - |
       cat > book/build-info.json <<EOF
