@@ -7,8 +7,8 @@ import unittest
 
 
 DISCLOSURE = (
-    "Drafted with AI assistance. Reviewed, fact-checked and published by "
-    "Mattia Egloff, who is responsible for its content (hello@vauchi.app)."
+    "AI-assisted. Reviewed and fact-checked by Mattia Egloff, "
+    "who is responsible for this content."
 )
 
 

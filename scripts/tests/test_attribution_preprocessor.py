@@ -27,7 +27,7 @@ class AttributionPreprocessorTests(unittest.TestCase):
                 self.assertTrue(content.startswith(prefix + "# Actual title\n"))
                 self.assertLess(content.index("# Actual title"), content.index('<aside'))
                 self.assertLess(content.index('</aside>'), content.index("Original first paragraph."))
-                self.assertEqual(content.count("Drafted with AI assistance."), 1)
+                self.assertEqual(content.count("AI-assisted."), 1)
                 self.assertTrue(content.endswith("Original first paragraph.\n"))
 
     def test_missing_title_fails_without_emitting_a_partially_changed_book(self):
