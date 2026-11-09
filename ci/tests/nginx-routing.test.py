@@ -27,6 +27,17 @@ class DocsRoutingTests(unittest.TestCase):
         (public / "users/getting-started.html").write_text("Getting started")
         (public / "build-info.json").write_text('{"sha":"routing-test"}')
         (public / "404.html").write_text("Page not found")
+        (root / "private.txt").write_text("outside-public-root-sentinel")
+        sources = Path(__file__).resolve().parents[2] / "src"
+        cls.chapters = sorted(
+            path.relative_to(sources).with_suffix(".html")
+            for path in sources.rglob("*.md") if path.name != "SUMMARY.md"
+        )
+        for chapter in cls.chapters:
+            destination = public / chapter
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if not destination.exists():
+                destination.write_text("Chapter: " + chapter.as_posix())
         root.chmod(0o755)
         for path in public.rglob("*"):
             path.chmod(0o755 if path.is_dir() else 0o644)
@@ -140,6 +151,65 @@ class DocsRoutingTests(unittest.TestCase):
         status, _, body = self.request("/css/general.css")
         self.assertEqual(status, 200)
         self.assertEqual(body, b"body { color: purple; }")
+
+    def test_existing_leaf_aliases_redirect_to_the_same_canonical_chapter(self):
+        for chapter in self.chapters:
+            if chapter.name == "index.html":
+                continue
+            slug = chapter.with_suffix("").as_posix()
+            for prefix in ("/", "/docs/"):
+                for suffix in ("", "/"):
+                    with self.subTest(chapter=str(chapter), prefix=prefix, suffix=suffix):
+                        status, headers, _ = self.request(prefix + slug + suffix + "?q=one%20two")
+                        self.assertEqual(status, 301)
+                        expected = "https://vauchi.app/docs/" + chapter.as_posix()
+                        self.assertEqual(headers["Location"], expected + "?q=one%20two")
+                        final, _, _ = self.request("/docs/" + chapter.as_posix())
+                        self.assertEqual(final, 200)
+
+    def test_index_aliases_and_directory_slashes_use_the_mounted_canonical(self):
+        for chapter in self.chapters:
+            if chapter.name != "index.html":
+                continue
+            section = chapter.parent.as_posix()
+            section = "" if section == "." else section + "/"
+            for prefix in ("/", "/docs/"):
+                aliases = [prefix + chapter.as_posix()]
+                if section:
+                    aliases.append(prefix + section.rstrip("/"))
+                for alias in aliases:
+                    with self.subTest(alias=alias):
+                        status, headers, _ = self.request(alias + "?search=one%20two")
+                        self.assertEqual(status, 301)
+                        self.assertEqual(headers["Location"], "https://vauchi.app/docs/" + section + "?search=one%20two")
+
+    def test_head_alias_redirect_preserves_query_without_a_body(self):
+        status, headers, body = self.request("/docs/users/getting-started/?theme=coal", "HEAD")
+        self.assertEqual(status, 301)
+        self.assertEqual(headers["Location"], "https://vauchi.app/docs/users/getting-started.html?theme=coal")
+        self.assertEqual(body, b"")
+
+    def test_unknown_chapters_and_removed_release_guide_stay_missing(self):
+        for path in ("/docs/missing/", "/docs/developers/verify-releases/", "/docs/not-a-directory/index.html"):
+            with self.subTest(path=path):
+                status, headers, body = self.request(path)
+                self.assertEqual(status, 404)
+                self.assertNotIn("Location", headers)
+                self.assertEqual(body, b"Page not found")
+
+    def test_malformed_aliases_do_not_escape_root_or_inject_headers(self):
+        for path in (
+            "/docs/users/x%0d%0aSet-Cookie:injected=yes/",
+            "/docs/%2e%2e/%2e%2e/private.txt",
+            "/docs/users/%2f%2e%2e/%2e%2e/private.txt",
+            "/docs/" + "x" * 9000,
+        ):
+            with self.subTest(path=path[:80]):
+                status, headers, body = self.request(path)
+                self.assertIn(status, (400, 404, 414))
+                self.assertNotIn("Location", headers)
+                self.assertNotIn("Set-Cookie", headers)
+                self.assertNotIn(b"outside-public-root-sentinel", body)
 
 
 if __name__ == "__main__":
