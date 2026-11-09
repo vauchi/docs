@@ -5,6 +5,9 @@
 """Publish search and agent discovery from the built public book."""
 
 import html
+import hashlib
+import json
+import os
 import re
 import sys
 import tomllib
@@ -163,6 +166,7 @@ def generate(root):
     ET.register_namespace("", NAMESPACE)
     sitemap = ET.Element(f"{{{NAMESPACE}}}urlset")
     files = []
+    fingerprints = {}
     for page in sorted(book.rglob("*.html")):
         relative = page.relative_to(book)
         document = page.read_bytes().decode("utf-8")
@@ -204,6 +208,7 @@ def generate(root):
             '<!-- vauchi-discovery:end -->',
         ]
         page.write_bytes(head.render("\n".join(tags) + "\n").encode("utf-8"))
+        fingerprints[canonical] = hashlib.sha256(page.read_bytes()).hexdigest()
         url = ET.SubElement(sitemap, f"{{{NAMESPACE}}}url")
         ET.SubElement(url, f"{{{NAMESPACE}}}loc").text = canonical
         files.append((title, markdown_url))
@@ -220,6 +225,14 @@ def generate(root):
         overview = f"# {name}\n\n> {description}\n\n## Pages\n\n"
         overview += "".join(f"- [{title}]({url})\n" for title, url in files)
     (book / "llms.txt").write_text(overview)
+    source_sha = os.environ.get("CI_COMMIT_SHA", "development")
+    if source_sha != "development" and not re.fullmatch(r"[0-9a-f]{40}", source_sha):
+        raise ValueError("invalid source SHA")
+    manifest = {
+        "version": 1, "source_sha": source_sha,
+        "page_count": len(fingerprints), "pages": fingerprints,
+    }
+    (book / "indexnow-manifest.json").write_text(json.dumps(manifest, sort_keys=True) + "\n")
     print(f"Discovery: {len(files)} canonical pages and Markdown versions")
 
 
