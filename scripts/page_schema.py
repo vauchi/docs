@@ -65,7 +65,10 @@ def article_schema(root, markdown, source, document, canonical, description):
         "headline": headline,
         "description": description,
         "mainEntityOfPage": canonical,
-        "author": {"@id": "https://vauchi.app/#organization"},
+        "author": {
+            "@type": "Person", "name": "Mattia Egloff",
+            "url": "https://vauchi.app/#organization",
+        },
         "publisher": {"@id": "https://vauchi.app/#organization"},
     }
     timestamp = content_date(root, markdown, source)

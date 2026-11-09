@@ -7,7 +7,7 @@ import unittest
 
 
 DISCLOSURE = (
-    "AI-assisted. Reviewed and fact-checked by Mattia Egloff, "
+    "AI-assisted. Reviewed and fact-checked by the author, "
     "who is responsible for this content."
 )
 
@@ -54,6 +54,7 @@ class EditorialAttributionTests(unittest.TestCase):
         for path in pages:
             page = VisibleText(path.read_text())
             text = " ".join("".join(page.parts).split())
+            self.assertIn("By Mattia Egloff", text, str(path.relative_to(book)))
             if DISCLOSURE not in text:
                 self.fail(f"Missing exact editorial disclosure in {path.relative_to(book)}")
             self.assertEqual(text.count(DISCLOSURE), 1, str(path.relative_to(book)))

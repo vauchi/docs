@@ -60,8 +60,11 @@ class PageSchemaTests(unittest.TestCase):
                 self.assertEqual(schema["@type"], "WebPage" if relative.startswith("legal/") else "TechArticle")
                 self.assertEqual(schema["headline"], "A </script> & café title")
                 self.assertEqual(schema["description"], "Overview" if relative == "index" else "Actual description.")
-                self.assertEqual(schema["author"], {"@id": "https://vauchi.app/#organization"})
-                self.assertEqual(schema["publisher"], schema["author"])
+                self.assertEqual(schema["author"], {
+                    "@type": "Person", "name": "Mattia Egloff",
+                    "url": "https://vauchi.app/#organization",
+                })
+                self.assertEqual(schema["publisher"], {"@id": "https://vauchi.app/#organization"})
                 self.assertNotIn("dateModified", schema)
                 self.assertNotIn("<", blocks[0])
                 again = subprocess.run([sys.executable, str(SCRIPT), str(root)], capture_output=True, text=True)
