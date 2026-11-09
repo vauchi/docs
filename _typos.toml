@@ -12,3 +12,9 @@ ratatui = "ratatui"
 Ratatui = "Ratatui"
 # mdBook's own CSS variable name (their typo)
 existant = "existant"
+
+[type.schema-license]
+extend-glob = ["CC-BY-SA-3.0.txt"]
+[type.schema-license.extend-words]
+# Verbatim SPDX license text: https://spdx.org/licenses/CC-BY-SA-3.0.html
+MERCHANTIBILITY = "MERCHANTIBILITY"

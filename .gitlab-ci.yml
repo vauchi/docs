@@ -34,6 +34,7 @@ include:
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 variables:
+  GIT_DEPTH: "0"
   VAUCHI_SCRIPTS_REF: "ci-templates-v2026.10.08"
 
 stages:
@@ -138,6 +139,8 @@ build:docs:
     # hand-maintained src/sitemap.xml that drifted and emitted 404 URLs).
     - python3 scripts/build-discovery.py
     - python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+    - python3 scripts/validate_schema.py book > schema-validation.txt
+    - cat schema-validation.txt
     # .well-known/ now lives under src/ and is copied by mdBook automatically.
     - |
       cat > book/build-info.json <<EOF
@@ -146,6 +149,7 @@ build:docs:
   artifacts:
     paths:
       - book/
+      - schema-validation.txt
     expire_in: 1 week
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
