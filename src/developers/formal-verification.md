@@ -6,7 +6,10 @@
 Parts of Vauchi's protocol are checked by machine, not only by tests.
 This page lists every model, what it covers, what it proves, and how
 to run it yourself. The [Security Claims](security-claims.md) page
-points at these lemmas from each claim.
+points at these lemmas from each claim. To rerun the models yourself
+with copy-paste commands, follow
+[VERIFY.md](https://gitlab.com/vauchi/core/-/blob/main/VERIFY.md) in the
+core repository.
 
 Three tools are in use.
 
