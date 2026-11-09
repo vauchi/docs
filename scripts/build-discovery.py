@@ -16,6 +16,8 @@ from pathlib import Path
 from urllib.parse import quote
 from xml.etree import ElementTree as ET
 
+from page_schema import article_schema
+
 
 ORIGIN = "https://vauchi.app"
 NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -214,6 +216,7 @@ def generate(root):
             f'<meta name="twitter:title" content="{escaped_title}">',
             f'<meta name="twitter:description" content="{escaped_description}">',
             '<meta name="twitter:image" content="https://vauchi.app/social-preview.png">',
+            article_schema(root, markdown, source, document, canonical, chapter_description),
             '<!-- vauchi-discovery:end -->',
         ]
         page.write_bytes(head.render("\n".join(tags) + "\n").encode("utf-8"))
