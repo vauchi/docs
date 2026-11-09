@@ -16,7 +16,7 @@ class Page(HTMLParser):
         attributes = dict(attributes)
         if tag == "h1":
             self.headings += 1
-        if tag == "img" and not attributes.get("alt", "").strip():
+        if tag == "img" and "alt" not in attributes:
             self.unlabelled_images.append(attributes.get("src", ""))
 
 
