@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Last Updated:** November 8, 2026
+**Last Updated:** November 9, 2026
 
 This policy distinguishes contact-card exchanges from this website and
 its optional email waitlist. The app's end-to-end encryption does not
@@ -51,10 +51,16 @@ retain copies after the active entry is removed. The
 [management page](https://vauchi.app/waitlist/manage?lang=en) explains
 expiry and removal limits before you submit a request.
 
-Hosting, email delivery and backup storage involve infrastructure
-providers. Requested messages also reach your email provider. The app's
+The website is hosted by IONOS. Messages are sent through Vauchi's
+self-hosted mail server and reach your email provider. The app's
 contact-card encryption does not hide your waitlist address from the
 people and systems needed to send those messages.
+
+We encrypt backups before uploading them to Cloudflare R2. Local backup
+copies are normally cleaned up after about two weeks. Off-site backups
+are deleted manually, without a fixed deletion date. They can retain a
+removed address for longer than a year. Vauchi can decrypt these backups;
+this is separate from the app's end-to-end encryption.
 
 You can ask security@vauchi.app about your waitlist information or request
 access, correction or deletion. Other rights depend on the applicable
