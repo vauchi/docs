@@ -13,8 +13,10 @@ Vauchi ships one file of vectors, produced by the functions in
 
 - canonical copy, checked by the Core test suite on every pipeline:
   [`vauchi-core/tests/fixtures/test-vectors/vauchi-protocol-vectors-v1.json`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/fixtures/test-vectors/vauchi-protocol-vectors-v1.json)
-- the test that reads it and recomputes every value:
-  [`vauchi-core/tests/it/protocol_test_vectors_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/protocol_test_vectors_tests.rs)
+- the tests that read it and recompute every value:
+  [`vauchi-core/tests/it/protocol_test_vectors_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/protocol_test_vectors_tests.rs),
+  and for `backup_v7`
+  [`protocol_test_vectors_backup_v7_tests.rs`](https://gitlab.com/vauchi/core/-/blob/main/vauchi-core/tests/it/protocol_test_vectors_backup_v7_tests.rs)
 - a copy of the file at the bottom of this page, and as a download:
   [vauchi-protocol-vectors-v1.json](test-vectors/vauchi-protocol-vectors-v1.json)
 
@@ -170,10 +172,10 @@ runs in every build. The other starts from the password and runs only
 in builds with production Argon2id parameters, where it also imports
 the backup through the same function the apps use.
 
-### `backup_v6`: the backup the app writes today
+### `backup_v6`: the backup before v7
 
-A v3 file is still imported, but a new backup is written as v6, whose
-header is in the clear and authenticated:
+A v3 file is still imported, and so is v6, whose header is in the
+clear and authenticated:
 
 ```text
 header = 0x06 || salt (16 bytes)
@@ -192,6 +194,32 @@ one opens the file from the recorded Argon2id output in every build
 and checks that a changed header is refused, the other imports it
 through the apps' own function in builds with production parameters
 and checks that a wrong password is refused.
+
+### `backup_v7`: the backup the app writes today
+
+A new backup holds two payloads of one size behind a clear,
+authenticated header:
+
+```text
+header  = 0x07 || file_id (16 bytes) || salt_0 (16) || salt_1 (16)
+file    = header || P_0 || P_1
+P_i     = XChaCha20-Poly1305(K_i, frame_i; AD = header)
+K_i     = HKDF-expand(HKDF-extract(salt = none, Argon2id(password_i, salt_i)),
+                      "vauchi-backup-v7-payload", 32 bytes)
+frame_i = u32_be(len(z_i)) || z_i || zero bytes up to the bucket
+z_i     = zlib(JSON snapshot)
+```
+
+One payload holds the snapshot; the other holds a decoy, or a zero
+frame under a random key, as in this vector. `real_slot` says which
+payload the password opens. The vector records the password, the file
+id, both salts, the header, the Argon2id output and the final key for
+that slot, and the complete file, and names the display name, master
+seed, device and creation time the snapshot must contain. Two tests
+cover it. One opens the real payload from the recorded Argon2id output
+in every build and checks that a changed header is refused. The other
+imports the file through the apps' own function in builds with
+production parameters and checks that a wrong password is refused.
 
 ### `qr_symmetric`: the mutual QR exchange
 

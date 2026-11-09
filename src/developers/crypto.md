@@ -344,9 +344,49 @@ Header (44 bytes) bound as AEAD associated data (tag `0x03`).
 
 ## Backup Format
 
-### v6 — Full Backup (Current)
+### v7 — Full Backup (Current)
 
+```text
+header  = [0x07] || file_id(16) || salt_0(16) || salt_1(16)
+file    = header || P_0 || P_1        (P_0 and P_1 the same size)
+P_i     = XChaCha20-Poly1305(K_i, frame_i; AD = header)
+K_i     = HKDF-expand(HKDF-extract(none, Argon2id(password_i, salt_i)),
+                      "vauchi-backup-v7-payload", 32)
+frame_i = u32_be(len(z_i)) || z_i || zero bytes up to the bucket
+z_i     = zlib(JSON snapshot)
 ```
+
+- Two payloads, each under its own password. One holds the
+  real snapshot and takes a random slot. The other is
+  either a decoy snapshot under a separate decoy password,
+  or a zero frame under a random key
+- Both payloads are padded to the same bucket: 4 KiB,
+  doubling, up to the largest size that fits twice in the
+  32 MiB file. Every export draws a fresh file id, salts
+  and nonces, so the file does not show which slot is
+  real or whether a decoy exists
+- A reader derives both keys before trying either, so a
+  restore takes the same time whichever payload opens. Any
+  failure, including a payload copied from another file,
+  is the same decryption error
+- Plaintext: the v6 snapshot with `version: 7`. Exported
+  from the real profile of an install with an app password,
+  it also carries the duress section: the decoy profile's
+  data re-encrypted under a fresh transfer key, and the
+  app password's and duress PIN's hashes, so a restored
+  install locks as before
+- The decoy payload holds the decoy profile under its own
+  identity, locked with the duress PIN, with no duress
+  section. It is offered only on the real profile when a
+  duress PIN is set
+- The export refuses a backup or decoy password that
+  unlocks the install, or that repeats the other
+- Limits and validation as for v6. Normative text:
+  Keys and Cards D4 in the protocol specification
+
+### v6 — Full Backup (still imported)
+
+```text
 header = [0x06] || salt(16)
 header || ciphertext
 ```
@@ -372,8 +412,8 @@ header || ciphertext
   installation. Source:
   `core/vauchi-core/src/backup/snapshot/`.
 
-The exporter writes v6; the importer accepts v6 and
-v3. A reader from before v6 rejects a v6 file.
+The exporter writes v7; the importer accepts v7, v6
+and v3. A reader from before v7 rejects a v7 file.
 
 ### v3 — Full Backup (Legacy, still imported)
 
