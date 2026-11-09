@@ -16,14 +16,81 @@ from xml.etree import ElementTree as ET
 
 ORIGIN = "https://vauchi.app"
 NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
-MARKER = re.compile(r"<!-- vauchi-discovery:start -->.*?<!-- vauchi-discovery:end -->\n?", re.S)
-DESCRIPTION = re.compile(r"<meta\b[^>]*\bname\s*=\s*(['\"])description\1[^>]*>\s*", re.I)
 DATE_PATTERN = r"(?:\d{4}-\d{2}-\d{2}|[A-Za-z]+\s+(?:\d{1,2},?\s+)?\d{4})"
 CHAPTER_METADATA = re.compile(
     rf"(?:Last\s+Updated:\s*{DATE_PATTERN}|"
     rf"Version\s+\d+(?:\.\d+)*(?:\s*[—–-]\s*{DATE_PATTERN})?)\.?",
     re.I,
 )
+
+
+class DiscoveryHead(HTMLParser):
+    def __init__(self, document):
+        super().__init__()
+        self.document = document
+        self.line_offsets = [0, *(match.end() for match in re.finditer("\n", document))]
+        self.start = None
+        self.end = None
+        self.owned_start = None
+        self.owned_ranges = []
+        self.descriptions = []
+        self.has_robots = False
+        self.feed(document)
+        if self.owned_start is not None:
+            raise ValueError("unpaired discovery marker in head")
+        if self.start is None or self.end is None:
+            raise ValueError("page must have one complete head")
+
+    def source_offset(self):
+        row, column = self.getpos()
+        return self.line_offsets[row - 1] + column
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "head":
+            if self.start is not None:
+                raise ValueError("page must have one complete head")
+            self.start = self.source_offset() + len(self.get_starttag_text())
+        elif self.start is not None and self.end is None and tag == "meta":
+            if self.owned_start is not None:
+                return
+            name = (dict(attrs).get("name") or "").lower()
+            if name == "description":
+                self.descriptions.append((self.source_offset(), self.source_offset() + len(self.get_starttag_text())))
+            elif name == "robots":
+                self.has_robots = True
+
+    def handle_endtag(self, tag):
+        if tag == "head":
+            if self.start is None or self.end is not None:
+                raise ValueError("page must have one complete head")
+            if self.owned_start is not None:
+                raise ValueError("unpaired discovery marker in head")
+            self.end = self.source_offset()
+
+    def handle_comment(self, data):
+        if self.start is None or self.end is not None:
+            return
+        if data.strip() == "vauchi-discovery:start":
+            if self.owned_start is not None:
+                raise ValueError("unpaired discovery marker in head")
+            self.owned_start = self.source_offset()
+        elif data.strip() == "vauchi-discovery:end":
+            if self.owned_start is None:
+                raise ValueError("unpaired discovery marker in head")
+            end = self.document.index("-->", self.source_offset()) + 3
+            if self.document.startswith("\r\n", end):
+                end += 2
+            elif self.document.startswith("\n", end):
+                end += 1
+            self.owned_ranges.append((self.owned_start, end))
+            self.owned_start = None
+
+    def render(self, tags, remove_descriptions=True):
+        head = self.document[self.start:self.end]
+        ranges = self.owned_ranges + (self.descriptions if remove_descriptions else [])
+        for start, end in sorted(ranges, reverse=True):
+            head = head[:start - self.start] + head[end - self.start:]
+        return self.document[:self.start] + head + tags + self.document[self.end:]
 
 
 class ChapterDescription(HTMLParser):
@@ -98,11 +165,11 @@ def generate(root):
     files = []
     for page in sorted(book.rglob("*.html")):
         relative = page.relative_to(book)
-        document = MARKER.sub("", page.read_text())
+        document = page.read_bytes().decode("utf-8")
+        head = DiscoveryHead(document)
         if relative.as_posix() in ("404.html", "print.html", "toc.html"):
-            if 'name="robots"' not in document:
-                document = document.replace("</head>", '<meta name="robots" content="noindex">\n</head>')
-            page.write_text(document)
+            robots = '' if head.has_robots else '<meta name="robots" content="noindex">\n'
+            page.write_bytes(head.render(robots, remove_descriptions=False).encode("utf-8"))
             continue
         markdown = source / relative.with_suffix(".md")
         if not markdown.is_file():
@@ -119,7 +186,6 @@ def generate(root):
         summary.feed(document)
         chapter_description = description if path == "index.html" else next(iter(summary.paragraphs), description)
         escaped_description = html.escape(chapter_description, quote=True)
-        document = DESCRIPTION.sub("", document)
         tags = [
             '<!-- vauchi-discovery:start -->',
             f'<meta name="description" content="{escaped_description}">',
@@ -137,7 +203,7 @@ def generate(root):
             '<meta name="twitter:image" content="https://vauchi.app/social-preview.png">',
             '<!-- vauchi-discovery:end -->',
         ]
-        page.write_text(document.replace("</head>", "\n".join(tags) + "\n</head>"))
+        page.write_bytes(head.render("\n".join(tags) + "\n").encode("utf-8"))
         url = ET.SubElement(sitemap, f"{{{NAMESPACE}}}url")
         ET.SubElement(url, f"{{{NAMESPACE}}}loc").text = canonical
         files.append((title, markdown_url))
