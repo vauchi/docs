@@ -26,6 +26,7 @@ class DocsRoutingTests(unittest.TestCase):
         (public / "book.js").write_text("window.docsLoaded = true;")
         (public / "users/getting-started.html").write_text("Getting started")
         (public / "build-info.json").write_text('{"sha":"routing-test"}')
+        (public / "indexnow-manifest.json").write_text('{"version":1}')
         (public / "404.html").write_text("Page not found")
         (root / "private.txt").write_text("outside-public-root-sentinel")
         sources = Path(__file__).resolve().parents[2] / "src"
@@ -93,6 +94,15 @@ class DocsRoutingTests(unittest.TestCase):
             return response.status, dict(response.getheaders()), response.read()
         finally:
             connection.close()
+
+    def test_deployment_metadata_requires_revalidation(self):
+        for prefix in ("", "/docs"):
+            for name in ("build-info.json", "indexnow-manifest.json"):
+                with self.subTest(prefix=prefix, name=name):
+                    status, headers, _ = self.request(prefix + "/" + name)
+                    self.assertEqual(status, 200)
+                    self.assertEqual(headers["Cache-Control"], "no-cache")
+                    self.assertEqual(headers["X-Content-Type-Options"], "nosniff")
 
     def test_docs_redirects_to_trailing_slash(self):
         status, headers, _ = self.request("/docs")

@@ -16,6 +16,20 @@ SHA = "a" * 40
 
 
 class NotificationManifestTests(unittest.TestCase):
+    def test_missing_summary_chapter_cannot_publish_a_partial_manifest(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "book").mkdir()
+            (root / "book.toml").write_text('[book]\ntitle="Test"\n[output.html]\nsite-url="/docs/"\n')
+            (root / "src/SUMMARY.md").write_text("[Home](index.md)\n[Topic](missing.md)\n")
+            (root / "src/index.md").write_text("# Home\n")
+            (root / "book/index.html").write_text("<head><title>Home</title></head><main>Home</main>")
+            result = subprocess.run([sys.executable, str(SCRIPT), str(root)], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("public chapter not built", result.stderr)
+            self.assertFalse((root / "book/indexnow-manifest.json").exists())
+
     def test_manifest_tracks_final_html_inventory_and_is_reproducible(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -24,7 +38,7 @@ class NotificationManifestTests(unittest.TestCase):
             (root / "book.toml").write_text(
                 '[book]\ntitle="Test"\n[output.html]\nsite-url="/docs/"\n'
             )
-            for name in ("index", "topic"):
+            for name in ("index", "topic", "reindex"):
                 (root / "src" / (name + ".md")).write_text("# Test\n")
                 (root / "book" / (name + ".html")).write_text(
                     "<html><head><title>Test</title></head>"
@@ -45,7 +59,8 @@ class NotificationManifestTests(unittest.TestCase):
             self.assertEqual(set(first), {"version", "source_sha", "page_count", "pages"})
             self.assertEqual(first["version"], 1)
             self.assertEqual(first["source_sha"], SHA)
-            self.assertEqual(first["page_count"], 2)
+            self.assertEqual(first["page_count"], 3)
+            self.assertIn("https://vauchi.app/docs/reindex.html", first["pages"])
             locations = [el.text for el in ElementTree.parse(
                 root / "book/sitemap.xml").findall(".//{*}loc")]
             self.assertEqual(set(first["pages"]), set(locations))

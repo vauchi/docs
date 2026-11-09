@@ -158,6 +158,15 @@ def generate(root):
     config = tomllib.loads((root / "book.toml").read_text())
     book = root / config.get("build", {}).get("build-dir", "book")
     source = root / config["book"].get("src", "src")
+    summary = source / "SUMMARY.md"
+    if summary.is_file():
+        chapters = re.findall(r"\[[^\]]*\]\(([^)\s]+\.md)(?:#[^)]*)?\)", summary.read_text())
+        if not chapters:
+            raise ValueError("no public chapters in summary")
+        for chapter in chapters:
+            relative = (source / chapter).resolve().relative_to(source.resolve())
+            if not (book / relative.with_suffix(".html")).is_file():
+                raise ValueError(f"public chapter not built: {relative}")
     prefix = config["output"]["html"]["site-url"]
     if not prefix.startswith("/") or not prefix.endswith("/"):
         raise ValueError("site-url must be a mounted path with trailing slash")
@@ -181,7 +190,7 @@ def generate(root):
         body = public_markdown(markdown, source)
         (book / relative.with_suffix(".md")).write_text(body)
         path = relative.as_posix()
-        canonical_path = path[:-10] if path.endswith("index.html") else path
+        canonical_path = path[:-10] if path == "index.html" or path.endswith("/index.html") else path
         canonical = ORIGIN + prefix + quote(canonical_path)
         markdown_url = ORIGIN + prefix + quote(relative.with_suffix(".md").as_posix())
         title = html.unescape(re.search(r"<title>(.*?)</title>", document, re.S)[1])
