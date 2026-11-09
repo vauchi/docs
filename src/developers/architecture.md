@@ -34,10 +34,10 @@ flowchart TB
         Recovery["Recovery Store<br/>(9-day TTL)"]
     end
 
-    Gateway["OHTTP Gateway<br/>(strips client IP)"]
+    Gateway["OHTTP Relay<br/>(hides client IP)"]
 
     Core -- "OHTTP encrypted" --> Gateway
-    Gateway -- "HTTP v2 (TLS 1.3)" --> Relay
+    Gateway -- "sealed request over WireGuard" --> Relay
 ```
 
 > **Note:** All remote client↔relay traffic flows through an OHTTP
