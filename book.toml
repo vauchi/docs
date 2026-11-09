@@ -35,6 +35,11 @@ limit-results = 20
 command = "mdbook-admonish"
 assets_version = "3.1.0"
 
+[preprocessor.editorial]
+command = "python3 scripts/editorial.py"
+renderers = ["html"]
+after = ["links"]
+
 [preprocessor.beautiful-mermaid]
 command = "node mdbook-beautiful-mermaid.mjs"
 

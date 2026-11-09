@@ -18,15 +18,23 @@ class VisibleText(HTMLParser):
         self.body = False
         self.ignored = None
         self.parts = []
+        self.main = False
+        self.reading_order = []
         self.feed(document)
 
     def handle_starttag(self, tag, attrs):
+        if tag == "main":
+            self.main = True
+        if self.main and tag in {"h1", "aside", "p"}:
+            self.reading_order.append(tag)
         if tag == "body":
             self.body = True
         if tag in {"script", "style"}:
             self.ignored = tag
 
     def handle_endtag(self, tag):
+        if tag == "main":
+            self.main = False
         if tag == "body":
             self.body = False
         if tag == self.ignored:
@@ -44,6 +52,9 @@ class EditorialAttributionTests(unittest.TestCase):
                  if path.name not in {"print.html", "toc.html", "404.html"}]
         self.assertNotEqual(pages, [], "Build the book before checking editorial attribution")
         for path in pages:
-            text = " ".join("".join(VisibleText(path.read_text()).parts).split())
+            page = VisibleText(path.read_text())
+            text = " ".join("".join(page.parts).split())
             if DISCLOSURE not in text:
                 self.fail(f"Missing exact editorial disclosure in {path.relative_to(book)}")
+            self.assertEqual(text.count(DISCLOSURE), 1, str(path.relative_to(book)))
+            self.assertEqual(page.reading_order[:2], ["h1", "aside"], str(path.relative_to(book)))
