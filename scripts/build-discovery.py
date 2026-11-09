@@ -186,7 +186,7 @@ def generate(root):
             continue
         markdown = source / relative.with_suffix(".md")
         if not markdown.is_file():
-            continue
+            raise ValueError(f"unexpected HTML without public source: {relative}")
         body = public_markdown(markdown, source)
         (book / relative.with_suffix(".md")).write_text(body)
         path = relative.as_posix()

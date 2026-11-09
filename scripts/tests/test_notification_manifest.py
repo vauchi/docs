@@ -16,6 +16,19 @@ SHA = "a" * 40
 
 
 class NotificationManifestTests(unittest.TestCase):
+    def test_unexpected_html_cannot_silently_escape_the_inventory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "src").mkdir()
+            (root / "book").mkdir()
+            (root / "book.toml").write_text('[book]\ntitle="Test"\n[output.html]\nsite-url="/docs/"\n')
+            (root / "src/index.md").write_text("# Home\n")
+            (root / "book/index.html").write_text("<head><title>Home</title></head><main>Home</main>")
+            (root / "book/plugin.html").write_text("<head><title>Plugin</title></head><main>Plugin</main>")
+            result = subprocess.run([sys.executable, str(SCRIPT), str(root)], capture_output=True, text=True)
+            self.assertNotEqual(result.returncode, 0)
+            self.assertIn("unexpected HTML without public source", result.stderr)
+
     def test_missing_summary_chapter_cannot_publish_a_partial_manifest(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
