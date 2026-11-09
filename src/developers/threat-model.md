@@ -48,7 +48,7 @@ flowchart TB
 | Boundary | Protection | What that party sees |
 |----------|-----------|----------------------|
 | Client ↔ Outer relay | TLS (WebPKI, optional SPKI pin) + OHTTP encapsulation | The address, not the content |
-| Outer relay ↔ Application relay | TLS; the request stays encapsulated | Content-shaped bytes, not the address |
+| Outer relay ↔ Application relay | WireGuard tunnel; the request stays encapsulated | Content-shaped bytes, not the address |
 | Both relays together | Nothing cryptographic; one operator runs both hops today | Can join address and content by timing; the delayed path is the mitigation. Separate hosts are in place for the alpha; a second operator is the gate for the first release |
 | Client ↔ Client | E2E (key agreement + Double Ratchet) | Verified in person |
 | Device ↔ Device | Static agreement between the devices' exchange keys | Trusted (same seed); no forward secrecy |
@@ -58,6 +58,24 @@ A client in production refuses to talk to the application relay
 directly: every data request goes through the outer hop, and the
 gateway's key is accepted only under a signed chain from an anchor
 compiled into the client.
+
+### Bootstrap exceptions
+
+A client cannot encapsulate a request before it holds the gateway's
+key, so one request goes outside OHTTP: the fetch of the signed gateway
+key, and of later fresh copies of it, from the outer relay's host
+(`create_bootstrap_transport_direct` in Core's `sync_http.rs`). The
+request carries no application action and no identifier. The client
+refuses it when the outer relay and the application relay are the same
+host, and accepts the answer only under the compiled-in anchor. The
+outer relay learns the client's address, which it sees on every request
+anyway, and that the client fetched the key. Release gate RG-8 allows
+exactly this exception.
+
+Certificate pins are compiled into each release. A remote pin-config
+refresh over the same direct transport was never enabled and has been
+removed (vauchi/private#1195); pin rotation, if it returns, goes through
+OHTTP.
 
 ## Assets
 
