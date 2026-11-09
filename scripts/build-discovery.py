@@ -19,6 +19,30 @@ from xml.etree import ElementTree as ET
 from page_schema import article_schema
 
 
+SIDEBAR_STORAGE = """// Optional scroll state must not prevent sidebar setup or navigation.
+const vauchiSidebarStorage = {
+    getItem(key) { try { return sessionStorage.getItem(key); } catch { return null; } },
+    setItem(key, value) { try { sessionStorage.setItem(key, value); } catch {} },
+    removeItem(key) { try { sessionStorage.removeItem(key); } catch {} }
+};
+"""
+
+
+def guard_sidebar_storage(book):
+    path = book / "toc.js"
+    if not path.is_file():
+        return
+    source = path.read_text()
+    if source.startswith(SIDEBAR_STORAGE):
+        return
+    guarded = re.sub(
+        r"(?m)^([ \t]*(?:var sidebarScrollTop = )?)sessionStorage\.",
+        r"\1vauchiSidebarStorage.", source,
+    )
+    if guarded != source:
+        path.write_text(SIDEBAR_STORAGE + guarded)
+
+
 ORIGIN = "https://vauchi.app"
 NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9"
 DATE_PATTERN = r"(?:\d{4}-\d{2}-\d{2}|[A-Za-z]+\s+(?:\d{1,2},?\s+)?\d{4})"
@@ -176,6 +200,7 @@ def generate(root):
     description = config["book"].get("description", name)
     ET.register_namespace("", NAMESPACE)
     sitemap = ET.Element(f"{{{NAMESPACE}}}urlset")
+    guard_sidebar_storage(book)
     files = []
     fingerprints = {}
     for page in sorted(book.rglob("*.html")):
