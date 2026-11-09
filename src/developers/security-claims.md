@@ -226,9 +226,9 @@ result is a live contact with a shared key, marked `Remote`.
   (`a_second_person_opening_a_used_link_is_told_it_was_used` in
   `link_exchange_api_tests.rs`); `derive_sas` in
   `relay_exchange_tests.rs`; Tamarin `link_exchange.spthy`, lemma
-  `contact_only_after_approval`, falsified on the protocol as shipped
-  and verified in the `-DPIN_CONFIRMED` variant the approval work
-  targets
+  `contact_only_after_approval`, verified on the protocol as shipped
+  and falsified with `-DFIRST_OPENER`, `-DPIN_CONFIRMED` and
+  `-DCODE_IN_LINK`
 
 ### 10. Trust level follows how you exchanged, and cannot be edited
 

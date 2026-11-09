@@ -50,9 +50,8 @@ instances in Quint. Examples:
 - `mailbox_token.spthy` is verified as written and falsified with
   `-DSTABLE_TOKEN`, the stable per-pair token the daily rotation
   replaced.
-- `link_exchange.spthy` runs the other way round: its lemma must be
-  falsified on the protocol as shipped, and verified with
-  `-DPIN_CONFIRMED`, the fix it is written to specify.
+- `link_exchange.spthy` is verified as written and falsified with
+  `-DFIRST_OPENER`, `-DPIN_CONFIRMED` and `-DCODE_IN_LINK`.
 - `ble_handshake.spthy`'s scanner lemma is verified as written and
   falsified with `-DRADIO_ONLY`; its displayer lemma must stay
   falsified, as written and with `-DQR_PRIVATE`.
@@ -307,8 +306,8 @@ hand on a merge request that touches the models.
   by the primitives' own analyses, not by a Vauchi model.
 - The relay's HTTP API and the Oblivious HTTP path are covered by the
   end-to-end certification lanes, not by a symbolic model.
-- The link exchange's approval step exists only as the model's
-  `-DPIN_CONFIRMED` variant; the code does not have it yet.
+- The link-exchange model assumes that SPAKE2's messages offer no
+  offline test of the code; it does not prove it.
 - The escrow encryption and the cards exchanged over a link are out
   of the link-exchange model's scope; it decides who ends up as whose
   contact.
