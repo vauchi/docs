@@ -182,9 +182,12 @@ allows:
 - **Logs:** connection metadata only (a
   cryptographic identity hash and timestamps), never
   card content. **IP addresses are not stored or
-  logged.** Rate-limiting state (keyed on the
-  identity hash, not IP) is discarded after 30
-  minutes of inactivity.
+  logged.** Rate-limiting state (keyed on mailbox
+  tokens and recipient IDs, never IP) is discarded
+  after 30 minutes of inactivity.
+
+<!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 
 ### Oblivious HTTP (Hiding Your IP)
 
@@ -195,25 +198,52 @@ part of that gap structurally rather than relying
 only on a promise.
 
 Client requests are wrapped in **Oblivious HTTP
-(OHTTP, RFC 9458)** and routed through an OHTTP
-relay before reaching the application relay:
+(OHTTP, RFC 9458)**. They travel through two
+servers:
 
-- The **OHTTP relay** sees your IP address but only
-  an encrypted request it cannot read.
-- The **application relay** sees the request but
-  only the OHTTP relay's IP — never yours.
+- The **OHTTP relay** receives the request from
+  your device. It sees your IP address but only an
+  encrypted request it cannot read. To limit how
+  fast one address can send requests, it keeps your
+  address in memory, never on disk, and removes it
+  once that address has sent nothing for 30 minutes
+  (the check runs every 10 minutes). It keeps no
+  request log.
+- The **application relay** unwraps the request and
+  handles it: it sees the encrypted card update and
+  the daily mailbox token it is addressed to, but
+  only the OHTTP relay's address, never yours.
 
-Vauchi currently operates both hops. Putting them on
-separate servers limits what a compromise of one
-server reveals, but Vauchi could still correlate
-metadata from both hops, such as timing and IP
-address. Contact-card contents remain end-to-end
-encrypted. Independent operation of the OHTTP relay
-is the target architecture; until then, OHTTP does
-not remove the need to trust Vauchi with that
-metadata. Transport throughout is HTTPS (TLS 1.3)
-with SPKI certificate pinning to block
-man-in-the-middle attacks.
+**One operator runs both servers during the
+alpha.** OHTTP is designed for two operators who do
+not share what they see. During the alpha, both
+servers are run by the same person, the one named
+under *Who is responsible* above, on separate
+machines. Today that means: other people on the
+network, and someone who breaks into only one of
+the two machines, cannot connect your address to
+your requests. The operator could: by matching the
+timing of a request at both servers, the operator
+can link your address to the mailbox tokens you
+use. Contact-card contents stay end-to-end
+encrypted either way. Vauchi's release plan
+requires an independent operator for the OHTTP
+relay before the first full release.
+
+**A direct request for the key.** To wrap a
+request, the app first needs the public key of the
+application relay's OHTTP endpoint. It fetches that
+key, and later fresh copies of it, directly from
+the OHTTP relay's server. That request carries no
+account, mailbox or contact data. The server sees
+your address and when the app fetches the key; like
+every other request there, it is not logged.
+
+Between your device and these servers, traffic uses
+HTTPS (TLS 1.2 or 1.3) with SPKI certificate
+pinning, which blocks man-in-the-middle attacks.
+The two servers talk to each other over an
+encrypted WireGuard tunnel.
 
 ## Data Sharing
 
