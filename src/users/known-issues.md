@@ -56,6 +56,12 @@ after updating to see if it's gone.
   fully shut it out, so someone holding it could add a new device of their
   own. Only link devices you control. A design that limits what ordinary
   devices hold is planned.
+- <a id="decoy-believability"></a>**The duress decoy is what you put in
+  it** — Unlocking with the duress PIN opens a decoy profile that holds
+  none of your real contacts and sends nothing that reveals it. Whether
+  someone believes it is up to you: a decoy of a few contacts may not
+  convince a close look. Add enough to it that it reads like your own
+  lightly used app.
 - <a id="post-quantum"></a>**Encryption is not yet quantum-resistant**
   — The key agreement used today is classical. Someone who records
   encrypted traffic now could read it if a large quantum computer is

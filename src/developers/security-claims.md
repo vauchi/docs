@@ -392,6 +392,10 @@ threat model keeps the full list.
   can guess it offline in about a million tries. That attacker already
   holds the data. Duress protects against a coercer who watches the
   unlock, not one who extracts the storage and the keychain.
+- The decoy is what you put in it. Claim 14 shows the decoy holds no
+  real secret and sends nothing that reveals it; no test shows that a
+  coercer believes it. A decoy of a few contacts may not convince a
+  close look.
 - A compromised device exposes the whole identity seed. Subkeys are
   planned.
 - There is no key transparency log yet. A relay that hands out a wrong

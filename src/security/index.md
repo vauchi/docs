@@ -84,7 +84,8 @@ The claims, in the specification's numbering:
 - **S11 to S15**, a device taken: old updates stay secret after a
   compromise (partial, not for sync between a person's own devices);
   destroying the storage key makes the data unrecoverable; a backup without its password reveals nothing; a
-  duress unlock shows a decoy and sends cover (partial); a linked
+  duress unlock shows a decoy and sends cover (partial: the decoy is
+  a few contacts and may not convince a close look); a linked
   device is a full copy of the identity (partial, stated as a limit).
 - **S16 and S17**, a recovery claimed: accepting a recovery needs the
   real one; social recovery needs the guardians and only the real ones
