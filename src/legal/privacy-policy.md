@@ -179,10 +179,10 @@ allows:
 - **Retention:** an undelivered blob is deleted
   after delivery, or after 120 days, whichever comes
   first.
-- **Logs:** connection metadata only (a
-  cryptographic identity hash and timestamps), never
-  card content. **IP addresses are not stored or
-  logged.** Rate-limiting state (keyed on mailbox
+- **Logs:** operational events and errors only
+  (start-up, key rotation, storage failures), never
+  card content, mailbox tokens or identities. **IP
+  addresses are not stored or logged.** Rate-limiting state (keyed on mailbox
   tokens and recipient IDs, never IP) is discarded
   after 30 minutes of inactivity.
 
@@ -266,8 +266,9 @@ infrastructure involved in operating those services.
 
 For stored contact-card exchanges, the relay holds:
 
-- Application-relay connection metadata: a cryptographic identity hash
-  and connection timestamps
+- For each stored envelope: the daily mailbox token it is addressed to,
+  when it was stored, and a sealed origin hint that only the recipient
+  can open
 - Encrypted envelopes (which we cannot decrypt)
 
 The application relay cannot decrypt contact-card contents. This does
