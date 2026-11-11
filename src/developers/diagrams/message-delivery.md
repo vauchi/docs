@@ -5,8 +5,8 @@
 
 **Interaction Type:** 🌐 **REMOTE (Via Relay)**
 
-End-to-end message delivery from card update to
-acknowledgment.
+End-to-end message delivery from card update to the
+recipient's fetch and ack.
 
 ## Participants
 
@@ -68,60 +68,38 @@ sequenceDiagram
     %% Relay processing
     activate R
     R->>R: Validate recipient_id format
-    R->>R: Check quota (blobs < 1000, storage < 50MB)
-    R->>R: Store blob indexed by recipient_id
-    R-->>AD: Acknowledgment(status=Stored)
-    Note right of R: Blob stored with 120-day TTL
+    R->>R: Check quota
+    R->>R: Store blob under recipient_id (the mailbox token)
+    R-->>AD: 200 OK
+    Note right of R: Blob kept up to 120 days
+    deactivate R
+    AD->>AD: Mark update as stored on the relay
+
+    %% Delivery: the relay never pushes; Bob pulls
+    Note over R,BD: Bob's device fetches on its own schedule<br/>(app open, background sync)
+    activate BD
+    BD->>R: POST /v2/fetch (mailbox_tokens: today's and owed days, padded)
+    deactivate BD
+    activate R
+    R-->>BD: blobs [blob_id, ciphertext, created_at, mailbox_token]
     deactivate R
 
-    %% Delivery
-    alt Bob is Online (Connected to Relay)
-        activate R
-        R-->>BD: Forward EncryptedUpdate
-        deactivate R
+    activate BD
+    BD->>BD: Match mailbox_token to the contact it belongs to
+    Note right of BD: Token derives from the<br/>shared key with Alice
+    BD->>BD: Derive message key (chain gen 43)
+    BD->>BD: Decrypt payload
+    BD->>BD: Remove padding
+    BD->>BD: Verify Ed25519 signature
+    BD->>BD: Update Alice's card locally
+    BD->>R: POST /v2/ack (recipient_id, blob_id)
+    deactivate BD
+    activate R
+    R->>R: Delete the blob
+    deactivate R
+    Note over R,AD: No receipt reaches Alice (ADR-057)
 
-        activate BD
-        BD->>BD: Receive encrypted blob
-        BD->>BD: Resolve anonymous sender ID
-        Note right of BD: Try each contact's<br/>shared key against<br/>anonymous_id
-        BD->>BD: Found: Alice
-        BD->>BD: Derive message key (chain gen 43)
-        BD->>BD: Decrypt payload
-        BD->>BD: Remove padding
-        BD->>BD: Verify Ed25519 signature
-        BD->>BD: Update Alice's card locally
-        deactivate BD
-
-        BD->>B: "Alice updated contact info"
-
-        %% Acknowledgment chain
-        activate BD
-        BD->>R: Acknowledgment(status=ReceivedByRecipient)
-        deactivate BD
-
-        activate R
-        R-->>AD: Forward Acknowledgment
-        Note over R,AD: Sender notified if<br/>suppress_presence=false
-        deactivate R
-
-        AD->>AD: Mark update as delivered
-
-    else Bob is Offline
-        Note over R,BD: Blob queued for later
-
-        opt Bob comes online later
-            BD->>R: Connect (Handshake)
-            activate R
-            R-->>BD: Deliver queued blobs
-            deactivate R
-
-            activate BD
-            BD->>BD: Process all pending updates
-            BD->>BD: Updates applied in order
-            deactivate BD
-        end
-    end
-
+    BD->>B: "Alice updated contact info"
     Note over A,B: Bob now sees Alice's new phone
 ```
 
@@ -215,72 +193,65 @@ sequenceDiagram
     Note over BD: All messages processed,<br/>skipped keys cleaned up
 ```
 
-## Relay Acknowledgment States
+## Sender-side Delivery States
+
+What Alice's device can know about an update. The relay confirms that
+it stored the blob; nothing tells the sender that Bob fetched or read it
+(ADR-057).
 
 ```mermaid
     accTitle: Message Delivery Sequence (4)
-    accDescr: Shows end-to-end encrypted message delivery from card update to relay acknowledgment
+    accDescr: Shows the sender-side states of an update, from queued to stored on the relay
 stateDiagram-v2
     direction LR
 
-    [*] --> Sent: Message created
-    Sent --> Stored: Relay confirms storage
-    Stored --> Delivered: Recipient connected
-    Delivered --> ReceivedByRecipient: Recipient acks
+    [*] --> Queued: Update created
+    Queued --> Sent: POST /v2/send
+    Sent --> Stored: Relay answers 200
+    Sent --> Failed: Relay refuses (quota, format)
+    Queued --> Expired: Never sent in time
 
-    Stored --> Failed: Quota exceeded
-    Delivered --> Failed: Decrypt error
-
-    ReceivedByRecipient --> [*]
+    Stored --> [*]
     Failed --> [*]
+    Expired --> [*]
 ```
+
+The `Delivered` value in Core's `DeliveryStatus` belongs to the retired
+push transport; the HTTP v2 relay never reports it.
 
 ## Wire Protocol
 
-### Envelope Format
+HTTP v2, JSON bodies (through the OHTTP hop where one is configured).
+Types: `vauchi-protocol` `src/v2.rs`.
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    MESSAGE ENVELOPE                          │
-├─────────────────────────────────────────────────────────────┤
-│  4 bytes: Length (big-endian)                               │
-│  JSON payload:                                               │
-│  {                                                           │
-│    "version": 1,                                            │
-│    "message_id": "uuid",                                    │
-│    "timestamp": unix_secs,                                  │
-│    "payload": { ... }                                       │
-│  }                                                           │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### EncryptedUpdate Payload
+### Send: `POST /v2/send`
 
 ```json
 {
-  "type": "EncryptedUpdate",
-  "sender_id": "anonymous_id (hourly rotation)",
   "recipient_id": "mailbox token (daily rotation)",
-  "ratchet_header": {
-    "dh_public": "[32 bytes] sender DH public key",
-    "dh_generation": 5,
-    "message_index": 10,
-    "previous_chain_length": 3
-  },
-  "ciphertext": "base64(encrypted_delta)"
+  "ciphertext": "base64(padded, encrypted, signed update)",
+  "origin_hint": null
 }
 ```
 
-### Acknowledgment Payload
+No sender identifier travels on this path.
+
+### Fetch: `POST /v2/fetch`
 
 ```json
-{
-  "type": "Acknowledgment",
-  "message_id": "original message uuid",
-  "status": "Stored|Delivered|Received|Failed",
-  "error": null
-}
+{ "mailbox_tokens": ["token", "..."] }
 ```
+
+Answer: `{ "status": "ok", "blobs": [ { "blob_id", "ciphertext",
+"created_at", "mailbox_token" } ], "truncated": false }`.
+
+### Ack: `POST /v2/ack`
+
+```json
+{ "recipient_id": "mailbox token", "blob_id": "id from the fetch" }
+```
+
+The relay deletes the blob. The ack goes no further.
 
 ## Timing Estimates
 
@@ -289,10 +260,9 @@ stateDiagram-v2
 | Encryption + padding | 1-5 ms | XChaCha20 is fast |
 | Network latency | 50-200 ms | Relay location |
 | Relay storage | 1-10 ms | SQLite insert |
-| Forward to recipient | 50-200 ms | If online |
+| Recipient fetch | 50-200 ms | When Bob's device next syncs |
 | Decryption + verify | 1-5 ms | |
-| **Total (online)** | **100-400 ms** | End-to-end |
-| **Total (offline)** | **Variable** | Until recipient connects |
+| **Total** | **Variable** | Bounded by when Bob's device next fetches |
 
 ## Related Features
 
