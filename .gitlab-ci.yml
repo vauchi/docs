@@ -25,17 +25,18 @@ default:
 
 include:
   - project: 'vauchi/scripts'
-    ref: ci-templates-v2026.10.08
+    ref: ci-templates-v2026.11.16
     file:
       - '/ci-templates/mr-rules.yml'
       - '/ci-templates/reuse.yml'
       - '/ci-templates/badges.yml'
       - '/ci-templates/github-mirror.yml'
+      - '/ci-templates/shipped-in.yml'
   - template: Security/Secret-Detection.gitlab-ci.yml
 
 variables:
   GIT_DEPTH: "0"
-  VAUCHI_SCRIPTS_REF: "ci-templates-v2026.10.08"
+  VAUCHI_SCRIPTS_REF: "ci-templates-v2026.11.16"
 
 stages:
   - lint
