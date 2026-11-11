@@ -134,7 +134,8 @@ Set up social recovery to protect against total device loss:
 2. **Don't rely on one group** — If all guardians
    are family, a single household event could make
    recovery impossible
-3. **Set threshold to at least 3** — Higher thresholds are more secure
+3. **Use at least 3 guardian groups** — Recovery needs one guardian from
+   each group
 4. **Update guardians when relationships change** —
    Remove guardians you've lost touch with and
    add new ones

@@ -5,7 +5,7 @@
 
 **Interaction Type:** 🤝 **IN-PERSON (Proximity Required)**
 
-User links a new device to their existing identity. The new device receives the master seed and syncs all data. A confirmation code and proximity verification prevent unauthorized remote linking.
+User links a new device to their existing identity. The new device receives the master seed and syncs all data. A confirmation code the user compares on both screens prevents unauthorized remote linking; a physical proximity check (NFC, ultrasonic) is planned.
 
 ## Participants
 
@@ -118,9 +118,12 @@ HMAC-SHA256(link_key, request_nonce)
 
 Both devices display the same code. User verifies they match.
 
-### Proximity Challenge
+### Proximity Challenge (planned)
 
-For external proximity verification (NFC, ultrasonic, etc.):
+Not in the code yet. The only proof checked today is the manual
+confirmation: an HMAC over the confirmation code, valid for 60 seconds,
+checked before the seed is released. For a later external proximity
+check (NFC, ultrasonic), the design is:
 
 ```
 HKDF(ikm=link_key, info="vauchi-device-link-proximity-v1", len=16)
@@ -162,7 +165,7 @@ sync_payload_json (variable, contacts + card)
 | **Seed Encryption** | ChaCha20-Poly1305 with ephemeral link_key |
 | **QR Authentication** | Ed25519 signature over QR fields |
 | **Confirmation Code** | HMAC-SHA256(link_key, nonce) displayed on both devices |
-| **Proximity Verification** | HKDF-derived 16-byte challenge; enforced before confirm |
+| **Proximity Verification** | Manual confirmation: HMAC over the confirmation code, valid 60 s, checked before the seed is released; a hardware proximity challenge is planned |
 | **Replay Prevention** | Random 32-byte nonce in each request |
 | **Token Expiry** | QR expires after 5 minutes |
 | **Registry Integrity** | Ed25519 signature over version + device list |

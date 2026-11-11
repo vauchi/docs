@@ -245,6 +245,9 @@ A backup you make today is a favour to a future, locked-out version of yourself.
 - Needing a guardian from every group prevents any single person from opening your backup
 - A recovery request ages out after 8 days
 - A backup is yours alone: Argon2id + XChaCha20-Poly1305, no escrow, no back door
-- The relay only ever forwards encrypted blobs, routed by daily-rotating mailbox tokens — it never sees your identity, your IP, or your data
+- The relay only ever forwards encrypted blobs, routed by daily-rotating
+  mailbox tokens, and cannot read your data. Guardian sets and recovery
+  proofs are filed under your keys, so a recovery is visible to the
+  relay; hiding your IP depends on the OHTTP hop
 
 For more on security, see [Backup & Recovery Feature](../features/backup-recovery.md).

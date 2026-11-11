@@ -143,7 +143,9 @@ generate a fresh one if needed.
 ## Security
 
 - Each device holds its own keys, derived from your master seed
-- Revoking a device invalidates its keys immediately
+- Revoking a device removes it from your signed device list, so your
+  other devices stop syncing with it; it does not erase the keys it
+  already holds
 - The relay never sees plaintext
 - Device-to-device traffic is end-to-end encrypted
 - Confirmation codes block man-in-the-middle attempts during linking

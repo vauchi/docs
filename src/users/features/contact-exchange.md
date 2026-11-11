@@ -53,7 +53,7 @@ intention is exactly what spam, bots, and impostors can't reproduce.
 
 ### QR code — the one to start with
 
-Works on every device, every time:
+Works on any phone with a camera:
 
 1. Open the **Exchange** tab
 2. Show your QR code

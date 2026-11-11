@@ -7,8 +7,11 @@
 
 Two users exchange contact cards by scanning QR
 codes while physically present together. Proximity
-is verified via ultrasonic audio handshake to
-prevent remote/screenshot attacks.
+is checked by an ultrasonic audio handshake where
+the device has a microphone and a speaker. A failed
+or missing check does not stop the exchange: it
+lowers the proximity confidence recorded for the
+contact. Only the multi-stage QR flow stops on it.
 
 ## Participants
 
@@ -162,7 +165,7 @@ standard-base64 form is still accepted on scan.
 
 | Property | Mechanism |
 |----------|-----------|
-| **Proximity** | Ultrasonic audio (18-20 kHz) |
+| **Proximity** | Ultrasonic audio (18-20 kHz); raises confidence, does not gate |
 | **No MITM** | X3DH with identity keys |
 | **Forward Secrecy** | Ephemeral keys discarded |
 | **Replay Prevention** | One-time token, 5-min expiry |
@@ -185,7 +188,7 @@ sequenceDiagram
     BD--xBD: No ultrasonic detected (too far)
     BD->>BD: Proximity verification FAILED
     BD->>BD: "Proximity verification failed"
-    Note over AD,BD: Exchange blocked - no cards exchanged
+    Note over AD,BD: Low proximity confidence recorded; the multi-stage flow stops here
 ```
 
 ### QR Code Expired

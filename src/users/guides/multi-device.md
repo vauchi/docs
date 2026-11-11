@@ -266,7 +266,8 @@ If you can't access your old phone:
 ## Security Notes
 
 - Each device has its own derived keys
-- Revoking a device invalidates its keys
+- Revoking a device stops it syncing with your other devices; it does
+  not erase what it already holds
   immediately
 - Up to 10 devices per identity; revoke one to make
   room for an eleventh
