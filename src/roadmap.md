@@ -23,3 +23,7 @@ maintainers' issues.
 | Screen-reader walkthrough of every journey on every app | Accessibility labels come with every screen; the walkthrough on each app is not done | vauchi/private#968 |
 | Right-to-left languages and more locales | English, German, French, Italian and Spanish | vauchi/private#36 |
 | Plural rules for every language | Plural forms are not applied per language yet | vauchi/private#341 |
+| A physical proximity check (NFC or ultrasonic) when linking a device | Linking checks a confirmation code you compare on both screens | vauchi/private#1240 |
+| Assigning an existing contact to a label from the contact's page | Labels are chosen at the end of an exchange | vauchi/private#1241 |
+| Contacts vouching for a card field, and marking your own fields as self-attested | Nothing yet | vauchi/private#1242 |
+| A panic button widget on the home screen | Nothing yet | vauchi/private#1243 |
