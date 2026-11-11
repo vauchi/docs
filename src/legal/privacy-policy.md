@@ -3,7 +3,7 @@
 
 # Privacy Policy
 
-**Last Updated:** November 9, 2026
+**Last Updated:** November 11, 2026
 
 This policy distinguishes contact-card exchanges from this website and
 its optional email waitlist. The app's end-to-end encryption does not
@@ -169,13 +169,16 @@ allows:
   end-to-end encrypted before they leave your
   device. The relay only ever holds opaque
   ciphertext blobs — it has none of your keys.
-- **It cannot build a social graph.** Messages are
+- **It is not handed a social graph.** Messages are
   addressed to **daily-rotating mailbox tokens**
   derived from a secret shared only between you and
   each contact. The token for "you → Alice" is a
   different random-looking value tomorrow, so the
   relay cannot link who talks to whom across days,
-  or tie a mailbox to a person.
+  or tie a mailbox to a person. It still sees which
+  tokens receive how much, and when; guardian sets,
+  recovery proofs and deletion requests carry your
+  identity key.
 - **Retention:** an undelivered blob is deleted
   after delivery, or after 120 days, whichever comes
   first.
@@ -281,7 +284,9 @@ in the website and Oblivious HTTP sections.
 ### Cryptographic Protections
 
 - **Identity Keys:** Ed25519 signing keys, derived
-  from a 256-bit master seed, never leave your device
+  from a 256-bit master seed, are never sent to the
+  relay; linking a device copies the seed to that
+  device
 - **Encryption:** X25519 key agreement +
   XChaCha20-Poly1305 for all contact card updates
 - **Key Derivation:** HKDF-SHA256 with domain

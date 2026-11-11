@@ -3,7 +3,7 @@
 
 # Terms of Service
 
-**Last Updated:** October 2026
+**Last Updated:** November 2026
 
 ## 1. Acceptance of Terms
 
@@ -33,7 +33,8 @@ Key points:
 
 - **Your data stays on your devices.** We do not store
   your contact cards, identity, or personal information
-  on our servers.
+  in readable form on our servers; the relay holds only
+  encrypted updates, for at most 120 days.
 - **End-to-end encryption.** Contact card updates sent
   through our relay are encrypted on your device before
   transmission. We cannot read them.
