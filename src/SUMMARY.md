@@ -13,6 +13,7 @@
 - [Getting Started](./users/getting-started.md)
 - [FAQ](./users/faq.md)
 - [Known Issues](./users/known-issues.md)
+- [Roadmap](./roadmap.md)
 
 ## Features
 
