@@ -236,9 +236,14 @@ flowchart TB
 Contact exchange requires in-person presence:
 
 - QR + ultrasonic audio verification (18-20 kHz)
-  — implemented on iOS, planned for Android
-- NFC Active tap (planned — centimeters range)
-- BLE with RSSI proximity check (planned — GATT transport)
+  — Core `exchange/audio_modem.rs`; the iOS and Android apps each carry an
+  `AudioProximityService`
+- NFC Active tap (centimetres range) — Core `exchange/nfc_*.rs`; the
+  Android app reads tags (`NfcReaderService`); iOS has a diagnostic view
+  only
+- BLE with RSSI proximity check (GATT transport) — Core
+  `exchange/ble_*.rs`; iOS `BleExchangeService`, Android `BleCentral` and
+  `BlePeripheral`
 
 ## Repository Structure
 
