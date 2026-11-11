@@ -172,7 +172,7 @@ sync_payload_json (variable, contacts + card)
 | **Memory Safety** | Master seed zeroized on Drop |
 | **Device Limit** | Maximum 10 devices per identity |
 
-## Numeric Code Fallback (No Camera)
+## Pasted-Data Fallback (No Camera)
 
 ```mermaid
     accTitle: Device Linking Sequence (2)

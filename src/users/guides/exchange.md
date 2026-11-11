@@ -115,6 +115,6 @@ Once exchange completes:
 - Both parties must scan each other's QR codes (mutual verification)
 - Each exchange uses fresh ephemeral keys (forward secrecy)
 - Exchange uses encrypted key agreement
-- The relay is a blind courier: it forwards encrypted blobs, routes them with daily-rotating mailbox tokens rather than your identity, and never learns your IP address (Oblivious HTTP). It carries the envelope; it cannot read the letter.
+- The relay is a blind courier: it forwards encrypted blobs, routes them with daily-rotating mailbox tokens rather than your identity, and does not receive your IP address (Oblivious HTTP; one operator runs both hops today) (Oblivious HTTP). It carries the envelope; it cannot read the letter.
 
 For more on security, see [Encryption](../features/encryption.md).

@@ -81,8 +81,7 @@ Signal. The idea is almost paranoid, in the good way:
   never the conversation
 - Today's keys cannot reach back and decrypt yesterday's messages
 
-It treats every key as disposable, so that no single theft is ever worth
-much.
+It treats every message key as disposable, so stealing one is worth little; a stolen, unlocked device is a bigger loss.
 
 ## The algorithms
 
@@ -113,7 +112,7 @@ The relay routes your messages and understands none of them:
 | Padded message size | Who you are — or your IP |
 
 Messages are padded to standard buckets (256 B, 512 B, 1 KB, 4 KB) so
-even the *shape* of your traffic gives nothing away, and requests arrive
+the relay sees a size bucket, not the exact length of what you send, and requests arrive
 via an Oblivious HTTP gateway that strips your IP. The relay is told the
 absolute minimum required to be a courier, and not one byte more.
 

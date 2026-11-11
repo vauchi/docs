@@ -59,7 +59,7 @@ change the next time they open the app — near-instant when you're both
 active.
 
 **When a contact's offline.** The encrypted update waits on the relay
-and is delivered the moment they reconnect. Nothing is lost in the gap.
+and is delivered the moment they reconnect. Nothing is lost in the gap, as long as they come back within the 120 days the relay keeps an update.
 
 **If anyone's impatient.** A pull-to-refresh, or **Settings > Sync
 Now**, fetches whatever's pending on demand.

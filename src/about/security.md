@@ -41,10 +41,10 @@ The relay server only sees encrypted blobs. It cannot:
 
 ### In-Person Verification
 
-Contact exchange requires physical presence:
+Contact exchange is built for physical presence (a remote Link exchange exists and is weaker):
 
 - **QR codes** contain cryptographic identity
-- **Proximity verification** via ultrasonic audio
+- **Proximity verification** via ultrasonic audio where the device has a microphone and a speaker; manual confirmation elsewhere
 - **No trust-on-first-use for contact
   verification** — you verify contacts in person.
   Relay server identity is pinned during contact
@@ -112,7 +112,7 @@ relay: Vauchi cannot yet pass updates between relays
    (4+ words) is recommended. Store it somewhere
    safe, separate from your devices
 3. **Verify important contacts** — Compare fingerprints in person
-4. **Revoke lost devices immediately** — Prevent unauthorized access
+4. **Revoke lost devices immediately** — your other devices stop syncing with them; a lost device still holds your identity keys
 5. **Keep your device secure** — Enable lock screen, update OS
 6. **Only link devices you physically control** —
    Each linked device has full access to your

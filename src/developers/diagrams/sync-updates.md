@@ -5,7 +5,7 @@
 
 **Interaction Type:** ☁️ **REMOTE (Via Relay)**
 
-Contact card changes propagate automatically to contacts via the relay network. All data is end-to-end encrypted - relays only see encrypted blobs.
+Contact card changes propagate automatically to contacts via the relay network. All data is end-to-end encrypted - relays store blobs they cannot read, and still see routing tokens, timing and sizes.
 
 ## Participants
 

@@ -73,9 +73,8 @@ Setting visibility one contact at a time is honest but tedious, like addressing 
 
 ### Assigning Contacts to Labels
 
-1. Open a contact
-2. Scroll to **Labels**
-3. Tap to assign/unassign labels
+Labels are chosen for a new contact at the end of an exchange.
+Assigning an existing contact to a label from their page is planned.
 
 ### Setting Visibility by Label
 

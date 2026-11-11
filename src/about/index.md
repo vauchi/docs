@@ -54,8 +54,7 @@ be allowed to change too.
 **A relationship belongs to the two people in it.**
 Staying reachable should not require a company to
 hold the list of who you know. Vauchi is built so
-that no operator — including us — can read your card
-or work out your social graph. Not because we promise
+that no operator — including us — can read your card, and the relay is never handed a list of who knows whom. Not because we promise
 restraint, but because the design does not give us
 the option.
 

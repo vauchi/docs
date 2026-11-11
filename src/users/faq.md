@@ -28,7 +28,7 @@ screens of the people you chose to share it with.
 
 No. The relay only ever handles sealed, encrypted blobs. It cannot
 decrypt content, cannot see your contact list, cannot read a single
-field, and cannot tie your identity to your data. It is, by design, a
+field, and addresses your mailboxes by rotating tokens, not by your identity. It is, by design, a
 courier that has never once been given a key.
 
 ### What does the relay actually store?
@@ -279,7 +279,7 @@ whom. It:
 
 - Routes encrypted messages between your devices and contacts
 - Holds messages briefly when a device is offline, then forwards them
-- Addresses everything by daily-rotating tokens, so it is never handed
+- Addresses mailboxes by daily-rotating tokens, so it is never handed
   the social graph — though a patient observer watching the network can
   still infer some connections from timing, which is why timing is
   jittered and message sizes are padded

@@ -103,8 +103,7 @@ personal phone and home address. Your two lives stay two.
 everyone else sees a deliberately thinner card. Intimacy, by design.
 
 **Lend a detail, then take it back.** Reveal a field to one person,
-finish whatever you needed it for, then hide it again — their access
-ends immediately. Sharing needn't be permanent to be useful.
+finish whatever you needed it for, then hide it again — their access to future updates ends as soon as your change syncs. Sharing needn't be permanent to be useful.
 
 ## Related
 

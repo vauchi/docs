@@ -513,7 +513,7 @@ Source: `core/vauchi-core/src/network/http_transport.rs`,
 
 ### Mailbox Routing (Daily-Rotating Tokens)
 
-The relay routes without identities. Messages are
+The relay routes messages by tokens, not identities; guardian sets, recovery proofs and purge requests use the identity key or its hash. Messages are
 addressed to **daily-rotating mailbox tokens**,
 `HKDF(shared_key, day_epoch, "Vauchi_Mailbox_v1")`,
 which both parties derive independently for a given
@@ -547,10 +547,10 @@ still rides in the discovery payload, unused by clients.)
 | **Break-in Recovery** | DH ratchet with ephemeral keys |
 | **No Nonce Reuse** | Random 24-byte nonces |
 | **Memory Safety** | `zeroize` on drop for all keys |
-| **Traffic Analysis Prevention** | Standardized bucket-size message padding |
+| **Traffic Analysis Reduction** | Bucket-size message padding (reduces, does not remove, size and timing metadata) |
 | **Replay Prevention** | Double Ratchet counters |
 | **Transport Encryption** | TLS 1.3 + SPKI certificate pinning (HTTP v2) |
-| **Network-Location Privacy** | Oblivious HTTP (RFC 9458), independent gateway |
+| **Network-Location Privacy** | Oblivious HTTP (RFC 9458); gateway on a separate host, same operator today |
 | **Unlinkable Routing** | Daily-rotating mailbox tokens |
 
 ## Source Files

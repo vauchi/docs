@@ -25,7 +25,7 @@ The relationship is yours and theirs. No one else is
 in the room.
 
 - **Meet once, stay in touch** — exchange in person;
-  it keeps itself current forever
+  it stays current whenever either of you is online
 - **No sign-up, no phone number** — your device is
   your identity
 - **Yours alone** — end-to-end encrypted, so only you

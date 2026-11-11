@@ -20,7 +20,7 @@ All design starts with:
 concern?"*
 
 - E2E encryption for all communications
-- Oblivious privacy-preserving relay (sees only encrypted blobs)
+- Oblivious privacy-preserving relay (sees encrypted blobs, tokens, sizes and timing, never content)
 - No tracking, analytics, or telemetry
 - User owns and controls their data
 

@@ -209,7 +209,7 @@ rotation to a next identity registered in advance with policy guardians
 
 - All card data encrypted with XChaCha20-Poly1305
 - Per-contact keys derived via X3DH + Double Ratchet
-- Forward secrecy: each message uses unique key
+- Forward secrecy: contact updates use a unique ratcheted key per message; sync between your own devices does not (see Security Claims)
 - Relay sees only encrypted blobs
 
 ### Key Hierarchy
@@ -233,7 +233,7 @@ flowchart TB
 
 ### Physical Verification
 
-Contact exchange requires in-person presence:
+In-person exchange modes check physical presence (Link mode exchanges remotely, over a shared link and a code sent another way):
 
 - QR + ultrasonic audio verification (18-20 kHz)
   — Core `exchange/audio_modem.rs`; the iOS and Android apps each carry an

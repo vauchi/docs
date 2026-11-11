@@ -15,7 +15,7 @@ Vauchi is a **contact card exchange** system, not a messaging app:
   physically meet (exchange) or update contact
   info (small delta to all contacts)
 - **Data type**: Contact cards (name, phone, email, address, social handles)
-- **Exchange model**: In-person only via QR code, NFC, or BLE
+- **Exchange model**: In person via QR code, NFC or BLE; remotely by a link plus a code (weaker, marked Remote)
 - **Update frequency**: Infrequent (users rarely change phone numbers or emails)
 - **Update size**: Small (delta of changed fields, typically < 1 KB)
 
@@ -165,8 +165,7 @@ information without permanent proof of past states.
 - Local storage encrypted with device-derived keys (SEK from HKDF key hierarchy)
 - Sensitive key material zeroized on drop (`zeroize` crate)
 - Message padding to fixed buckets
-  (256 B, 512 B, 1 KB, 4 KB) prevents
-  size-based inference
+  (256 B, 512 B, 1 KB, 4 KB) reduces size-based inference to bucket granularity
 
 **Residual risk**: Metadata (request timing, padded
 sizes, mailbox tokens) visible to the application
@@ -202,7 +201,7 @@ IPs can overwhelm a single relay.
 - No user accounts on relay: no admin interface, no privilege levels
 - Client capabilities limited to own identity (can only decrypt own messages)
 - Master seed required for all identity operations
-- Device linking requires physical QR scan + identity key signature verification
+- Device linking needs the link QR and a confirmation code compared on both screens; a photographed QR is a stated limit (S15)
 
 **Residual risk**: Compromised device with master
 seed has full identity control. Mitigated by device
@@ -410,7 +409,7 @@ page and in the [Cryptography Reference](crypto.md).
 | No key transparency | Not auditable | Signed key log (future) |
 | Meeting someone is cheap | A legitimate in-person exchange grants High trust | Shown as "met in person", never "trusted"; recovery vouching is a separate explicit choice |
 | Link exchange weaker | A code sent with its link protects nothing; whoever holds the link can use it up | Contact stays `Remote` until fingerprints are compared |
-| Push leaks metadata | Delivery timing | Empty push + fetch |
+| Push leaks metadata | Delivery timing | No push today; if added, empty push + fetch |
 | Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
 
 ## Core-UI Trust Boundary

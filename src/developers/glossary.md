@@ -78,7 +78,7 @@ encrypts it (SMK or a per-contact CEK) instead of overwriting the
 ciphertext.
 
 **Duress PIN** — A secondary unlock credential that shows a decoy
-contact list and silently alerts trusted contacts, for users unlocking
+contact list and shows a decoy profile and sends nothing that reveals it, for users unlocking
 under coercion. See [Security](../about/security.md).
 
 **Decoy contacts** — The plausible fake contact list presented in
