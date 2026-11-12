@@ -371,8 +371,8 @@ for redundancy), additional trust boundaries apply.
 **Known limitation**: Currently, the full master
 seed is shared during device linking (not per-device
 subkeys). A compromised linked device gains full
-identity control. Per-device subkey isolation is
-planned for 1.0 release.
+identity control. Per-device subkey isolation is planned for a public
+release; see the [Roadmap](../roadmap.md).
 
 ## Remote Contact Paths
 
@@ -400,17 +400,17 @@ page and in the [Cryptography Reference](crypto.md).
 | Identity-key-addressed routes | The relay sees a long-lived identifier on guardian sets, recovery proofs and purge, the flows that map a recovery circle | By design |
 | Device sync has no forward secrecy | A later compromise of a device's exchange key opens every recorded batch, which carries contacts, cards and shared contact keys | None today; live pairwise ratchet states are not copied |
 | Duress PIN is six digits | With a device image and the storage master key: learns whether a PIN exists and guesses it offline in about a million tries, and already holds the data | Protects against a coercer who watches the unlock, not a forensic image |
-| Device compromise | Full seed exposed | Subkeys (planned), passwords |
-| Linked device = full seed | Full identity | Subkeys (planned) |
-| Single relay SPOF | No sync if down | Federation (planned) |
+| Device compromise | Full seed exposed | Protect device access; see the [Roadmap](../roadmap.md) for authority isolation |
+| Linked device = full seed | Full identity | None today; see the [Roadmap](../roadmap.md) for authority isolation |
+| Offloaded messages | App cannot fetch messages a relay moved to a peer | None today; see the [Roadmap](../roadmap.md) |
 | Blocked contacts keep data | Can't unsend | By design |
 | Recovery leaks voucher PKs | Partial graph | Accepted tradeoff |
-| No guardian diversity | Same circle | UX warnings (planned) |
-| No key transparency | Not auditable | Signed key log (future) |
+| No guardian diversity | Same circle | No guardian-diversity warning today |
+| No key transparency | Not auditable | No signed key log today |
 | Meeting someone is cheap | A legitimate in-person exchange grants High trust | Shown as "met in person", never "trusted"; recovery vouching is a separate explicit choice |
 | Link exchange weaker | A code sent with its link protects nothing; whoever holds the link can use it up | Contact stays `Remote` until fingerprints are compared |
 | Push leaks metadata | Delivery timing | No push today; if added, empty push + fetch |
-| Quantum HNDL | Ciphertext readable at Q-Day | Hybrid ML-KEM (ADR-060) |
+| Quantum HNDL | Ciphertext readable at Q-Day | Classical key agreement today; see the [Roadmap](../roadmap.md) |
 
 ## Core-UI Trust Boundary
 
@@ -546,14 +546,6 @@ protection its threat model asks for without the
 usability and censorship-resistance penalties, and
 Tor remains available as the optional proxy.
 
-**Future considerations**: Private Information
-Retrieval (PIR) could eliminate recipient pseudonym
-visibility entirely. Cover traffic patterns could
-further reduce timing correlation. These are not
-currently prioritized given Vauchi's low-frequency
-traffic pattern, but remain on the architectural
-roadmap for high-threat deployments.
-
 ## Key Transparency
 
 ### Current Model
@@ -594,26 +586,6 @@ strong root of trust that subsequent key changes
 cannot easily override without raising suspicion
 (contacts would see unexpected re-exchange
 requests).
-
-### Future Direction
-
-A lightweight key transparency mechanism could
-provide additional assurance:
-
-- **Signed key history**: Each user maintains a
-  signed append-only log of their key changes.
-  Contacts can audit this log to detect
-  unauthorized key modifications.
-- **Cross-contact verification**: Contacts can
-  compare their view of a user's key history with
-  other contacts to detect divergence (split-world
-  attack detection).
-
-This is not currently implemented but is documented
-as a future enhancement for high-assurance
-deployments. A full CONIKS-style transparency log
-is not necessary given Vauchi's decentralized
-architecture and low update frequency.
 
 ## Push Notification Constraints
 
@@ -660,11 +632,10 @@ explicitly prohibited.
 | CSPRNG | OsRng | `rand` |
 | TLS | TLS 1.2/1.3 | `rustls` (`aws-lc-rs` backend) |
 
-**Post-quantum:** key agreement is classical-only today. A hybrid
-X25519 + ML-KEM-768 upgrade is planned (ADR-060) to close the
-harvest-now-decrypt-later gap on relay-carried ciphertext. Ed25519
-signatures are not subject to harvest-now-forge-later, so they migrate
-later, not now.
+**Post-quantum:** key agreement is classical-only today. Recorded
+relay-carried ciphertext could be read by a future quantum computer.
+See the [Roadmap](../roadmap.md) for the hybrid X25519 + ML-KEM-768
+upgrade. Signatures use Ed25519.
 
 For the full cryptographic specification, see the
 [Cryptography Reference](crypto.md).

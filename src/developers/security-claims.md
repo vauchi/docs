@@ -333,8 +333,9 @@ the relay, a photographed or leaked link QR does, and lets the attacker
 choose which device identity joins. The QR expires after five minutes.
 
 - Status: **Partial**. Under a lossy relay, a device whose joiner gave
-  up can still be registered; CI asserts that violation. Per-device
-  subkeys that would contain a leak are planned.
+  up can still be registered; CI asserts that violation. Every linked
+  device receives the identity seed; see the [Roadmap](../roadmap.md)
+  for authority isolation.
 - Proof: Tamarin `device_link.spthy`, lemmas `seed_secrecy`,
   `initiator_agreement`, `joiner_agreement`,
   `photographed_qr_alone_keeps_the_seed` (only under `-DHONEST_RELAY`),
@@ -357,7 +358,8 @@ contact who accepts it.
 
 - Status: **Partial**. The protocol lemmas hold. A shipped defect means
   a contact who accepts a recovery proof does not yet receive a key
-  bound to the recovered identity; the fix is planned.
+  bound to the recovered identity. See the [Roadmap](../roadmap.md)
+  for recovery rekeying.
 - Proof: Tamarin `recovery_acceptance.spthy`, lemmas
   `accept_needs_the_real_recovery`, `john_key_secrecy`,
   `alice_rekeys_only_with_an_accepting_contact`, and the attack lemma
@@ -377,7 +379,7 @@ rekeys only with the real counterpart.
 - Proof: Tamarin `social_recovery.spthy`, lemmas
   `backup_needs_both_guardians` and `a_group_mate_can_stand_in`; the
   rekey lemmas `john_rekeys_only_with_the_real_alice` and
-  `alice_rekeys_only_with_the_real_john` model the planned design
+  `alice_rekeys_only_with_the_real_john` model an unimplemented design
 
 ## What we do not claim
 
@@ -396,16 +398,14 @@ threat model keeps the full list.
   real secret and sends nothing that reveals it; no test shows that a
   coercer believes it. A decoy of a few contacts may not convince a
   close look.
-- A compromised device exposes the whole identity seed. Subkeys are
-  planned.
+- A compromised device exposes the whole identity seed. See the
+  [Roadmap](../roadmap.md) for authority isolation.
 - There is no key transparency log yet. A relay that hands out a wrong
-  key for a first contact is not auditable today; a signed log is
-  planned.
+  key for a first contact is not auditable today.
 - Today's key agreement is not post-quantum. Recorded ciphertext could
-  be read by a future quantum computer; a hybrid ML-KEM scheme is
-  planned.
-- No external cryptographic audit has been performed yet. It is
-  planned and depends on funding.
+  be read by a future quantum computer. See the [Roadmap](../roadmap.md)
+  for hybrid key agreement.
+- No external cryptographic audit has been performed yet.
 
 ## How the proofs run
 

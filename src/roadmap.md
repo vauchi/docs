@@ -17,6 +17,7 @@ maintainers' issues.
 | Contacts move to your recovered identity automatically after social recovery | Guardians hold your encrypted backup and hand it back in person; your contacts do not move to the recovered identity yet | vauchi/private#796 |
 | Post-quantum key agreement (hybrid X25519 + ML-KEM-768) | Classical X25519 key agreement | vauchi/private#109 |
 | Forward secrecy for sync between your own devices | Contact updates have forward secrecy; own-device sync does not | vauchi/private#1090 |
+| Per-device authority and key isolation | Every linked device receives the master seed and can act as the whole identity; removing a device does not take away that seed | vauchi/private#1098 |
 | An independent operator for the OHTTP hop | The hop runs on a separate host, run by the same operator as the relay | vauchi/private#605 |
 | Reaching messages a relay has offloaded to a peer relay | Relays can offload old messages; the app cannot yet fetch them back | vauchi/private#835 |
 | Mesh exchange (several people at once over Bluetooth or Wi-Fi) | One-to-one exchange over QR, NFC, Bluetooth or a link | vauchi/private#55 |
