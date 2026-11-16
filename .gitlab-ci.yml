@@ -24,6 +24,7 @@ default:
   interruptible: true
 
 include:
+  - local: ci/site-indexing.yml
   - project: 'vauchi/scripts'
     ref: ci-templates-v2026.11.16
     file:
@@ -80,7 +81,10 @@ test:ci-contract:
   tags: [docker]
   image: ${CI_DEPENDENCY_PROXY_GROUP_IMAGE_PREFIX}/alpine:3.21
   needs: []
+  before_script:
+    - apk add --no-cache python3 py3-yaml
   script:
+    - python3 ci/tests/site-indexing-inputs.test.py
     - sh ci/tests/deploy-pin-contract.test.sh
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -250,37 +254,3 @@ pages:
 github-mirror:
   extends: .github-mirror
 
-# The downstream audit builds this exact commit with the other public sites.
-check:site-indexing:
-  stage: lint
-  needs: []
-  inherit:
-    variables: false
-  trigger:
-    project: vauchi/private
-    branch: main
-    strategy: mirror
-    inputs:
-      site_indexing: local
-      indexing_project: $CI_PROJECT_PATH
-      indexing_sha: $CI_COMMIT_SHA
-    forward:
-      yaml_variables: false
-      pipeline_variables: false
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes: &indexing-changes
-        - ".gitlab-ci.yml"
-        - "Dockerfile"
-        - "nginx.conf"
-        - "ci/**/*"
-        - "scripts/**/*"
-        - "src/**/*"
-        - "theme/**/*"
-        - "book.toml"
-        - "package*.json"
-        - "mdbook-*.mjs"
-    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
-      changes: *indexing-changes
