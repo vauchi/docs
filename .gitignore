@@ -14,3 +14,6 @@ service-account*.json
 book/
 __pycache__/
 node_modules/
+
+# Fetched at build time from vauchi/scripts (private#1267)
+/scripts/build-discovery.py
