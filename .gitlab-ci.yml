@@ -37,7 +37,7 @@ include:
 
 variables:
   GIT_DEPTH: "0"
-  VAUCHI_SCRIPTS_REF: "a3ebc857af74b69073e0e59b2614ea38b53b150a"
+  VAUCHI_SCRIPTS_REF: "ci-templates-v2026.11.17.1"
 
 stages:
   - lint
