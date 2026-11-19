@@ -232,6 +232,24 @@ so they simply re-establish themselves the next time you and a contact
 sync. You get your people back; you don't drag along yesterday's
 disposable keys.
 
+### What is an "identity only" backup, and what happens to my contacts?
+
+When you export a backup you can switch it to **Identity only**. That
+file holds just your identity: no contacts, no card entries, no labels.
+After you restore it you are still you, with an empty contact list.
+
+Your old contacts still have you in theirs, but updates stop in both
+directions: the keys you shared with each of them were not in the file.
+To connect again, meet the person and exchange with **Hover**. Their
+phone notices that it still has you while yours no longer has them, and
+asks them whether to start a new connection. When they agree you are
+connected again, and they keep their notes and groups for you. If they
+decline, or nobody answers within two minutes, nothing changes on either
+phone.
+
+A link exchange does not do this. It leaves their side as it was and
+only tells them that they already have you.
+
 ### I forgot my backup password. Can you recover it?
 
 No — and you should be glad. The backup is encrypted so that *only* the
