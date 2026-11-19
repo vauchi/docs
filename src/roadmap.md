@@ -29,3 +29,63 @@ maintainers' issues.
 | Assigning an existing contact to a label from the contact's page | Labels are chosen at the end of an exchange | vauchi/private#1241 |
 | Contacts vouching for a card field, and marking your own fields as self-attested | Nothing yet | vauchi/private#1242 |
 | A panic button widget on the home screen | Nothing yet | vauchi/private#1243 |
+| Hiding who writes to whom from the relays: [mailbox cohorts](#mailbox-cohorts-design-under-review) | The relay sees daily-rotating mailbox tokens, padded sizes and timing, behind an OHTTP hop | vauchi/private#1281 |
+
+## Mailbox cohorts (design under review)
+
+This design is not in the app. It exists as a written design and as
+research models. Reviews by AI models from two providers have asked for
+changes on every version so far, and the current one is under review
+again; a human cryptographer's review comes before any release. The
+numbers below are the design's today and may change.
+
+**What it fixes.** Today the relay cannot read your updates, but it sees
+which mailbox tokens (the daily-changing addresses your updates are
+delivered to) receive how much, and when (see the
+[threat model](developers/threat-model.md#relay-metadata-exposure-analysis)).
+Over time that can hint at who is in touch with whom.
+
+**How it works.**
+
+- Phones are grouped into **cohorts**. Every member downloads the
+  cohort's whole daily batch, so the download does not show the relay
+  which records were meant for whom.
+- Every phone writes the same number of same-sized records on a fixed
+  schedule, real or dummy, in random order. The relay sees that you
+  wrote, but the records themselves do not show whether any was real, or
+  for whom.
+- A card update is encrypted once per visibility group. Each contact
+  device gets its key in a tiny **notice**, sealed with a key used once
+  and then deleted, so keys stolen today open no notice the phone has
+  already read.
+- Each contact device sends back short receipts, so lost notices are
+  sent again. Every week it also sends a fresh key, so someone who
+  quietly copied a phone loses access once that key takes effect.
+
+**What it costs and what it does not do.**
+
+- **Data.** Downloading the whole batch costs each phone from about one
+  to several tens of megabytes a day, depending on the cohort's size and
+  how long the app stays open.
+- **Delay.** The target for an open app is an update within about five
+  minutes. A phone that only syncs in the background catches up at its
+  next background session; with strict battery limits that can take a
+  few days.
+- **Being online still shows.** The relay sees when each app is active,
+  and cohort membership is public. A recipient is hidden only among its
+  cohort, and a small cohort is a small crowd, so the first pilot makes
+  no anonymity claim.
+- **A copied phone is detected, not prevented.** Someone who copies a
+  phone's whole state and keeps interfering can read new updates until
+  the app notices: up
+  to about 25 days if they copied the sender's phone, about 51 if they
+  copied the recipient's. In the second case, if the relay also helps
+  them, only the recipient's phone raises the alarm, and the reading
+  stops when you act on it.
+- **Alarms ask you to meet.** Signs of a stolen state pause updates to
+  that contact, and the strongest ones ask you to re-verify the contact
+  in person. The design aims to raise no alarm for phones that connect
+  every three days, are away for up to two weeks, or have clocks up to
+  three days off, and the research models show it does. Outside that, an
+  alarm is possible, and an alarm that clears when a contact
+  comes back hints that they had been offline.

@@ -396,7 +396,7 @@ page and in the [Cryptography Reference](crypto.md).
 
 | Limitation | Impact | Mitigation |
 |-----------|--------|------------|
-| Relay sees metadata | Graph inference; timing and volume per mailbox | Padding, daily tokens, OHTTP, per-day fetch requests |
+| Relay sees metadata | Graph inference; timing and volume per mailbox | Padding, daily tokens, OHTTP, per-day fetch requests; see the [Roadmap](../roadmap.md#mailbox-cohorts-design-under-review) for mailbox cohorts |
 | Tokens not forward secure | A later shared-key compromise links that channel's past tokens, across the relay's 120-day retention | None today |
 | Identity-key-addressed routes | The relay sees a long-lived identifier on guardian sets, recovery proofs and purge, the flows that map a recovery circle | By design |
 | Device sync has no forward secrecy | A later compromise of a device's exchange key opens every recorded batch, which carries contacts, cards and shared contact keys | None today; live pairwise ratchet states are not copied |
@@ -546,6 +546,14 @@ Vauchi's low-frequency traffic the metadata
 protection its threat model asks for without the
 usability and censorship-resistance penalties, and
 Tor remains available as the optional proxy.
+
+**Not hidden today**: none of the mitigations above
+hides who writes to whom from the application
+relay. Mailbox cohorts would, within a cohort, at
+the cost of bandwidth and delay, and without hiding
+cohort membership or when an app is online. The
+design is under review and not in the app; see the
+[Roadmap](../roadmap.md#mailbox-cohorts-design-under-review).
 
 ## Key Transparency
 

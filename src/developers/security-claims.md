@@ -390,6 +390,8 @@ threat model keeps the full list.
 
 - The relay sees metadata: which mailbox tokens receive how much, and
   when. Sealed sender and padding reduce it; they do not remove it.
+  Mailbox cohorts, which would hide who writes to whom, are on the
+  [Roadmap](../roadmap.md#mailbox-cohorts-design-under-review).
 - A duress PIN is six digits. Someone who images the device and also
   holds the storage master key learns whether a duress PIN exists and
   can guess it offline in about a million tries. That attacker already
