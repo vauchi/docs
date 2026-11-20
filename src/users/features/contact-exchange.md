@@ -1,6 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- description: Why Vauchi exchanges contacts in person: being there shows who the other person is, so a QR scan stands in for passwords and keeps impostors out of the middle. -->
+<!-- description: Why Vauchi exchanges contacts in person: meeting is the strongest defence against a stranger slipping into the exchange, and how the remote Link mode differs. -->
 
 # Contact Exchange
 

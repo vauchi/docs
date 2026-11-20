@@ -1,6 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<!-- description: The three ways back into your Vauchi identity: a second device, an encrypted backup or social recovery, and what to do when a phone is stolen unlocked. -->
+<!-- description: Ways back into Vauchi after losing a phone: a second device, an encrypted backup, or social recovery, which today starts a new identity; and stolen phones. -->
 
 # Backup & Recovery
 
