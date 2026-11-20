@@ -46,3 +46,8 @@ command = "node mdbook-beautiful-mermaid.mjs"
 [output.html.playground]
 editable = false
 runnable = false
+
+# Search snippets show 120-160 characters (Bing's guidance): build-discovery.py
+# fails the build on any page whose description falls outside (private#1311).
+[output.html.vauchi-discovery]
+description-length = [120, 160]
