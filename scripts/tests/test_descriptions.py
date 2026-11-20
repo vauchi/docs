@@ -49,8 +49,8 @@ class DescriptionTests(unittest.TestCase):
             '[output.html]\nsite-url="/reference/"\n'
         )
 
-    def page(self, body, name="topic"):
-        (self.root / f"src/{name}.md").write_text("# Public chapter\n")
+    def page(self, body, name="topic", markdown="# Public chapter\n"):
+        (self.root / f"src/{name}.md").write_text(markdown)
         destination = self.root / f"book/{name}.html"
         destination.write_text(
             '<html><head><title>Public chapter</title>'
@@ -59,12 +59,19 @@ class DescriptionTests(unittest.TestCase):
         )
         return destination
 
-    def build(self):
-        result = subprocess.run(
+    def run_build(self):
+        return subprocess.run(
             [sys.executable, str(SCRIPT), str(self.root)],
             capture_output=True, text=True,
         )
+
+    def build(self):
+        result = self.run_build()
         self.assertEqual(result.returncode, 0, result.stderr)
+
+    def require_snippet_length(self):
+        with (self.root / "book.toml").open("a") as config:
+            config.write("[output.html.vauchi-discovery]\ndescription-length = [120, 160]\n")
 
     def assert_descriptions(self, path, expected):
         metadata = Metadata(path.read_text())
@@ -132,3 +139,49 @@ class DescriptionTests(unittest.TestCase):
         )
         self.build()
         self.assert_descriptions(page, 'Version 2 keeps contact notes on your devices.')
+
+    def test_an_authored_description_comment_wins_everywhere_the_page_is_described(self):
+        authored = "Authored summary of this chapter."
+        page = self.page(
+            "<main><h1>Chapter</h1><p>First paragraph prose.</p></main>",
+            markdown=f"<!-- description: {authored} -->\n# Public chapter\n\nFirst paragraph prose.\n",
+        )
+        self.build()
+        self.assert_descriptions(page, authored)
+        self.assertIn(f'"description": "{authored}"', page.read_text())
+
+    def test_a_multi_line_authored_description_reads_as_one_line(self):
+        page = self.page(
+            "<main><p>Prose.</p></main>",
+            markdown="<!--\n  description: Spread over\n  two lines.\n-->\n# Chapter\n",
+        )
+        self.build()
+        self.assert_descriptions(page, "Spread over two lines.")
+
+    def test_the_book_root_takes_its_authored_description_over_the_book_one(self):
+        page = self.page(
+            "<main><h1>Reference</h1></main>", "index",
+            markdown="<!-- description: Root page summary. -->\n# Reference\n",
+        )
+        self.build()
+        self.assert_descriptions(page, "Root page summary.")
+
+    def test_a_book_that_asks_for_snippet_length_fails_on_each_page_outside_it(self):
+        self.require_snippet_length()
+        self.page("<main><p>Too short.</p></main>", "short")
+        self.page("<main><p>" + "Far too long. " * 14 + "</p></main>", "long")
+        self.page("<main><p>" + "x" * 140 + "</p></main>", "fits")
+        result = self.run_build()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("short.html: description is 10 characters", result.stderr)
+        self.assertIn("long.html: description is 195 characters", result.stderr)
+        self.assertNotIn("fits.html", result.stderr)
+
+    def test_a_book_that_asks_for_snippet_length_builds_when_every_page_fits(self):
+        self.require_snippet_length()
+        authored = "y" * 120
+        page = self.page("<main><p>Short.</p></main>", markdown=f"<!-- description: {authored} -->\n# C\n")
+        index = self.page("<main><h1>Reference</h1></main>", "index", markdown=f"<!-- description: {'z' * 160} -->\n# R\n")
+        self.build()
+        self.assert_descriptions(page, authored)
+        self.assert_descriptions(index, "z" * 160)
