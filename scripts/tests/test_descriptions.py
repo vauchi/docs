@@ -185,3 +185,20 @@ class DescriptionTests(unittest.TestCase):
         self.build()
         self.assert_descriptions(page, authored)
         self.assert_descriptions(index, "z" * 160)
+
+    def test_an_included_fragment_cannot_lend_the_page_its_description(self):
+        (self.root / "src/fragment.md").write_text("<!-- description: Belongs to the fragment, not the page. -->\nShared text.\n")
+        page = self.page(
+            "<main><h1>Chapter</h1><p>The page's own first paragraph.</p></main>",
+            markdown="# Public chapter\n\n{{#include fragment.md}}\n",
+        )
+        self.build()
+        self.assert_descriptions(page, "The page's own first paragraph.")
+
+    def test_a_description_shown_in_a_code_example_is_not_the_pages(self):
+        page = self.page(
+            "<main><h1>Chapter</h1><p>How to describe a page.</p></main>",
+            markdown="# Public chapter\n\n```markdown\n<!-- description: Only an example. -->\n```\n",
+        )
+        self.build()
+        self.assert_descriptions(page, "How to describe a page.")
