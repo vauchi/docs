@@ -51,8 +51,8 @@ To change what a particular person sees:
 4. Toggle fields on or off
 
 Each field is simply **Visible** or **Hidden** for that contact. New
-fields start visible to everyone — a sensible default you can tighten the
-moment you add them, or any time after.
+fields start hidden from everyone: nobody sees a field until you choose
+who may, the moment you add it or any time after.
 
 ## Labels — visibility without the tedium
 
