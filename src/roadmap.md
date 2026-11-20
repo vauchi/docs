@@ -90,7 +90,8 @@ Over time that can hint at who is in touch with whom.
   alarm is possible, and an alarm that clears when a contact
   comes back hints that they had been offline.
 - **Many edits at once take a slower path.** The fixed schedule leaves
-  little room: a phone that connects every three days carries about six
-  card edits every two weeks this way, and about ten if it connects
-  daily. Beyond that, and after some lost notices, the app sends your
-  whole card again instead. Nothing is lost, but it costs more data.
+  little room: a phone that connects only every three days carries just
+  a few card edits every two weeks this way, more if it connects daily;
+  the exact numbers are still being measured. Beyond that, the app sends
+  your whole card again instead. Nothing is lost, but it costs more
+  data.
