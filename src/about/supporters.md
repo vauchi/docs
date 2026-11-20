@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The people and organizations who support Vauchi, and how to become one of them through GitHub Sponsors or Liberapay to fund privacy-respecting software. -->
 
 # Supporters
 

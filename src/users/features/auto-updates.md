@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How automatic updates work in Vauchi: change a detail once and everyone who holds your card receives it, end-to-end encrypted, without you sending anything. -->
 
 # Automatic Updates
 

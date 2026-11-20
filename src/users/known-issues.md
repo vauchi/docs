@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Known issues and limitations in Vauchi, listed in plain sight: what may not work yet, such as Bluetooth exchange on older Android phones, and the workarounds. -->
 
 # Known Issues
 

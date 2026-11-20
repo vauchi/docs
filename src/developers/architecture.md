@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How Vauchi is built: the Rust core that holds all cryptography and protocol logic, the shared protocol crate, the relay, and the apps on each platform. -->
 
 # Architecture Overview
 

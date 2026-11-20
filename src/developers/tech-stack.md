@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The languages, frameworks and libraries behind Vauchi's Rust core, relay and apps on each platform, and how the repositories depend on one another. -->
 
 # Technology Stack
 

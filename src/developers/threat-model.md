@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: STRIDE threat analysis of Vauchi: who the adversaries are, what the relay and the network can still observe, and the mitigations and residual risks for each. -->
 
 # Threat Model
 

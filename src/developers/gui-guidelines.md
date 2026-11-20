@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Cross-platform GUI rules for every Vauchi client, from phones to desktops: no confirmation dialogs for reversible actions, inline editing and clear feedback. -->
 
 # GUI Design Guidelines
 

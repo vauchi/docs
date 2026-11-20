@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Where security researchers should start with Vauchi: the claims in plain language, each tied to its test, model or code, and what the relay can still see. -->
 
 # For Security Researchers
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Diagram of Vauchi's cryptographic key hierarchy: how every key is derived from the master seed with HKDF (RFC 5869), and what each derived key is used for. -->
 
 # Crypto Key Hierarchy
 

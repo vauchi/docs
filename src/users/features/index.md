@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: An overview of Vauchi's features: in-person exchange, per-contact visibility, one identity across your devices, automatic updates, backups and recovery. -->
 
 # Features
 

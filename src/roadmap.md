@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The one page that lists what Vauchi does not do yet: planned features without dates, what part of each already ships, and the tracker issue behind each one. -->
 
 # Roadmap
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How Vauchi encrypts everything it stores and sends, which keys your device creates, and why the project arranges never to be able to read your data at all. -->
 
 # Encryption
 

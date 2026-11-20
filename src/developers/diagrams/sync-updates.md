@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagram of a card change reaching contacts and your other devices through the relay, which stores encrypted blobs but still sees tokens and timing. -->
 
 # Sync Updates Sequence
 

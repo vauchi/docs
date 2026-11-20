@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagrams of Vauchi's core flows, from contact exchange and device linking to updates, delivery and recovery, with a guide to reading the notation. -->
 
 # Diagrams
 

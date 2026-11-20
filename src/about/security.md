@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How Vauchi protects your data: the relay and the network are assumed hostile, cards are end-to-end encrypted, and contacts are verified by meeting in person. -->
 
 # Security
 

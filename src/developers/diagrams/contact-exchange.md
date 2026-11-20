@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagram of an in-person contact exchange: two devices swap QR codes, check proximity with an ultrasonic handshake and set up keys for later updates. -->
 
 # Contact Exchange Sequence
 

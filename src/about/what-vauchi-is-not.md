@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The limits of Vauchi in plain words: what sharing and withdrawing a detail cannot undo, and the protections it does not offer, so nobody relies on them. -->
 
 # What Vauchi Is Not
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How the Vauchi website and its optional email waitlist handle personal data, who is responsible for it, and how this differs from end-to-end encrypted cards. -->
 
 # Privacy Policy
 

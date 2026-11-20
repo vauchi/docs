@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Plain answers to common questions about Vauchi, starting with how your data is encrypted on your device, in transit and in backups, and who can read it. -->
 
 # Frequently Asked Questions
 

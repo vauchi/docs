@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagram of a card update delivered through the relay, from sending to fetch and acknowledgement, and why the sender never learns it was read. -->
 
 # Message Delivery Flow
 

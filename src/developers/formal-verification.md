@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Which parts of Vauchi's protocol are checked by machine with Tamarin, Quint and other tools, what each model covers and proves, and how to run it yourself. -->
 
 # Formal Verification
 

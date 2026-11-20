@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: What Vauchi is: a living contact card you exchange face to face that updates itself for everyone who holds it, with no sign-up and end-to-end encryption. -->
 
 # About Vauchi
 

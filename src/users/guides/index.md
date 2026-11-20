@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Short how-to guides for common Vauchi tasks: exchanging contacts, linking a new device, hiding a field from a contact and exporting an encrypted backup. -->
 
 # How-To Guides
 

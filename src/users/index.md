@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Vauchi for users: exchange contact cards face to face and let them update themselves, with guides to getting started, the features, recovery and the FAQ. -->
 
 # For Users
 

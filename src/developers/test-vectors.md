@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Known-answer test vectors for Vauchi's key derivations and formats, produced by the shipped core code, to check your own implementation or ours against. -->
 
 # Test Vectors
 

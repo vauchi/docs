@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagram of linking a new device: a five-minute QR code, a confirmation code compared on both screens, and the master seed passed to the new device. -->
 
 # Device Linking Sequence
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The Vauchi Contributor License Agreement, version 1.1: what you confirm when you contribute, and why it lets the project also offer other license terms. -->
 
 # Contributor License Agreement
 

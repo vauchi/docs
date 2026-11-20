@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Every cryptographic operation in Vauchi: HKDF key derivation, the per-contact Double Ratchet, encryption, signatures and planned post-quantum work. -->
 
 # Cryptography Reference
 

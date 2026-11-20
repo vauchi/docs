@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How to contribute to Vauchi: branches and merge requests across repositories, the strict TDD workflow, atomic commits, and the checks to run before pushing. -->
 
 # Contributing to Vauchi
 

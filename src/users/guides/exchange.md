@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Step-by-step guide to exchanging contact cards in Vauchi: show and scan QR codes in person, what you need, and the other ways to exchange when you are apart. -->
 
 # How to Exchange Contacts
 

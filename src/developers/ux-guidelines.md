@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Cross-platform interaction rules for every Vauchi client: don't make people think, keep them informed, and respect simplicity and trust earned in person. -->
 
 # UX Interaction Guidelines
 

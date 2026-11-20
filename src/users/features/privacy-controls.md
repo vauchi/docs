@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How Vauchi's privacy controls work: one contact card, with every field shown to or hidden from each contact individually, and changeable at any time. -->
 
 # Privacy Controls
 

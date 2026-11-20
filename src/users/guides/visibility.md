@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Step-by-step guide to choosing what each contact sees in Vauchi: set every field to everyone, a chosen few or nobody, and change it later at any time. -->
 
 # How to Manage Visibility
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How to use one Vauchi identity on several devices: link a new device with a QR code valid for five minutes, keep them in step, and handle a lost device. -->
 
 # Multi-Device Sync
 

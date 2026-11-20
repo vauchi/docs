@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Definitions of the terms used across Vauchi's developer documentation, from the master seed and signing keys to shredding keys, each linked to its source. -->
 
 # Glossary
 

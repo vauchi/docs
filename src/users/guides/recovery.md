@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Step-by-step guide to getting back into your Vauchi identity: pick the recovery path you prepared, from a linked device to a backup or social recovery. -->
 
 # How to Recover Your Account
 

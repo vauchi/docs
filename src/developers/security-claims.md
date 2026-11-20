@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Every security property Vauchi claims, with the attacker it holds against and the test, formal model or certification that backs it. For those who break things. -->
 
 # Security Claims
 

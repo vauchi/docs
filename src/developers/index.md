@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Where to start developing Vauchi: the contributing guide, architecture, design guidelines and cryptography, plus the repositories and core rules such as TDD. -->
 
 # For Developers
 

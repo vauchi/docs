@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Step-by-step guide to setting up Vauchi on several devices: link a new device to your identity, check that it syncs, and what to do when one is lost. -->
 
 # How to Set Up Multi-Device
 

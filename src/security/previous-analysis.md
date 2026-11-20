@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: What has already been reviewed in Vauchi and by whom, what runs against every change, and what has never been done: there has been no external audit yet. -->
 
 # Previous Analysis
 

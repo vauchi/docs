@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: How to take part in Vauchi: report bugs and request features on GitLab, contribute code, translate the app, and the conduct expected in the community. -->
 
 # Community
 

@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Sequence diagrams for getting back into a Vauchi identity by device link, backup or social recovery, and for moving contacts to new keys after a theft. -->
 
 # Recovery and Compromise Rotation
 

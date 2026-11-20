@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The five commitments every Vauchi design decision is checked against, from end-to-end encryption and trust earned in person to simplicity and data ownership. -->
 
 # Vauchi Principles
 

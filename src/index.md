@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: Vauchi documentation: a living contact card you exchange face to face that stays current for everyone who holds it. Guides for users, developers, researchers. -->
 
 # Vauchi Documentation
 

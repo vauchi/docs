@@ -1,5 +1,6 @@
 <!-- SPDX-FileCopyrightText: 2026 Mattia Egloff <mattia.egloff@pm.me> -->
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- description: The test-driven development rules for Vauchi code: no production code without a failing test, tidy first before changing behavior, and commit at each step. -->
 
 # TDD Rules
 
