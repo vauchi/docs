@@ -26,7 +26,7 @@ default:
 include:
   - local: ci/site-indexing.yml
   - project: 'vauchi/scripts'
-    ref: ci-templates-v2026.11.16
+    ref: ci-templates-v2026.11.21
     file:
       - '/ci-templates/mr-rules.yml'
       - '/ci-templates/reuse.yml'
