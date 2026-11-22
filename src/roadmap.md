@@ -33,11 +33,13 @@ maintainers' issues.
 
 ## Mailbox cohorts (design under review)
 
-This design is not in the app. It exists as a written design and as
-research models. Reviews by AI models from two providers have asked for
-changes on every version so far, and the current one is under review
-again; a human cryptographer's review comes before any release. The
-numbers below are the design's today and may change.
+This design is not in the app. It exists as a written design, as
+research models, and as a first part of its code that the app does not
+use. AI models from three providers have reviewed every version, the
+code included, and every review so far has found faults that had to be
+fixed; the latest fixes have not been reviewed yet. A human
+cryptographer reviews it before any release. The numbers below are the
+design's today and may change.
 
 **What it fixes.** Today the relay cannot read your updates, but it sees
 which mailbox tokens (the daily-changing addresses your updates are
@@ -58,9 +60,11 @@ Over time that can hint at who is in touch with whom.
   device gets its key in a tiny **notice**, sealed with a key used once
   and then deleted, so keys stolen today open no notice the phone has
   already read.
-- Each contact device sends back short receipts, so lost notices are
-  sent again. Every week it also sends a fresh key, so someone who
-  quietly copied a phone loses access once that key takes effect.
+- Every week each contact device sends a fresh key. The sender answers
+  it and sends its current card again, so a lost notice or a lost part
+  of a card is replaced within about a week, and someone who quietly
+  copied a phone and only reads loses access within about two to three
+  weeks of normal use.
 
 **What it costs and what it does not do.**
 
@@ -75,20 +79,21 @@ Over time that can hint at who is in touch with whom.
   and cohort membership is public. A recipient is hidden only among its
   cohort, and a small cohort is a small crowd, so the first pilot makes
   no anonymity claim.
-- **A copied phone is detected, not prevented.** Someone who copies a
-  phone's whole state and keeps interfering can read new updates until
-  the app notices: up
-  to about 25 days if they copied the sender's phone, about 51 if they
-  copied the recipient's. In the second case, if the relay also helps
-  them, only the recipient's phone raises the alarm, and the reading
-  stops when you act on it.
-- **Alarms ask you to meet.** Signs of a stolen state pause updates to
-  that contact, and the strongest ones ask you to re-verify the contact
-  in person. The design aims to raise no alarm for phones that connect
-  every three days, are away for up to two weeks, or have clocks up to
-  three days off, and the research models show it does. Outside that, an
-  alarm is possible, and an alarm that clears when a contact
-  comes back hints that they had been offline.
+- **A copied phone that keeps writing may go unnoticed.** Someone who
+  copies a phone's whole state and then keeps sending records of their
+  own can keep reading new updates to or from that phone, and the app
+  may never notice. The app raises an alarm when it sees certain signs
+  of this, but there is no promise that it always does, or that the
+  reading ever stops on its own. Re-verifying the contact in person
+  ends it. Copying needs the phone's unlocked storage.
+- **Alarms ask you to meet.** An alarm warns you and asks you to
+  re-verify the contact in person; updates keep flowing meanwhile. The
+  design aims to raise no alarm for phones that connect every three
+  days, are away for up to two weeks, or have clocks up to three days
+  off. The models and tests run so far raised none in those cases,
+  which shows the cases they tried, not every case.
+- **Card photos are not covered yet.** A card of up to 4 KB travels
+  this way; how a photo does is not designed yet.
 - **Many edits at once take a slower path.** The fixed schedule leaves
   little room: a phone that connects only every three days carries just
   a few card edits every two weeks this way, more if it connects daily;
