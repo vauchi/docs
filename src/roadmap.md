@@ -36,14 +36,17 @@ maintainers' issues.
 This design is not in the app. It exists as a written design, as
 research models, and as first parts of its code, in the app's core and
 on the relay, that nothing uses yet. AI models from three providers
-attacked every version. Their reviews kept finding faults until one
-version of the code that handles notices (the part below that delivers
-keys) drew no finding from any of the three. That shows what those
-reviews looked for and found, not that the design is secure: the next
-review found a fault in how the written design republishes cards, now
-fixed and not yet reviewed, and parts of the design have no code yet. A
-human cryptographer reviews it before any release. The numbers below
-are the design's today and may change.
+attacked fifteen versions of the code that handles notices (the part
+below that delivers keys). Their reviews kept finding faults until the
+version in core commit 3af62982a, in which none of the three found what
+they looked for: a way for a relay alone to raise a false alarm, stop
+updates for good or link records, or for a later copy of a phone to
+read more than the design says. That shows what those reviews looked
+for and did not find, not that the design is secure. A test sends one
+phone's records through a real relay and back and the card arrives, but
+the app does not use any of this, and parts of the design have no code
+yet. A human cryptographer reviews it before any release. The numbers
+below are the design's today and may change.
 
 **What it fixes.** Today the relay cannot read your updates, but it sees
 which mailbox tokens (the daily-changing addresses your updates are
@@ -65,10 +68,13 @@ Over time that can hint at who is in touch with whom.
   and then deleted, so keys stolen today open no notice the phone has
   already read.
 - Every week each contact device sends a fresh key. The sender answers
-  it and sends its current card again, so a lost notice or a lost part
-  of a card is replaced within about a week, and someone who quietly
-  copied a phone and only reads loses access within about three to four
-  weeks of normal use.
+  it and sends its current card again, so on a phone with a few
+  contacts a lost notice or a lost part of a card is replaced within
+  about a week, and someone who quietly copied a phone and only reads
+  loses access within about three to four weeks of normal use. A phone
+  that only syncs in the background has room in each session for this
+  for about five contacts, so with many contacts and the app never
+  opened, both take longer: several weeks with a few dozen contacts.
 
 **What it costs and what it does not do.**
 
