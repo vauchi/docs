@@ -34,12 +34,16 @@ maintainers' issues.
 ## Mailbox cohorts (design under review)
 
 This design is not in the app. It exists as a written design, as
-research models, and as a first part of its code that the app does not
-use. AI models from three providers have reviewed every version, the
-code included, and every review so far has found faults that had to be
-fixed; the latest fixes have not been reviewed yet. A human
-cryptographer reviews it before any release. The numbers below are the
-design's today and may change.
+research models, and as first parts of its code, in the app's core and
+on the relay, that nothing uses yet. AI models from three providers
+attacked every version. Their reviews kept finding faults until one
+version of the code that handles notices (the part below that delivers
+keys) drew no finding from any of the three. That shows what those
+reviews looked for and found, not that the design is secure: the next
+review found a fault in how the written design republishes cards, now
+fixed and not yet reviewed, and parts of the design have no code yet. A
+human cryptographer reviews it before any release. The numbers below
+are the design's today and may change.
 
 **What it fixes.** Today the relay cannot read your updates, but it sees
 which mailbox tokens (the daily-changing addresses your updates are
@@ -86,6 +90,11 @@ Over time that can hint at who is in touch with whom.
   of this, but there is no promise that it always does, or that the
   reading ever stops on its own. Re-verifying the contact in person
   ends it. Copying needs the phone's unlocked storage.
+- **Old keys are deleted only while the app runs.** A phone that stays
+  switched off keeps, until the app next runs, keys the design would
+  otherwise have deleted. A copy of its storage taken then can read
+  updates from the few weeks before it was switched off that the design
+  would no longer let it read.
 - **Alarms ask you to meet.** An alarm warns you and asks you to
   re-verify the contact in person; updates keep flowing meanwhile. The
   design aims to raise no alarm for phones that connect every three
