@@ -101,7 +101,7 @@ Over time that can hint at who is in touch with whom.
   days, are away for up to two weeks, or have clocks up to three days
   off. The models and tests run so far raised none in those cases,
   which shows the cases they tried, not every case.
-- **Card photos are not covered yet.** A card of up to 4 KB travels
+- **Card photos are not covered yet.** A card of up to about 3.9 KB travels
   this way; how a photo does is not designed yet.
 - **Many edits at once take a slower path.** The fixed schedule leaves
   little room: a phone that connects only every three days carries just
