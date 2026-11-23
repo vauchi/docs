@@ -569,11 +569,70 @@ Tor remains available as the optional proxy.
 
 **Not hidden today**: none of the mitigations above
 hides who writes to whom from the application
-relay. Mailbox cohorts would, within a cohort, at
-the cost of bandwidth and delay, and without hiding
-cohort membership or when an app is online. The
-design is under review and not in the app; see the
+relay. Mailbox cohorts would, among the members of
+a cohort, at the cost of bandwidth and delay, and
+without hiding when an app is online. The design
+is under review and not in the app; see the
 [Roadmap](../roadmap.md#mailbox-cohorts-design-under-review).
+
+### Planned: mailbox cohorts (not in the app)
+
+**Designed against**: the application relay alone,
+and the application relay working together with
+the OHTTP relay, for the writes of an update.
+
+**What it would hide**: who writes to whom among
+the members of a cohort. Every member downloads the
+cohort's whole batch, so a download does not show
+which records were meant for it. Every phone writes
+the same number of same-sized records on a fixed
+schedule, real or dummy, in random order, and a
+write names no recipient.
+
+**Cohort membership**: which cohort a phone is in is
+public, but phones are assigned at random, never by
+region or by whom they know, so membership says
+nothing about connections. It sets the size of the
+crowd they hide in: a small cohort is a small
+crowd, and the first pilot, with one small cohort,
+makes no anonymity claim.
+
+**Still visible**:
+
+- when each app is active. If the phone's system
+  wakes recently used apps sooner, two people who
+  just exchanged cards may stand out;
+- every contact still on today's per-contact
+  mailboxes, which leak as described above; no claim
+  covers a user while any of their contacts is;
+- with more than one cohort, how a phone writes to
+  contacts in other cohorts without standing out is
+  not settled yet.
+
+**Key delivery**: the part that delivers update keys
+(the notice core) is specified at
+[spec.vauchi.app](https://spec.vauchi.app/protocols/notice-core.html).
+Its code is in Core behind a feature that no build
+ships. In Core commit `3af62982a`, three reviews by
+AI models from three providers found no way for a
+relay without keys to raise a false alarm, stop
+updates for good or link records, and no way for a
+later copy of a phone that only reads to read more
+than the specification states. That records what
+those reviews looked for and did not find; it is not
+a proof, and a human cryptographer reviews the
+design before any release.
+
+**Its stated limits**:
+
+- a copy of a phone that keeps writing records of
+  its own can keep reading, and can keep healing
+  from starting, with no alarm, until the contact is
+  re-verified in person;
+- old keys are deleted only while the app runs;
+- on a phone that only syncs in the background, a
+  lost key or a healing step can take several weeks
+  when it has many contacts.
 
 ## Key Transparency
 

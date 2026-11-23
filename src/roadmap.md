@@ -86,9 +86,11 @@ Over time that can hint at who is in touch with whom.
   next background session; with strict battery limits that can take a
   few days.
 - **Being online still shows.** The relay sees when each app is active,
-  and cohort membership is public. A recipient is hidden only among its
-  cohort, and a small cohort is a small crowd, so the first pilot makes
-  no anonymity claim.
+  and which cohort each phone is in is public. Phones are placed in
+  cohorts at random, not by whom they know, so that says nothing about
+  your connections; but a recipient is hidden only among its cohort, and
+  a small cohort is a small crowd, so the first pilot makes no anonymity
+  claim.
 - **A copied phone that keeps writing may go unnoticed.** Someone who
   copies a phone's whole state and then keeps sending records of their
   own can keep reading new updates to or from that phone, and the app
