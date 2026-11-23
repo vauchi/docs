@@ -67,7 +67,7 @@ Over time that can hint at who is in touch with whom.
 - Every week each contact device sends a fresh key. The sender answers
   it and sends its current card again, so a lost notice or a lost part
   of a card is replaced within about a week, and someone who quietly
-  copied a phone and only reads loses access within about two to three
+  copied a phone and only reads loses access within about three to four
   weeks of normal use.
 
 **What it costs and what it does not do.**
