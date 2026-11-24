@@ -55,7 +55,12 @@ after updating to see if it's gone.
   your identity** — Every phone you link holds everything needed to act as
   you. If one is compromised, removing it from your device list does not
   fully shut it out, so someone holding it could add a new device of their
-  own. Only link devices you control. A design that limits what ordinary
+  own. Until you remove it, a copy can also make your contacts stop
+  receiving the changes that device sends; changes from your other devices
+  still arrive. If you think a device or a backup was copied, remove it
+  and follow
+  [If a Device Was Stolen Unlocked](guides/recovery.md#if-a-device-was-stolen-unlocked).
+  Only link devices you control. A design that limits what ordinary
   devices hold is planned.
 - <a id="decoy-believability"></a>**The duress decoy is what you put in
   it** — Unlocking with the duress PIN opens a decoy profile that holds
