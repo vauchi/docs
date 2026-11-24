@@ -618,7 +618,8 @@ makes no anonymity claim.
 (the notice core) is specified at
 [spec.vauchi.app](https://spec.vauchi.app/protocols/notice-core.html).
 Its code is in Core behind a feature that no build
-ships. In Core commit `3af62982a`, three reviews by
+ships. In Core commit `3af62982a` (on `main` as
+`adfb1f7d8`, the same notice code), three reviews by
 AI models from three providers found no way for a
 relay without keys to raise a false alarm, stop
 updates for good or link records, and no way for a

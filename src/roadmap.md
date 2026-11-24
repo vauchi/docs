@@ -38,7 +38,8 @@ research models, and as first parts of its code, in the app's core and
 on the relay, that nothing uses yet. AI models from three providers
 attacked fifteen versions of the code that handles notices (the part
 below that delivers keys). Their reviews kept finding faults until the
-version in core commit 3af62982a, in which none of the three found what
+version in core commit 3af62982a (on main as adfb1f7d8, the same notice
+code), in which none of the three found what
 they looked for: a way for a relay alone to raise a false alarm, stop
 updates for good or link records, or for a later copy of a phone to
 read more than the design says. That shows what those reviews looked
