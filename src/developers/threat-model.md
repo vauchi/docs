@@ -441,6 +441,26 @@ relationship between core and its callers:
 - **File content**: Core verifies checksums on all
   content fetched from remote servers
 
+**Display and hardware shells**: an app assembles Core
+with a display shell, which renders the commands Core
+prepared, and a hardware shell, which runs the device's
+radios, NFC reader, camera and notifications and reports
+what it observes. Neither decides anything, and both talk
+to Core only through the one command and event contract.
+What a hardware shell reports is untrusted input in the
+sense of the list above: a scanned QR code is bounded and
+verified by Core (length, signature, expiry; see the
+in-person exchange in the specification) whatever the
+shell's decoder read. On Windows, `windows-hw` decodes
+camera frames with zxing-cpp, native C++ code that runs
+in the app's process; it hands the decoder only frames
+whose size is bounded and whose pixels match it, and
+reports at most a QR code's capacity per code. The camera
+runs only on Core's command, and Core stops it when the
+screen that started it is replaced. Notifications show
+the title and body Core prepared; `windows-hw` writes them
+as text, never as markup.
+
 A compromised or buggy UI layer cannot cause `vauchi-core` to:
 
 - Decrypt data for an unauthorized recipient

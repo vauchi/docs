@@ -218,7 +218,9 @@ vauchi/                          ← root repo (justfile, CI config)
 ├── macos/                       ← SwiftUI macOS app
 ├── linux-gtk/                   ← GTK4 + libadwaita Linux app
 ├── linux-qt/                    ← Qt6 Linux app
-├── windows/                     ← WinUI 3 Windows app
+├── windows-app/                 ← WinUI 3 Windows app (assembles the two below)
+├── windows-display/             ← Windows display shell (WinUI 3 library)
+├── windows-hw/                  ← Windows hardware shell
 ├── web-demo/                    ← SolidJS + WASM demo app
 ├── vauchi-platform-swift/       ← Generated Swift bindings + XCFramework (SPM distribution)
 │

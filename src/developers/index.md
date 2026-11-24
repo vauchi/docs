@@ -50,7 +50,9 @@ Vauchi is a multi-repo project under the
 | `linux-gtk/` | GTK4 Linux desktop app |
 | `linux-qt/` | Qt6 (Widgets) Linux desktop app |
 | `macos/` | macOS native app (SwiftUI) |
-| `windows/` | Windows native app (WinUI3) |
+| `windows-app/` | Windows app (WinUI3): assembles Core, `windows-display` and `windows-hw` |
+| `windows-display/` | Windows display shell: renders Core's commands in WinUI3 |
+| `windows-hw/` | Windows hardware shell: Bluetooth, NFC, camera, notifications |
 | `ios/` | SwiftUI app |
 | `android/` | Kotlin/Compose app |
 | `features/` | Gherkin specs |
