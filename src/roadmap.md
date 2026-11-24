@@ -33,6 +33,13 @@ maintainers' issues.
 
 ## Mailbox cohorts (design under review)
 
+**The goal.** Vauchi's relays cannot reconstruct who is in touch with
+whom: not the relay that stores updates on its own, not that relay
+working together with the OHTTP relay in front of it, and not at any size
+Vauchi grows to. Mailbox cohorts are how, and the first test release
+(the alpha) is planned to ship with them. Until it does, the limits in
+the [threat model](developers/threat-model.md) apply as they are today.
+
 This design is not in the app. It exists as a written design, as
 research models, and as first parts of its code, in the app's core and
 on the relay, that nothing uses yet. AI models from three providers
