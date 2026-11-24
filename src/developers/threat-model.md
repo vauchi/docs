@@ -580,6 +580,11 @@ is under review and not in the app; see the
 **Designed against**: the application relay alone,
 and the application relay working together with
 the OHTTP relay, for the writes of an update.
+Through the first pilot one organisation, the one
+running Vauchi, runs both relays, so the hiding
+holds against outsiders and a relay host broken
+into, not against that organisation. A separate
+operator for the OHTTP relay comes before release.
 
 **What it would hide**: who writes to whom among
 the members of a cohort. Every member downloads the
